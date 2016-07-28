@@ -1,0 +1,1324 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>Hexo</title>
+  <meta name="author" content="托尼的夏天">
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  
+  <meta property="og:site_name" content="Hexo"/>
+
+  
+    <meta property="og:image" content="undefined"/>
+  
+
+  <link href="/favicon.ico" rel="icon">
+  <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap.min.css">
+<link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css">
+<link rel="stylesheet" href="/css/style.css">
+  <script src="http://code.jquery.com/jquery-2.1.1.min.js"></script>
+  <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+  
+<script type="text/javascript">
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-368771XX-X']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+</script>
+
+</head>
+
+<body>
+  <header id="header" class='normal_mode'>
+    <nav id="main-nav">
+  <ul class='container'>
+    
+      <li><a href="/">Home</a></li>
+    
+      <li><a href="/archives">Archives</a></li>
+    
+  </ul>
+  <div class="clearfix"></div>
+</nav>
+  </header>
+  <div id="content" class="container">
+    <div id="cover">
+	<div id="profile" alt="http://ww1.sinaimg.cn/large/6cea169fjw1edgyzma1xcj21kw16ohba.jpg">
+		<a href="/">
+			<div class="logo">
+				<img src="/logo.png" alt="Profile Picture">
+			</div>
+			<div id="title">Hexo</div>
+		</a>
+
+		
+		 <ul class="my-socials">
+  
+  <li>
+  	<a href="https://github.com/your_id" class="github" target="_blank">
+  		<i class="fa fa-github"></i>
+  	</a>
+  </li>
+  
+  <li>
+  	<a href="http://weibo.com/your_id" class="weibo" target="_blank">
+  		<i class="fa fa-weibo"></i>
+  	</a>
+  </li>
+  
+ 
+</ul>
+	</div>
+</div>
+
+
+  <article class="post">
+  
+    <div class="gallery">
+  <div class="photoset">
+    
+      <img src="">
+    
+  </div>
+  <div class="control">
+    <div class="prev"></div>
+    <div class="next"></div>
+  </div>
+</div>
+  
+  <div class="post-content">
+    <header>
+      
+      <time datetime="2016-04-25T12:51:37.000Z"><a href="/2016/04/25/weak-block/">Mon, Apr 25 2016, 8:51:37 pm</a></time>
+
+  
+    <h1 class="title"><a href="/2016/04/25/weak-block/">__weak &amp;&amp; _strong</a></h1>
+  
+
+
+
+<div class="clear"></div>
+      
+    </header>
+    <div class="entry">
+      
+        <h4 id="retain-count"><a href="#retain-count" class="headerlink" title="retain count"></a>retain count</h4><p>在ARC环境下的，每个block在创建时，编译器会对里面用到的所有对象自动增加一个reference count,如下 Block 会 retain ‘self’，而 ‘self‘ 又 retain 了 Block。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">__weak __typeof__(self) weakSelf = self;</span><br><span class="line"> dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^&#123;</span><br><span class="line">    [weakSelf doSomething];</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<p>weakSelf是为了block不持有self，避免循环引用，而再声明一个strongSelf是因为一旦进入block执行，就不允许self在这个执行过程中释放。block执行完后这个strongSelf会自动释放，没有循环引用问题。</p>
+<h4 id="strong"><a href="#strong" class="headerlink" title="__strong"></a>__strong</h4><p><strong>weak </strong>typeof__(self) weakSelf = self;<br> dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{<br>​    [weakSelf doSomething];</p>
+<p>   [weakSelf doSomtThing];</p>
+<p>});</p>
+<p>上面的代码可能出现一种情况，，在调用doSomething的时候self还存在，在doMoreThing的时候self就变成nil了，所以为了避免这种情况发生，我们会重新strongify self。一般情况下，我们都建议这么做，这没什么风险，除非你不关心self在执行过程中变成nil，或者你确定它不会变成nil（比方说所以block都在main thread执行）。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">weak __typeof(self) weakSelf = self;    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^&#123;</span><br><span class="line">    _strong _typeof(self) strongSelf = weakSelf;</span><br><span class="line">    [strongSelf doSomething];</span><br><span class="line">    [strongSelf doOtherThing];</span><br><span class="line"></span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<h4 id="weak-strong-dance"><a href="#weak-strong-dance" class="headerlink" title="weak/strong dance"></a>weak/strong dance</h4><p>用过 <a href="https://github.com/ReactiveCocoa/ReactiveCocoa" target="_blank" rel="external">ReactiveCocoa</a>（这里讨论的是 ObjC 版本，下面简称 ReactiveCocoa 为 RAC）的朋友肯定对下面的代码非常熟悉</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">@weakify(self);</span><br><span class="line">[self.collectionView hh_addGifRefreshHeaderWithHandler:^&#123;</span><br><span class="line">    @strongify(self);</span><br><span class="line">    [self fetchLivesRefresh:YES];</span><br><span class="line">&#125;];</span><br></pre></td></tr></table></figure>
+<p>@weakify @strongify 是ReactiveCocoa宏定义，相当于下面代码</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">__weak __typeof(self) self_weak_ = (self);</span><br><span class="line">[self.collectionView hh_addGifRefreshHeaderWithHandler:^&#123;</span><br><span class="line">    _Pragma(&quot;clang diagnostic push&quot;)</span><br><span class="line">    _Pragma(&quot;clang diagnostic ignored \&quot;-Wshadow\&quot;&quot;)</span><br><span class="line">    __strong __typeof__(self) self = self_weak_;</span><br><span class="line">    _Pragma(&quot;clang diagnostic pop&quot;)</span><br><span class="line">    [self fetchLivesRefresh:YES];</span><br><span class="line">&#125;];</span><br></pre></td></tr></table></figure>
+<p><a href="http://blog.lessfun.com/blog/2014/11/22/when-should-use-weakself-and-strongself-in-objc-block/" target="_blank" rel="external">到底什么时候才需要在ObjC的Block中使用weakSelf/strongSelf</a></p>
+<p><a href="http://sherlockyao.com/blog/2015/08/08/weakself-and-strongself-in-blocks/" target="_blank" rel="external">使用Block时何时需要WeakSelf和StrongSelf?</a></p>
+<p><a href="http://devliu.com/2016/04/14/%E7%A5%9E%E7%A7%98%E7%9A%84-weakify%E5%92%8C-strongify/" target="_blank" rel="external">神秘的 @weakify 和 @strongify</a></p>
+
+      
+    </div>
+    <footer>
+      
+        <div class="alignleft">
+            <a href="/2016/04/25/weak-block/#more" class="more-link"><i class="fa fa-chevron-right"></i>Read More</a>
+        </div>
+        
+        
+          <div class="alignright"> 
+            <a href="atony2099.github.io/2016/04/25/weak-block/#comment" class="comment-link">
+              <i class="fa fa-comments"></i><span class="ds-thread-count" data-thread-key="/2016/04/25/weak-block/">&nbsp;
+              </span>
+            </a>
+          </div>
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+
+  <article class="post">
+  
+    <div class="gallery">
+  <div class="photoset">
+    
+      <img src="">
+    
+  </div>
+  <div class="control">
+    <div class="prev"></div>
+    <div class="next"></div>
+  </div>
+</div>
+  
+  <div class="post-content">
+    <header>
+      
+      <time datetime="2016-04-22T06:24:17.000Z"><a href="/2016/04/22/layer/">Fri, Apr 22 2016, 2:24:17 pm</a></time>
+
+  
+    <h1 class="title"><a href="/2016/04/22/layer/">CAReplicatorLayer</a></h1>
+  
+
+
+
+<div class="clear"></div>
+      
+    </header>
+    <div class="entry">
+      
+        <h4 id="CAReplicatorLayer"><a href="#CAReplicatorLayer" class="headerlink" title="CAReplicatorLayer"></a>CAReplicatorLayer</h4><ol>
+<li><code>CAReplicatorLayer</code>的目的是为了高效生成许多相似的图层。它会绘制一个或多个图层的子图层，并在每个复制体上应用不同的变换。</li>
+</ol>
+<ol>
+<li>相关属性: <ul>
+<li><code>instanceCount</code>: 子层总数（包括原生子层）</li>
+<li><code>instanceDelay</code>: 复制子层动画延迟时长</li>
+<li><code>instanceTransform</code>: 复制子层形变(不包括原生子层)，每个复制子层都是相对上一个。</li>
+<li><code>instanceRedOffset、instanceGreenOffset、instanceBlueOffset、instanceAlphaOffset</code>: 颜色通道偏移量，每个复制子层都是相对上一个的偏移量。</li>
+</ul>
+</li>
+</ol>
+<h4 id="CAReplicatorLayer例子"><a href="#CAReplicatorLayer例子" class="headerlink" title="CAReplicatorLayer例子"></a>CAReplicatorLayer例子</h4><p>实现一个音乐振幅条的效果:</p>
+<p><img src="http://7xrn7f.com1.z0.glb.clouddn.com/16-7-22/81481818.jpg" alt=""></p>
+<p>相关代码如下: </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line">- (void)viewDidLoad &#123;</span><br><span class="line">    [super viewDidLoad];</span><br><span class="line">   </span><br><span class="line">    // 创建CAReplicatorLayer对象</span><br><span class="line">    CAReplicatorLayer *layer = [CAReplicatorLayer layer];</span><br><span class="line">    layer.frame = CGRectMake(50, 50, 200, 200);</span><br><span class="line">    layer.backgroundColor = [UIColor blueColor].CGColor;</span><br><span class="line">    [self.view.layer addSublayer:layer];</span><br><span class="line"></span><br><span class="line">    // 添加子layer</span><br><span class="line">    CALayer *bar = [CALayer layer];</span><br><span class="line">    bar.backgroundColor = [UIColor redColor].CGColor;</span><br><span class="line">    bar.bounds = CGRectMake(0, 0, 30, 100);</span><br><span class="line">    bar.position = CGPointMake(15, 200);</span><br><span class="line">    bar.anchorPoint = CGPointMake(0.5, 1);</span><br><span class="line">    [layer addSublayer:bar];</span><br><span class="line">    </span><br><span class="line">    // 子layer执行动画操作</span><br><span class="line">    CABasicAnimation *anim = [CABasicAnimation animation];</span><br><span class="line">    anim.keyPath = @&quot;transform.scale.y&quot;;</span><br><span class="line">    anim.toValue = @(0.1);</span><br><span class="line">    anim.autoreverses = YES;</span><br><span class="line">    anim.repeatCount = MAXFLOAT;</span><br><span class="line">    [bar addAnimation:anim forKey:nil];</span><br><span class="line">    </span><br><span class="line">    // 复制3个子layer+原来子layer = 4；</span><br><span class="line">    layer.instanceCount = 4;</span><br><span class="line">    // 子laye执行的动画进行延时操作</span><br><span class="line">    layer.instanceDelay = 0.3f;</span><br><span class="line">    // 子layer进行位移操作</span><br><span class="line">    layer.instanceTransform = CATransform3DMakeTranslation(40, 0, 0);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="CAShapeLayer"><a href="#CAShapeLayer" class="headerlink" title="CAShapeLayer"></a>CAShapeLayer</h4><p>普通CALayer在被初始化时是需要给一个frame值的,这个frame值一般都与给定view的bounds值一致,它本身是有形状的,而且是矩形.</p>
+<p>CAShapeLayer在初始化时也需要给一个frame值,但是,它本身没有形状,它的形状来源于你给定的一个path,然后它去取CGPath值,它与CALayer有着很大的区别。</p>
+<p>CAShapeLayer有着几点很重要:</p>
+<ul>
+<li>它依附于一个给定的path,必须给与path,而且,即使path不完整也会自动首尾相接</li>
+</ul>
+<ul>
+<li>strokeStart以及strokeEnd代表着在这个path中所占用的百分比</li>
+</ul>
+<ul>
+<li>CAShapeLayer动画仅仅限于沿着边缘的动画效果,它实现不了填充效果</li>
+</ul>
+<p><img src="http://i2.piimg.com/567571/bb1e26e70397fc34.png" alt=""></p>
+<h4 id="CAShapeLayer例子"><a href="#CAShapeLayer例子" class="headerlink" title="CAShapeLayer例子"></a>CAShapeLayer例子</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">- (void)viewDidLoad &#123;</span><br><span class="line">    [super viewDidLoad];</span><br><span class="line">	CGPoint startPoint = CGPointMake(50, 300);</span><br><span class="line">    CGPoint endPoint = CGPointMake(300, 300);</span><br><span class="line">    CGPoint controlPoint = CGPointMake(170, 200);</span><br><span class="line">    </span><br><span class="line">    //贝塞尔曲线</span><br><span class="line">    UIBezierPath *path = [[UIBezierPath alloc] init];</span><br><span class="line">    [path moveToPoint:startPoint];</span><br><span class="line">    [path addQuadCurveToPoint:endPoint controlPoint:controlPoint];</span><br><span class="line">    </span><br><span class="line">    //shaperLayer相关属性设置</span><br><span class="line">    CAShapeLayer *shapeLayer = [CAShapeLayer layer];</span><br><span class="line">    shapeLayer.strokeColor = [UIColor redColor].CGColor;</span><br><span class="line">    shapeLayer.fillColor = [UIColor clearColor].CGColor;</span><br><span class="line">    shapeLayer.lineWidth = 5;</span><br><span class="line">    shapeLayer.lineJoin = kCALineJoinRound;</span><br><span class="line">    shapeLayer.lineCap = kCALineCapRound;</span><br><span class="line">    shapeLayer.path = path.CGPath; //路径</span><br><span class="line">    [self.view.layer addSublayer:shapeLayer];</span><br><span class="line">	</span><br><span class="line">  // 添加动画效果</span><br><span class="line">    CABasicAnimation *rBase = [CABasicAnimation animationWithKeyPath:@&quot;strokeEnd&quot;];</span><br><span class="line">    rBase.fromValue = @0.0;</span><br><span class="line">    rBase.toValue = @1;</span><br><span class="line">    rBase.duration = 2.f;</span><br><span class="line">    [shapeLayer addAnimation:rBase forKey:nil];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+    <footer>
+      
+        <div class="alignleft">
+            <a href="/2016/04/22/layer/#more" class="more-link"><i class="fa fa-chevron-right"></i>Read More</a>
+        </div>
+        
+        
+          <div class="alignright"> 
+            <a href="atony2099.github.io/2016/04/22/layer/#comment" class="comment-link">
+              <i class="fa fa-comments"></i><span class="ds-thread-count" data-thread-key="/2016/04/22/layer/">&nbsp;
+              </span>
+            </a>
+          </div>
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+
+  <article class="post">
+  
+    <div class="gallery">
+  <div class="photoset">
+    
+      <img src="">
+    
+  </div>
+  <div class="control">
+    <div class="prev"></div>
+    <div class="next"></div>
+  </div>
+</div>
+  
+  <div class="post-content">
+    <header>
+      
+      <time datetime="2016-04-12T13:32:39.000Z"><a href="/2016/04/12/runloop学习/">Tue, Apr 12 2016, 9:32:39 pm</a></time>
+
+  
+    <h1 class="title"><a href="/2016/04/12/runloop学习/">associated Objects</a></h1>
+  
+
+
+
+<div class="clear"></div>
+      
+    </header>
+    <div class="entry">
+      
+        <p><em>与文章无关的事情: 为什么感觉可乐越来越难喝了？ 我想当个诗人</em></p>
+<p>今天我们来谈谈高大上的runloop,跟往常一样，我们先抛出问题: </p>
+<ul>
+<li>什么是runloop？</li>
+<li>runloop和autoReleasePool关系</li>
+</ul>
+<h3 id="什么是runloop"><a href="#什么是runloop" class="headerlink" title="什么是runloop?"></a>什么是runloop?</h3><p>一般来讲，一个线程执行完一次就退出了。我们需要一种机制，让线程处于”work –sleep – work– sleep”的状态，runloop正是这种机制的实现。</p>
+<p><img src="http://www.2cto.com/uploadfile/Collfiles/20160330/2016033009122244.jpg" alt=""></p>
+<p>相关的伪代码如下: </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">while (AppIsRunning)&#123;</span><br><span class="line">	// 睡眠状态，等待唤醒</span><br><span class="line">	id whoWakesMe = SleepForWaitingUp(); </span><br><span class="line"> 	// 唤醒</span><br><span class="line"> 	id event = GetEvent(whoWakeMe)</span><br><span class="line"> 	HandleEvent(event)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="runloop"><a href="#runloop" class="headerlink" title="runloop"></a>runloop</h3><h4 id="runloop与线程关系"><a href="#runloop与线程关系" class="headerlink" title="runloop与线程关系"></a>runloop与线程关系</h4><p>先上代码: </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line">1</span><br><span class="line">/// 全局的Dictionary，key 是 pthread_t， value 是 CFRunLoopRef</span><br><span class="line">static CFMutableDictionaryRef loopsDic;</span><br><span class="line">/// 访问 loopsDic 时的锁</span><br><span class="line">static CFSpinLock_t loopsLock;</span><br><span class="line">  </span><br><span class="line">/// 获取一个 pthread 对应的 RunLoop。</span><br><span class="line">CFRunLoopRef _CFRunLoopGet(pthread_t thread) &#123;</span><br><span class="line">    OSSpinLockLock(&amp;loopsLock);</span><br><span class="line">    if (!loopsDic) &#123;</span><br><span class="line">        // 第一次进入时，初始化全局Dic，并先为主线程创建一个 RunLoop。</span><br><span class="line">        loopsDic = CFDictionaryCreateMutable();</span><br><span class="line">        CFRunLoopRef mainLoop = _CFRunLoopCreate();</span><br><span class="line">        CFDictionarySetValue(loopsDic, pthread_main_thread_np(), mainLoop);</span><br><span class="line">    &#125;</span><br><span class="line">     </span><br><span class="line">    /// 直接从 Dictionary 里获取。</span><br><span class="line">    CFRunLoopRef loop = CFDictionaryGetValue(loopsDic, thread));</span><br><span class="line">     </span><br><span class="line">    if (!loop) &#123;</span><br><span class="line">        /// 取不到时，创建一个</span><br><span class="line">        loop = _CFRunLoopCreate();</span><br><span class="line">        CFDictionarySetValue(loopsDic, thread, loop);</span><br><span class="line">        /// 注册一个回调，当线程销毁时，顺便也销毁其对应的 RunLoop。</span><br><span class="line">        _CFSetTSD(..., thread, loop, __CFFinalizeRunLoop);</span><br><span class="line">    &#125;</span><br><span class="line">     </span><br><span class="line">    OSSpinLockUnLock(&amp;loopsLock);</span><br><span class="line">    return loop;</span><br><span class="line">&#125;</span><br><span class="line">  </span><br><span class="line">CFRunLoopRef CFRunLoopGetMain() &#123;</span><br><span class="line">    return _CFRunLoopGet(pthread_main_thread_np());</span><br><span class="line">&#125;</span><br><span class="line">  </span><br><span class="line">CFRunLoopRef CFRunLoopGetCurrent() &#123;</span><br><span class="line">    return _CFRunLoopGet(pthread_self());</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>其中pthread_t是一个与线程相关对象，可以看到runloop存在一个全局的字典里面，线程和runloop是一一对应关系。</p>
+<p>程序启动会自动调用<code>CFRunLoopGetMain</code> 创建主线程的runloop，其他线程如果不调用<code>CFRunLoopGetCurrent</code>并不会主动去创建。</p>
+<h4 id="runloop-mode"><a href="#runloop-mode" class="headerlink" title="runloop mode"></a>runloop mode</h4><blockquote>
+<p>A <em>run loop mode</em> is a collection of input sources and timers to be monitored and a collection of run loop observers to be notified</p>
+<p>runloop  mode 是一个关于 输入源,定时源 和观察者的集合。</p>
+</blockquote>
+<p><img src="http://blog.ibireme.com/wp-content/uploads/2015/05/RunLoop_0.png" alt=""></p>
+<p>一个runloop包含若干个mode,每个 Mode 又包含若干个 Source/Timer/Observer</p>
+<p><strong>CFRunLoopSourceRef</strong></p>
+<p> 转发异步事件，有两种版本的source : </p>
+<ul>
+<li><p>source0 : 只包含了一个回调 (函数指针),不能主动触发事件</p>
+</li>
+<li><p>source1: 基于mach_port()，能唤醒进程</p>
+<blockquote>
+<p>Mach port 是一个轻量级的进程间通讯方式，可以理解为一个通讯通道，假如同时有几个进程都挂在这个通道上，那么其他进程向这个通道发送消息时，其他进程都能收到。</p>
+</blockquote>
+</li>
+</ul>
+<p><strong>CFRunLoopTimerRef</strong></p>
+<p>转发同步事件，包含一个时间长度和一个回调，加入runloop的时候，runloop会注册对应的时间点，当时间点到达的时候,runloop就被唤醒并执行那个回调</p>
+<p><strong>CFRunLoopObserverRef</strong></p>
+<p>观察者，每个观察者都包含了一个回调，当runloop状态发生变化时候，观察者就能通过会回调感受到这个变化</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">typedef CF_OPTIONS(CFOptionFlags, CFRunLoopActivity) &#123;</span><br><span class="line">    kCFRunLoopEntry         = (1UL &lt;&lt; 0), // 即将进入Loop</span><br><span class="line">    kCFRunLoopBeforeTimers  = (1UL &lt;&lt; 1), // 即将处理 Timer</span><br><span class="line">    kCFRunLoopBeforeSources = (1UL &lt;&lt; 2), // 即将处理 Source</span><br><span class="line">    kCFRunLoopBeforeWaiting = (1UL &lt;&lt; 5), // 即将进入休眠</span><br><span class="line">    kCFRunLoopAfterWaiting  = (1UL &lt;&lt; 6), // 刚从休眠中唤醒</span><br><span class="line">    kCFRunLoopExit          = (1UL &lt;&lt; 7), // 即将退出Loop</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>autoreleasepool的创建和销毁?</p>
+<p>苹果在主线程runloop注册了连个observer</p>
+<p>第一个observer监听事件是<strong><em>entry</em></strong>，回调调用_objc_autoreleasePoolPush() 创建自动释放池</p>
+<p>第二个observer监听两个事件<strong><em>BeforeWaiting(准备进入休眠)</em></strong> 时调用_objc_autoreleasePoolPop() 和 _objc_autoreleasePoolPush() 释放旧的池并创建新池；Exit(即将退出Loop) 时调用 _objc_autoreleasePoolPop() 来释放自动释放池</p>
+</blockquote>
+<p>常见的runloop mode模式</p>
+<table>
+<thead>
+<tr>
+<th>mode名称</th>
+<th>运行机制</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>NSDefaultRunLoopMode</td>
+<td>App的默认 Mode，通常主线程是在这个 Mode 下运行的。</td>
+</tr>
+<tr>
+<td>UITrackingRunLoopMode</td>
+<td>界面跟踪 Mode，用于 ScrollView 追踪触摸滑动，</td>
+</tr>
+<tr>
+<td>UIInitializationRunLoopMode</td>
+<td>刚启动 App 时第进入的第一个 Mode，启动完成后就不再使用。</td>
+</tr>
+<tr>
+<td>NSRunLoopCommonModes</td>
+<td>默认包含了NSDefaultRunLoopMode 和UITrackingRunLoopMode</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>问题： 为什么[NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(doTimer1) userInfo:nil repeats:YES];在互动的时候定时器不走了呢</p>
+<ol>
+<li><p>schedule类方法默认是将timer添加到defaultMode下面 </p>
+</li>
+<li><p>根据官方文档： Each time you run your run loop, you specify (either explicitly or implicitly) a particular “mode” in which to run. During that pass of the run loop, only sources associated with that mode are monitored and allowed to deliver their events. (Similarly, only observers associated with that mode are notified of the run loop’s progress.) Sources associated with other modes hold on to any new events until subsequent passes through the loop in the appropriate mode.</p>
+<p>也就是说runloop每次只能运行在一个mode下，该mode下面的timer才能被监听</p>
+<p>而APP滑动的时候切换到UITrackingRunLoopMode,所以timer事件无法被监听到。</p>
+</li>
+<li><p>解决方法</p>
+<p>将timer 添加到commonmodes上面去，commonmodes是关于mode的集合，添加到上面的timer就自动添加到defaultmode和trackingMode。</p>
+<p>​</p>
+</li>
+</ol>
+</blockquote>
+<p>#### </p>
+<p>参考： </p>
+<p><a href="http://chun.tips/blog/2014/10/20/zou-jin-run-loopde-shi-jie-%5B%3F%5D-:shi-yao-shi-run-loop%3F/" target="_blank" rel="external">走进Run Loop的世界 (一)：什么是Run Loop？</a></p>
+<p><a href="https://developer.apple.com/library/ios/documentation/Cocoa/Conceptual/Multithreading/RunLoopManagement/RunLoopManagement.html" target="_blank" rel="external">Threading Programming Guide</a></p>
+
+      
+    </div>
+    <footer>
+      
+        <div class="alignleft">
+            <a href="/2016/04/12/runloop学习/#more" class="more-link"><i class="fa fa-chevron-right"></i>Read More</a>
+        </div>
+        
+        
+          <div class="alignright"> 
+            <a href="atony2099.github.io/2016/04/12/runloop学习/#comment" class="comment-link">
+              <i class="fa fa-comments"></i><span class="ds-thread-count" data-thread-key="/2016/04/12/runloop学习/">&nbsp;
+              </span>
+            </a>
+          </div>
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+
+  <article class="post">
+  
+    <div class="gallery">
+  <div class="photoset">
+    
+      <img src="">
+    
+  </div>
+  <div class="control">
+    <div class="prev"></div>
+    <div class="next"></div>
+  </div>
+</div>
+  
+  <div class="post-content">
+    <header>
+      
+      <time datetime="2016-04-09T12:46:08.000Z"><a href="/2016/04/09/category/">Sat, Apr 9 2016, 8:46:08 pm</a></time>
+
+  
+    <h1 class="title"><a href="/2016/04/09/category/">category笔记</a></h1>
+  
+
+
+
+<div class="clear"></div>
+      
+    </header>
+    <div class="entry">
+      
+        <h4 id="category是什么"><a href="#category是什么" class="headerlink" title="category是什么?"></a>category是什么?</h4><p>苹果文档如是说: </p>
+<blockquote>
+<p>You use categories to define additional methods of an existing class—even one whose source code is unavailable to you—without subclassin</p>
+</blockquote>
+<p>也就是说category主要是用来向一个已存在的类拓展方法，用category拓展方法明显的好处是可以用来拆分功能,让一个大型的类让一个大型的类分治管理。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">// Sark.h</span><br><span class="line">@interface tfenglin : NSObject</span><br><span class="line">@end</span><br><span class="line"></span><br><span class="line">@interface Sark (play)  // 学习的分类</span><br><span class="line">- (void)play;</span><br><span class="line">@end</span><br><span class="line"></span><br><span class="line">@interface Sark (study) // 工作的分类 </span><br><span class="line">- (void)study;</span><br><span class="line">@end</span><br></pre></td></tr></table></figure>
+<p>category使用要注意的原则:category 的实现可以依赖主类，但主类一定不依赖 category，也就是说移除任何一个 Category 的代码不会对主类产生任何影响。</p>
+<blockquote>
+<p> 所以 Category 一定是简单插拔的，就像买个外接键盘来扩展在 MacBook 上的写码能力，但当拔了键盘，MacBook 的运行不会受到任何影响。–sunnyxx</p>
+</blockquote>
+<h4 id="category-和extension"><a href="#category-和extension" class="headerlink" title="category 和extension"></a>category 和extension</h4><p>category在语法上一般被成视为匿名的extension，但他们在实现机制上差别很大。</p>
+<blockquote>
+<p>Class Extension 在编译期就会将定义的 Ivar、属性、方法等直接合入主类，而 Category 在程序启动 Runtime Loading 时才会将属性（没 Ivar）和方法合入主类。</p>
+</blockquote>
+<p>由于category是运行期决议的，我们可以推导出category是无法添加成员变量的，因为在运行期，对象的内存布局已经确定好，如果添加成员变量，会破会对象的内存布局。</p>
+<blockquote>
+<p> this(extension)  is a way to declare “pseudo-private” methods (pseudo-private in that they’re not really private, just not externally exposed). –stackoverflow </p>
+<p>extension可以理解为声明”私有方法”的一种方式</p>
+</blockquote>
+<h4 id="runtime对category处理"><a href="#runtime对category处理" class="headerlink" title="runtime对category处理"></a>runtime对category处理</h4><p>我们知道OC中的类和对象都可以用category来表示，category也不例外:</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="keyword">struct</span> <span class="keyword">category_t</span> &#123;</span><br><span class="line">    <span class="keyword">const</span> <span class="keyword">char</span> *name; <span class="comment">// 类名</span></span><br><span class="line">    <span class="keyword">classref_t</span> cls; <span class="comment">// 要关联的类对象</span></span><br><span class="line">    <span class="keyword">struct</span> <span class="keyword">method_list_t</span> *instanceMethods; <span class="comment">// 给类添加的实例方法的列表</span></span><br><span class="line">    <span class="keyword">struct</span> <span class="keyword">method_list_t</span> *classMethods; <span class="comment">//给类添加的类方法的列表</span></span><br><span class="line">    <span class="keyword">struct</span> <span class="keyword">protocol_list_t</span> *protocols; <span class="comment">// 给类添加协议列表</span></span><br><span class="line">    <span class="keyword">struct</span> <span class="keyword">property_list_t</span> *instanceProperties; <span class="comment">// 给类添加实例属性</span></span><br><span class="line">&#125; <span class="keyword">category_t</span>;</span><br></pre></td></tr></table></figure>
+<p>从category的数据结构可以看出没有实例变量这一项，这再一次佐证了category                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    无法添加实例变量的特性。</p>
+<p>runtime处理category时候，会调用两拨方法， 一组是实例对象相关的调用<code>addUnattachedCategoryForClass</code>，一拨是类对象相关的调用<code>addUnattachedCategoryForClass</code>，然后会调到<code>attachCategoryMethods</code>方法，这个方法把一个类所有的category_list的所有方法取出来组成一个<code>method_list_t **</code></p>
+<p>attachCategoryMethods方法如下所示: </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">static void</span><br><span class="line">attachCategoryMethods(class_t *cls, category_list *cats,</span><br><span class="line">                      BOOL *inoutVtablesAffected)</span><br><span class="line">&#123;</span><br><span class="line">    if (!cats) return;</span><br><span class="line">    if (PrintReplacedMethods) printReplacements(cls, cats);</span><br><span class="line"></span><br><span class="line">    BOOL isMeta = isMetaClass(cls);</span><br><span class="line">    method_list_t **mlists = (method_list_t **)</span><br><span class="line">        _malloc_internal(cats-&gt;count * sizeof(*mlists));</span><br><span class="line"></span><br><span class="line">    // Count backwards through cats to get newest categories first</span><br><span class="line">    int mcount = 0;</span><br><span class="line">    int i = cats-&gt;count;</span><br><span class="line">    BOOL fromBundle = NO;</span><br><span class="line">    while (i--) &#123;</span><br><span class="line">        method_list_t *mlist = cat_method_list(cats-&gt;list[i].cat, isMeta);</span><br><span class="line">        if (mlist) &#123;</span><br><span class="line">            mlists[mcount++] = mlist;</span><br><span class="line">            fromBundle |= cats-&gt;list[i].fromBundle;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    attachMethodLists(cls, mlists, mcount, NO, fromBundle, inoutVtablesAffected);</span><br><span class="line"></span><br><span class="line">    _free_internal(mlists);</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这边有两个核心点: </p>
+<ol>
+<li>category的方法没有“完全替换掉”原来类已经有的方法，也就是说如果category和原来类都有methodA，那么category附加完成之后，类的方法列表里会有两个method</li>
+<li>category的方法被放到了新方法列表的前面，而原来类的方法被放到了新方法列表的后面，这也就是我们平常所说的category的方法会“覆盖”掉原来类的同名方法，这是因为运行时在查找方法的时候是顺着方法列表的顺序查找的，它只要一找到对应名字的方法, ，就会罢休，殊不知后面可能还有一样名字的方法</li>
+</ol>
+<h4 id="associated-object"><a href="#associated-object" class="headerlink" title="associated  object"></a>associated  object</h4><p>虽然category不能添加成员变量，但通过associated  object却可以弥补这一不足，顾名思义，他是一个关联对象，把一个key-object和已知的对象关联起来。</p>
+<p><strong>相关函数</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">void objc_setAssociatedObject(id object, const void *key, id value, objc_AssociationPolicy policy); // 类似set方法</span><br><span class="line">id objc_getAssociatedObject(id object, const void *key); // 类似get方法</span><br><span class="line">void objc_removeAssociatedObjects(id object);</span><br></pre></td></tr></table></figure>
+<p><code>objc_removeAssociatedObjects</code> 函数我们一般是用不上的，因为这个函数会移除一个对象的所有关联对象，将该对象恢复成“原始”状态<br>上文函数key指针参数，推荐使用@selector(),它能确保key值是唯一的常量</p>
+<p><strong>关联策略</strong></p>
+<p>主要有五种关联策略</p>
+<table>
+<thead>
+<tr>
+<th>关联策略</th>
+<th>等价属性</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>OBJC_ASSOCIATION_ASSIGN</td>
+<td>@property (assign) or @property (unsafe_unretained)</td>
+<td>弱引用关联对象</td>
+</tr>
+<tr>
+<td>OBJC_ASSOCIATION_RETAIN_NONATOMIC</td>
+<td>@property (strong, nonatomic)</td>
+<td>强引用关联对象，且为非原子操作</td>
+</tr>
+<tr>
+<td>OBJC_ASSOCIATION_COPY_NONATOMIC</td>
+<td>@property (copy, nonatomic)</td>
+<td>复制关联对象，且为非原子操作</td>
+</tr>
+<tr>
+<td>OBJC_ASSOCIATION_RETAIN</td>
+<td>@property (strong, atomic)</td>
+<td>强引用关联对象，且为原子操作</td>
+</tr>
+<tr>
+<td>OBJC_ASSOCIATION_COPY</td>
+<td>@property (copy, atomic)</td>
+<td>复制关联对象，且为原子操作</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<ol>
+<li>关联对象与被关联对象本身的存储并没有直接的关系，它是存储在单独的哈希表中的；</li>
+<li>关联对象的五种关联策略与属性的限定符非常类似，在绝大多数情况下，我们都会使用<code>OBJC_ASSOCIATION_RETAIN_NONATOMIC</code> 的关联策略，这可以保证我们持有关联对象；</li>
+</ol>
+</blockquote>
+<p><a href="http://nshipster.com/associated-objects/" target="_blank" rel="external"><a href="http://nshipster.com/associated-objects/" target="_blank" rel="external">Associated Objects</a></a></p>
+<p><a href="http://tech.meituan.com/DiveIntoCategory.html" target="_blank" rel="external">深入理解Objective-C：Category</a></p>
+<p><a href="http://blog.devtang.com/2013/10/15/objective-c-object-model/" target="_blank" rel="external">Objective-C对象模型及应用</a></p>
+<p><a href="http://blog.leichunfeng.com/blog/2015/06/26/objective-c-associated-objects-implementation-principle/" target="_blank" rel="external">Objective-C Associated Objects 的实现原理</a></p>
+<p><a href="http://blog.sunnyxx.com/2014/03/05/objc_category_secret/" target="_blank" rel="external">objc category的秘密</a></p>
+
+      
+    </div>
+    <footer>
+      
+        <div class="alignleft">
+            <a href="/2016/04/09/category/#more" class="more-link"><i class="fa fa-chevron-right"></i>Read More</a>
+        </div>
+        
+        
+          <div class="alignright"> 
+            <a href="atony2099.github.io/2016/04/09/category/#comment" class="comment-link">
+              <i class="fa fa-comments"></i><span class="ds-thread-count" data-thread-key="/2016/04/09/category/">&nbsp;
+              </span>
+            </a>
+          </div>
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+
+  <article class="post">
+  
+    <div class="gallery">
+  <div class="photoset">
+    
+      <img src="">
+    
+  </div>
+  <div class="control">
+    <div class="prev"></div>
+    <div class="next"></div>
+  </div>
+</div>
+  
+  <div class="post-content">
+    <header>
+      
+      <time datetime="2016-04-02T12:52:18.000Z"><a href="/2016/04/02/coreAnimation学习/">Sat, Apr 2 2016, 8:52:18 pm</a></time>
+
+  
+    <h1 class="title"><a href="/2016/04/02/coreAnimation学习/">CoreAnimation学习</a></h1>
+  
+
+
+
+<div class="clear"></div>
+      
+    </header>
+    <div class="entry">
+      
+        <p> <strong>相关学习资料 </strong>:</p>
+<ul>
+<li>文档<br> <a href="http://blog.csdn.net/mad2man/article/details/16928891" target="_blank" rel="external">Core Animation编程指南2013中文</a><br><a href="http://www.cocoachina.com/bbs/read.php?tid=84461&amp;fpage=3" target="_blank" rel="external">Core Animation编程指南2011中文</a><br><a href="[Core Animation编程指南2011中文]">Core Animation编程指南英文</a><br><a href="https://www.gitbook.com/book/zsisme/ios-/details" target="_blank" rel="external">Core Animationg高级技巧</a></li>
+<li>相关博客<br><a href="http://objccn.io/issue-12-1/" target="_blank" rel="external">动画解 释</a><br><a href="http://geeklu.com/2012/09/animation-in-ios/" target="_blank" rel="external">谈谈iOS Animation</a><br><a href="http://objccn.io/issue-12-4/" target="_blank" rel="external">View-Layer 协作</a><br><a href="http://www.cocoachina.com/ios/20150828/13257.html" target="_blank" rel="external">你给我解析清楚，都有了CALayer了，为什么还要UIView</a><br><a href="http://o0o0o0o.iteye.com/blog/1728599" target="_blank" rel="external">UIView 和 CALayer的那点事</a></li>
+</ul>
+<p><img src="http://cdn.cocimg.com/cms/uploads/allimg/140515/4196_140515121200_1.png" alt="UIKit"></p>
+<p>####CALayer</p>
+<ol>
+<li><p>什么是图层(CALayer)</p>
+<ul>
+<li>图层是一个模型对象(data object):<blockquote>
+<p>图层管理位图周围状态信息<br>-&gt; A layer merely manages the state information surrounding a bitmap. </p>
+</blockquote>
+</li>
+</ul>
+<blockquote>
+<p>layers manage information about the geometry, content, and visual attributes of their surfaces.</p>
+</blockquote>
+</li>
+</ol>
+<ol>
+<li>how:  CALayer的渲染过程？<br><img src="https://developer.apple.com/library/ios/documentation/Cocoa/Conceptual/CoreAnimation_guide/Art/basics_layer_rendering_2x.png" alt=""><br>1.a layer captures the content your app provides and caches it in a bitmap,</li>
+<li>When you subsequently change a property of the layer, all you are doing is changing the state information associated with the layer object</li>
+<li><p>When a change triggers an animation, Core Animation passes the layer’s bitmap and state information to the graphics hardware, </p>
+</li>
+<li><p>coreAnimation和coreGraphics比较：</p>
+<blockquote>
+<p> But drawing in this way is expensive because <strong>it is done using the CPU on the main thread. </strong>Core Animation avoids this expense by whenever possible by manipulating the cached bitmap in hardware to achieve the same or similar effects.</p>
+</blockquote>
+</li>
+</ol>
+<ol>
+<li>CALayer三层模型<br><img src="https://zsisme.gitbooks.io/ios-/content/chapter7/7.4.jpeg" alt="图片"><br><strong>Layer也和View一样存在着一个层级树状结构,称之为图层树(Layer Tree)</strong></li>
+</ol>
+<p><strong>三个模型层对象</strong></p>
+<ul>
+<li><p>Model Tree。在这个树中的对象是模型对象，模型对象负责存储所有动画的结束值。无论何时改变图层的属性值，你使用的始终是某一个模型对象。</p>
+</li>
+<li><p>Presentation Tree。呈现树中的对象包含所有运行中的动画的瞬时值。图层树对象包含的是动画的目标值，而呈现树中的对象代表显示在屏幕上动画的当前值。你不应该更改这个树中的对象。相反，你使用这些对象来读取当前动画的值，可能用于创建开始于这些值的新的动画。<br>通过-presentationLayer方法来访问。这个呈现图层实际上是模型图层的复制，但是它的属性值代表了在任何指定时刻当前外观效果。换句话说，你可以通过呈现图层的值来获取当前屏幕上真正显示出来的值<br>大多数情况下，你不需要直接访问呈现图层<br><strong>如果想准确地知道在某一时刻图层显示在什么位置就会对正确摆放图层很有用了。</strong></p>
+</li>
+<li><p>Render Tree 在渲染树中的对象执行实际的动画，并且对Core Animation是不公开的。,渲染树是对呈现树的数据进行渲染,为了不阻塞主线程,渲染的过程是在单独的进程或线程中进行的,所以你会发现Animation的动画并不会阻塞主线程.</p>
+</li>
+</ul>
+<ol>
+<li>图层的赋值方式</li>
+</ol>
+<ul>
+<li>直接赋值一个UIImage对象给图层对象contents属性。（这个技术适用于图层内容从不或几乎不改变的情形。）</li>
+<li>赋值一个代理给图层，由代理负责绘制图层内容。（该技术适用于图层内容可能偶尔改变，且内容可由外部对象提供，比如视图。）</li>
+<li>定义一个CALayer的子类并覆盖类的绘图方法，有覆盖的方法返回图层的内容。（该技术适用于你需要创建自定义图层的子类，或者你想改变图层基本的绘图行为。）</li>
+</ul>
+<hr>
+<blockquote>
+<p> 图层并不知道当前设备的分辨率信息。<strong>图层只是简单的存储一个指向位图的指针</strong>，并用给定的有效像素以最佳的方式显示。如果你赋值一个图片给图层的contents属性，你必须给图层的contentsScale属性设置一个正确的值以告诉Core Animation关于图片的分辨率。默认的属性值为1.0，对于在标准分辨率的屏幕上显示图片是正确的。如果你的图片要在Retina屏幕上显示，该值需要设定为2.0。使用[[UIScreen mainScreen] scale]可获取正确的缩放率。</p>
+</blockquote>
+<hr>
+<blockquote>
+<p>核心动画不提供在一个窗口(window)实际显示图层的手段，它们必须通过视图来<br>托管。当视图和图层一起的时候，视图为图层提供了底层的事件处理，而图层为视图<br>提供了显示的内容。<br><strong>iOS 上面的视图系统直接建立在核心动画的图层上面。</strong></p>
+</blockquote>
+<hr>
+<hr>
+<blockquote>
+<p> 当你随后改变了一个图层的属性值，你做的所有工作只是改变了与图层对象相关联的状态信息。当你的更改触发了一个动画，Core Animation会将该图层对应的位图数据和图层的状态信息发送给图形处理硬件。图形处理器所做的工作是根据获得的信息对位图进行渲染<br> 对基于视图的绘图，对视图的改变经常会触发调用视图的drawRect：方法以重绘视图内容。但是此种方式的代价相对较高，因为它是CPU在主线程上的操作。Core Animation通过尽可能的使用图形硬件操纵缓存后的位图来避免了这种开销，从而完成相同或相似的效果。</p>
+<p>Core Animation让视图和可视对象的变化能以动画的形式呈现。大部分变化都与可视对象属性的更改相关。比如Core Animation能让视图的位置、尺寸或者透明度的变化以动画的形式呈现。当你更改了这些属性的值， Core Animation会在当前属性值和最新指定的属性值之间进行动画。</p>
+</blockquote>
+<p><strong>UIView &amp;&amp;CALAyer区别和联合</strong><br><strong>关系:</strong></p>
+<ul>
+<li>官方文档:<br>The view system in iOS is built directly on top of Core Animation layers.  Every instance of UIView automatically creates an instance of a<br>CALayer class .<br>UIView是对layer进一步封装，增加了响应用户时间能力(uiresponder)，包装了一层calyer<br>UIView依赖于calyer提供内容，UIVIEW的内容展示(frame.bounds)和动画都是通过calyer获得</li>
+</ul>
+<p><strong>为什么要 UIView 和 CALayer：</strong><br>职责分离，避免重复的代码<br>底层的布局动画是一样的，表层的用户交互事件差异很大，共享代码</p>
+<ul>
+<li>需要提供什么功能（机制）”和“怎样实现这些功能（策略）”。如果程序可以由独立的部分分别完成机制与策略的实现，那么开发软件就更加容易，也更加容易适应不同的需求。UIView可以看做是策略，变动很多。越是底层，越是机制，越是机制就越是稳定。</li>
+</ul>
+<p><em>CALayer 的 position 属性与 anchorPoint 属性间的关系</em><br>position是layer中的anchorPoint点在superLayer中的位置坐标。<br>因此可以说,<br><strong>position点是相对suerLayer的，anchorPoint点是相对layer的，</strong>两者是相对不同的坐标空间的一个重合点。</p>
+<ul>
+<li>1.position是layer中的anchorPoint在superLayer中的位置坐标。</li>
+<li>2.互不影响原则：单独修改position与anchorPoint中任何一个属性都不影响另一个属性。</li>
+</ul>
+<p>它主要的作用就是用来作为变换的支点，</p>
+<p>####CoreAnimation<br><img src="http://img.objccn.io/issue-3/pixels-software-stack.png" alt="图片1"></p>
+<p>1.它是什么: </p>
+<ul>
+<li>It is an infrastructure for compositing and manipulating your app’s content in hardware.</li>
+<li>操作的对象是图层</li>
+</ul>
+<blockquote>
+<p> Core Animation是一个复合引擎，它的职责就是尽可能快地组合屏幕上不同的可视内容，这个内容是被分解成独立的图层，存储在一个叫做图层树的体系之</p>
+<p>Core Animation自身并不是一个绘图系统。它只是一个负责在硬件上合成和操纵应用内容的基础构件。（Core Animation is not a drawing system itself. It is an infrastructure for compositing and manipulating your app’s content in hardware.）Core Animation的核心是图层对象，图层对象用于管理和操控你的应用内容。图层将捕获的内容放到一副位图中，<strong>图形硬件能够非常容易的操控你的位图。</strong>（A layer captures your content into a bitmap that can be manipulated easily by the graphics hardware.）在大部分应用中，图层被作为一种管理视图内容的方式，但是你也可以创建标准的图层，</p>
+</blockquote>
+<p><strong>什么是Animation(动画),简单点说就是在一段时间内,显示的内容发生了变化.对CALayer来说就是在一段时间内,其Animatable Property发生了变化.</strong></p>
+<p>###隐式动画</p>
+<p><em>之所以叫隐式是因为我们并没有指定任何动画的类型。我们仅仅改变了一个属性，然后Core Animation来决定如何并且何时去做动画</em></p>
+<blockquote>
+<p>核心动画的隐式动画模型假定所有动画图层属性的变化应该是渐进的和异步的。<br>动态的动画场景可以在没有显式的动画图层时候实现。改变可动画显示的图层的属性<br>将会导致图层隐式把图层从旧的值动画显示为新的值。虽然动画是持续的，但是设置<br>新的目标值时会导致图层从当前状态动画过渡到新的目标值。 </p>
+<p>不同于隐式动画，隐式动画会更新图层对象的值。<strong>而显示动画不会更改图层树中的数据。显示动画仅是创建了一个动画。在动画结束之后，Core Animation从图层中移除该动画对象并使用当前的数据值重绘图层。</strong>如果你想让显示动画的改变成为永久性的，如你在之前的例子中看到的，你必须更新图层属性。</p>
+</blockquote>
+<p>###事务</p>
+<blockquote>
+<p>事务实际上是Core Animation用来包含一系列属性动画集合的机制，任何用指定事务去改变可以做动画的图层属性都不会立刻发生变化，而是当事务一旦提交的时候开始用一个动画过渡到新值。</p>
+</blockquote>
+<hr>
+<blockquote>
+<p><strong> 图层的每个改变都是事务的一部分</strong>。CATransaction 是核心动画类，它负责成批的把多个图层树的修改作为一个原子更新到渲染树。<br>可以通过给 CATransaction 类发送一个 begin 消息来创建一<br>个显式事务，修改完成之后发送 comit 消息。<br><strong>Core Animation在每个run loop周期中自动开始一次新的事务（run loop是iOS负责收集用户输入，处理定时器或者网络事件并且重新绘制屏幕的东西），即使你不显式的用[CATransaction begin]开始一次事务，任何在一次run loop循环中属性的改变都会被集中起来，然后做一次0.25秒的动画。</strong></p>
+<p>UIView+animateWithDuration:animations:。这样写对做一堆的属性动画在语法上会更加简单，但实质上它们都是在做同样的事情。  CATransaction的+begin和+commit方法在+animateWithDuration:animations:内部自动调用，这样block中所有属性的改变都会被事务所包含。这样也可以避免开发者由于对+begin和+commit匹配的失误造成的风险。<br>使用场景：</p>
+<ul>
+<li>显式事务在同时设置多个图层的属性的<br>时候（例如当布局多个图层的时候），</li>
+<li>暂时的禁用图层的行为</li>
+<li>或者暂时修改动画的时间的时候</li>
+</ul>
+</blockquote>
+<h4 id="CALayer"><a href="#CALayer" class="headerlink" title="CALayer"></a>CALayer</h4><p>#####CAShapeLayer </p>
+<blockquote>
+<p>CAShapeLayer是一个通过矢量图形而不是bitmap来绘制的图层子类。你指定诸如颜色和线宽等属性，用CGPath来定义想要绘制的图形，最后CAShapeLayer就自动渲染出来<br>优点：</p>
+<ul>
+<li>渲染快速。CAShapeLayer使用了硬件加速，绘制同一图形会比用Core Graphics快很多。</li>
+<li>高效使用内存。一个CAShapeLayer不需要像普通CALayer一样创建一个寄宿图形，所以无论有多大，都不会占用太多的内存。</li>
+<li>不会被图层边界剪裁掉。一个CAShapeLayer可以在边界之外绘制。你的图层路径不会像在使用Core Graphics的普通CALayer一样被剪裁掉（如我们在第二章所见）。</li>
+<li>不会出现像素化。当你给CAShapeLayer做3D变换时，它不像一个有寄宿图的普通图层一样变得像素化。</li>
+</ul>
+</blockquote>
+<h4 id="mask"><a href="#mask" class="headerlink" title="mask"></a>mask</h4><p>CALayer拥有mask属性，Apple的官方解释如下：</p>
+<blockquote>
+<p>An optional layer whose alpha channel is used to mask the layer’s content. The layer’s alpha channel determines how much of the layer’s content and background shows through. Fully or partially opaque pixels allow the underlying content to show through but fully transparent pixels block that content.</p>
+</blockquote>
+<p>mask同样也是一个CALayer。假设将CALayer本身称为ContentLayer，将mask称为MaskLayer，蒙版（Masking）的工作原理是通过MaskLayer的alpha值定义ContentLayer的显示区域：对于ContentLayer上每一个Point，计算公式为ResultLayer = ContentLayer * MaskLayer_Alpha。所以当alpha为1时Content显示，alpha为0时Content不显示，其他处于0与1之间的值导致Content半透明。</p>
+<p>需要注意的是：</p>
+<ul>
+<li>MaskLayer的color不重要，主要使用opacity（CALayer中的alpha），但是注意[UIColor clearColor]其实就是alpha为0的color。<br>ContentLayer超出MaskLayer以外的部分不会被显示出来。</li>
+<li>MaskLayer必须是个“单身汉”，不能有sublayers，否则蒙版（Masking）的结果就是未知（Undefined）。</li>
+</ul>
+<p>####粒子动画</p>
+<blockquote>
+<p>通常粒子系统在三维空间中的位置与运动是由发射器控制的。发射器主要由一组粒子行为参数以及在三维空间中的位置所表示。<strong>粒子行为参数可以包括粒子生成速度（即单位时间粒子生成的数目）、粒子初始速度向量（例如什么时候向什么方向运动）、粒子寿命（经过多长时间粒子湮灭）、粒子颜色、在粒子生命周期中的变化以及其它参数等等。使用大概值而不是绝对值的模糊参数占据全部或者绝大部分是很正常的，一些参数定义了中心值以及允许的变化</strong>。</p>
+</blockquote>
+<p>####备注：<br>bitMap:由像素点构成，每个像素点由自己的颜色和位置属性</p>
+
+      
+    </div>
+    <footer>
+      
+        <div class="alignleft">
+            <a href="/2016/04/02/coreAnimation学习/#more" class="more-link"><i class="fa fa-chevron-right"></i>Read More</a>
+        </div>
+        
+        
+          <div class="alignright"> 
+            <a href="atony2099.github.io/2016/04/02/coreAnimation学习/#comment" class="comment-link">
+              <i class="fa fa-comments"></i><span class="ds-thread-count" data-thread-key="/2016/04/02/coreAnimation学习/">&nbsp;
+              </span>
+            </a>
+          </div>
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+
+  <article class="post">
+  
+    <div class="gallery">
+  <div class="photoset">
+    
+      <img src="">
+    
+  </div>
+  <div class="control">
+    <div class="prev"></div>
+    <div class="next"></div>
+  </div>
+</div>
+  
+  <div class="post-content">
+    <header>
+      
+      <time datetime="2016-03-02T07:33:17.000Z"><a href="/2016/03/02/js-oc交互/">Wed, Mar 2 2016, 3:33:17 pm</a></time>
+
+  
+    <h1 class="title"><a href="/2016/03/02/js-oc交互/">js&amp;&amp;oc交互</a></h1>
+  
+
+
+
+<div class="clear"></div>
+      
+    </header>
+    <div class="entry">
+      
+        <h4 id="相关概念"><a href="#相关概念" class="headerlink" title="相关概念"></a>相关概念</h4><blockquote>
+<p> JavaScriptCore是iOS7引入的新功能，JavaScriptCore可以理解为一个浏览器的运行内核，使用JavaScriptCore可以使用native代码（这里主要指objectiveC和swift）与js代码进行相互的调用</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">#import &quot;JSContext.h&quot;</span><br><span class="line">#import &quot;JSValue.h&quot;</span><br><span class="line">#import &quot;JSManagedValue.h&quot;</span><br><span class="line">#import &quot;JSVirtualMachine.h&quot;</span><br><span class="line">#import &quot;JSExport.h&quot;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>JSContext是JavaScript的运行上下文，他主要作用是执行js代码和注册native方法接口</li>
+<li>JSValue是JSContext执行后的返回结果，他可以是任何js类型（比如基本数据类型和函数类型，对象类型等），并且都有对象的方法转换为native对象。</li>
+<li>JSManagedValue是JSValue的封装，用它可以解决js和原声代码之间循环引用的问题</li>
+<li>JSVirtualMachine 管理JS运行时和管理js暴露的native对象的内存</li>
+<li>JSExport是一个协议，通过实现它可以完成把一个native对象暴漏给js</li>
+</ul>
+<h4 id="JS调用OC"><a href="#JS调用OC" class="headerlink" title="JS调用OC"></a>JS调用OC</h4><p>JS端实现</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">//iOSNative 是调用方法的对象，方法名要跟iOS端协商好</span><br><span class="line">//callHandler 这个是function name，方法名称 要和iOS商议确定</span><br><span class="line">//handlerName和info 这个是传过来给iOS的参数</span><br><span class="line">iOSNative.callHandler(info)</span><br></pre></td></tr></table></figure>
+<p>iOS端实现</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"> #import &lt;Foundation/Foundation.h&gt;  </span><br><span class="line">#import &lt;JavaScriptCore/JavaScriptCore.h&gt;  </span><br><span class="line">  </span><br><span class="line">//首先创建一个实现了JSExport协议的协议  </span><br><span class="line">@protocol JSObjectText &lt;JSExport&gt;  </span><br><span class="line"></span><br><span class="line">-(void)callHandler:(NSString *)string;  </span><br><span class="line"></span><br><span class="line">@end  </span><br><span class="line">  </span><br><span class="line">//让我们创建的类实现上边的协议  </span><br><span class="line">@interface JSObject : NSObject&lt;JSObjectText&gt;  </span><br><span class="line">@end</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"> #import &quot;JSObjectText.h&quot;  </span><br><span class="line">  </span><br><span class="line">@implementation JSObjectText  </span><br><span class="line">  </span><br><span class="line">-(void)callHandler:(NSString *)string;  </span><br><span class="line">&#123;  </span><br><span class="line">	NSLog(@&quot;%@&quot;,string) ;</span><br><span class="line">&#125;  </span><br><span class="line"></span><br><span class="line">@end</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">-(void)webViewDidFinishLoad:(UIWebView *)webView  </span><br><span class="line">&#123;  </span><br><span class="line">    //网页加载完成调用此方法  </span><br><span class="line">      </span><br><span class="line">    //首先创建JSContext 对象（此处通过当前webView的键获取到jscontext）  </span><br><span class="line">    JSContext *context=[webView valueForKeyPath:@&quot;documentView.webView.mainFrame.javaScriptContext&quot;];  </span><br><span class="line">      </span><br><span class="line">    //假设js是通过iOSNative对象调用</span><br><span class="line">    //首先创建我们新建类的对象，将他赋值给js的对象  </span><br><span class="line">    JSObjectText *iOSNative=[JSObjectText new];  </span><br><span class="line">    context[@&quot;iOSNative&quot;]=iOSNative;        </span><br><span class="line">&#125;</span><br><span class="line">	//异常信息的处理</span><br><span class="line">  context.exceptionHandler = ^(JSContext *context, JSValue *exceptionValue) &#123;</span><br><span class="line">        context.exception = exceptionValue;</span><br><span class="line">        NSLog(@&quot;异常信息：%@&quot;, exceptionValue);</span><br><span class="line">    &#125;;</span><br></pre></td></tr></table></figure>
+      
+    </div>
+    <footer>
+      
+        <div class="alignleft">
+            <a href="/2016/03/02/js-oc交互/#more" class="more-link"><i class="fa fa-chevron-right"></i>Read More</a>
+        </div>
+        
+        
+          <div class="alignright"> 
+            <a href="atony2099.github.io/2016/03/02/js-oc交互/#comment" class="comment-link">
+              <i class="fa fa-comments"></i><span class="ds-thread-count" data-thread-key="/2016/03/02/js-oc交互/">&nbsp;
+              </span>
+            </a>
+          </div>
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+
+  <article class="post">
+  
+    <div class="gallery">
+  <div class="photoset">
+    
+      <img src="">
+    
+  </div>
+  <div class="control">
+    <div class="prev"></div>
+    <div class="next"></div>
+  </div>
+</div>
+  
+  <div class="post-content">
+    <header>
+      
+      <time datetime="2016-02-19T09:14:18.000Z"><a href="/2016/02/19/block/">Fri, Feb 19 2016, 5:14:18 pm</a></time>
+
+  
+    <h1 class="title"><a href="/2016/02/19/block/">block探究</a></h1>
+  
+
+
+
+<div class="clear"></div>
+      
+    </header>
+    <div class="entry">
+      
+        <h4 id="关于闭包"><a href="#关于闭包" class="headerlink" title="关于闭包"></a>关于闭包</h4><blockquote>
+<p>闭包:首先，闭包是一个<strong>函数</strong>,它1.定义在函数内部 2.能读取其他函数内部变量</p>
+</blockquote>
+<p><strong>JS例子</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">　　<span class="function"><span class="keyword">function</span> <span class="title">f1</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line"></span><br><span class="line">　　　　<span class="keyword">var</span> n=<span class="number">999</span>;</span><br><span class="line"></span><br><span class="line">　　　　nAdd=<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;n+=<span class="number">1</span>&#125;</span><br><span class="line"></span><br><span class="line">　　　　<span class="function"><span class="keyword">function</span> <span class="title">f2</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line"></span><br><span class="line">　　　　　　alert(n);</span><br><span class="line"></span><br><span class="line">　　　　&#125;</span><br><span class="line"></span><br><span class="line">　　　　<span class="keyword">return</span> f2;</span><br><span class="line"></span><br><span class="line">　　&#125;</span><br><span class="line"></span><br><span class="line">　　<span class="keyword">var</span> result=f1();</span><br><span class="line"></span><br><span class="line">　　result(); <span class="comment">// 999</span></span><br><span class="line"></span><br><span class="line">　　nAdd();</span><br><span class="line"></span><br><span class="line">　　result(); <span class="comment">// 1000</span></span><br></pre></td></tr></table></figure>
+<p>result实际上就是闭包f2函数。它一共运行了两次，第一次的值是999，第二次的值是1000。这证明了，函数f1中的局部变量n一直保存在内存中，并没有在f1调用后被自动清除。</p>
+<p>为什么会这样呢？原因就在于=f1是f2的父函数，而f2被赋给了一个全局变量，这导致f2始终在内存中，而f2的存在依赖于f1，因此f1也始终在内存中，不会在调用结束后，被垃圾回收机制（garbage collection）回收。</p>
+<h4 id="block实现"><a href="#block实现" class="headerlink" title="block实现"></a>block实现</h4><blockquote>
+<p> block 实际上就是 Objective-C 语言对于闭包的实现。</p>
+</blockquote>
+<p>block数据结构定义如下</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">struct __block_impl</span><br><span class="line">&#123;</span><br><span class="line">    void *isa;</span><br><span class="line">    int Flags;</span><br><span class="line">    int Reserved;</span><br><span class="line">    void *FuncPtr;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<ol>
+<li>isa 指针，所有对象都有该指针，用于实现对象相关的功能。</li>
+<li>flags，用于按 bit 位表示一些 block 的附加信息，本文后面介绍 block copy 的实现代码可以看到对该变量的使用。</li>
+<li>reserved，保留变量。</li>
+<li>FuncPtr函数指针，指向 Block 要执行的函数</li>
+</ol>
+<blockquote>
+<p>“<em>Blocks are Objective-C objects, which means they can be added to collections like NSArray or NSDictionary.</em> ”</p>
+</blockquote>
+<p>###block执行过程</p>
+<p>   ​</p>
+<p>   block.c</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span><br><span class="line"></span>&#123;</span><br><span class="line">    ^&#123; <span class="built_in">printf</span>(<span class="string">"Hello, World!\n"</span>); &#125; ();</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>clang -rewrite-objc block.c 翻译后</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">struct</span> __block_impl &#123;</span><br><span class="line">    <span class="keyword">void</span> *isa;</span><br><span class="line">    <span class="keyword">int</span> Flags;</span><br><span class="line">    <span class="keyword">int</span> Reserved;</span><br><span class="line">    <span class="keyword">void</span> *FuncPtr;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">struct</span> __main_block_impl_0 &#123;</span><br><span class="line">    <span class="keyword">struct</span> __block_impl impl;</span><br><span class="line">    <span class="keyword">struct</span> __main_block_desc_0* Desc;</span><br><span class="line">    __main_block_impl_0(<span class="keyword">void</span> *fp, <span class="keyword">struct</span> __main_block_desc_0 *desc, <span class="keyword">int</span> flags=<span class="number">0</span>) &#123;</span><br><span class="line">        impl.isa = &amp;_NSConcreteStackBlock;</span><br><span class="line">        impl.Flags = flags;</span><br><span class="line">        impl.FuncPtr = fp;</span><br><span class="line">        Desc = desc;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"><span class="keyword">static</span> <span class="keyword">void</span> __main_block_func_0(<span class="keyword">struct</span> __main_block_impl_0 *__cself) &#123;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"Hello, World!\n"</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">static</span> <span class="keyword">struct</span> __main_block_desc_0 &#123;</span><br><span class="line">    <span class="keyword">size_t</span> reserved;</span><br><span class="line">    <span class="keyword">size_t</span> Block_size;</span><br><span class="line">&#125; __main_block_desc_0_DATA = &#123; <span class="number">0</span>, <span class="keyword">sizeof</span>(<span class="keyword">struct</span> __main_block_impl_0) &#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span><br><span class="line"></span>&#123;</span><br><span class="line">    (<span class="keyword">void</span> (*)())&amp;__main_block_impl_0((<span class="keyword">void</span> *)__main_block_func_0, &amp;__main_block_desc_0_DATA) ();</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>通过上面的代码，block的代码可以表示为: </p>
+<p><img src="data:image/svg+xml,%3C%3Fxml%20version%3D%221.0%22%20encoding%3D%22utf-8%22%20standalone%3D%22no%22%3F%3E%3C!DOCTYPE%20svg%20PUBLIC%20%22-%2F%2FW3C%2F%2FDTD%20SVG%2020010904%2F%2FEN%22%20%22http%3A%2F%2Fwww.w3.org%2FTR%2F2001%2FREC-SVG-20010904%2FDTD%2Fsvg10.dtd%22%3E%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22559%22%20height%3D%22458%22%20xmlns%3Axlink%3D%22http%3A%2F%2Fwww.w3.org%2F1999%2Fxlink%22%3E%3Csource%3E%3C!%5BCDATA%5BCreated%20with%20Rapha%C3%ABl%202.1.2main(" alt="">%E8%B0%83%E7%94%A8%20<strong>main_block_impl_0%20%E6%9E%84%E9%80%A0%E5%87%BD%E6%95%B0%E5%88%9D%E5%A7%8B%E5%8C%96%E7%BB%93%E6%9E%84%E4%BD%93</strong>main_block_impl_0%EF%BC%88<strong>main_block_func_0%20%2C%20</strong>main_block_desc_0_DATA%EF%BC%89%3B%E5%BE%97%E5%88%B0%E7%9A%84<strong>main_block_impl_0%20%E7%B1%BB%E5%9E%8B%E5%8F%98%E9%87%8F%E8%B5%8B%E5%80%BC%E7%BB%99%20blk%E6%89%A7%E8%A1%8C%20blk-%3EFuncPtr()%E5%87%BD%E6%95%B0%EF%BC%8C%E5%8D%B3%20printf(%22Block%5Cn%22)%3BEnd%5D%5D%3E%3C%2Fsource%3E%3Cdesc%20style%3D%22-webkit-tap-highlight-color%3A%20rgba(0%2C%200%2C%200%2C%200)%3B%22%3ECreated%20with%20Rapha%C3%ABl%202.1.2%3C%2Fdesc%3E%3Cdefs%20style%3D%22-webkit-tap-highlight-color%3A%20rgba(0%2C%200%2C%200%2C%200)%3B%22%3E%3Cpath%20stroke-linecap%3D%22round%22%20d%3D%22M5%2C0%200%2C2.5%205%2C5z%22%20id%3D%22raphael-marker-block%22%20style%3D%22-webkit-tap-highlight-color%3A%20rgba(0%2C%200%2C%200%2C%200)%3B%22%3E%3C%2Fpath%3E%3Cmarker%20id%3D%22raphael-marker-endblock33%22%20markerHeight%3D%223%22%20markerWidth%3D%223%22%20orient%3D%22auto%22%20refX%3D%221.5%22%20refY%3D%221.5%22%20style%3D%22-webkit-tap-highlight-color%3A%20rgba(0%2C%200%2C%200%2C%200)%3B%22%3E%3Cuse%20xmlns%3Axlink%3D%22http%3A%2F%2Fwww.w3.org%2F1999%2Fxlink%22%20xlink%3Ahref%3D%22%23raphael-marker-block%22%20transform%3D%22rotate(180%201.5%201.5)%20scale(0.6%2C0.6)%22%20stroke-width%3D%221.6667%22%20fill%3D%22black%22%20stroke%3D%22none%22%20style%3D%22-webkit-tap-highlight-color%3A%20rgba(0%2C%200%2C%200%2C%200)%3B%22%3E%3C%2Fuse%3E%3C%2Fmarker%3E%3C%2Fdefs%3E%3Crect%20x%3D%220%22%20y%3D%220%22%20width%3D%2262.5%22%20height%3D%2236.65625%22%20r%3D%2220%22%20rx%3D%2220%22%20ry%3D%2220%22%20fill%3D%22%23ffffff%22%20stroke%3D%22%23000000%22%20style%3D%22-webkit-tap-highlight-color%3A%20rgba(0%2C%200%2C%200%2C%200)%3B%22%20stroke-width%3D%222%22%20class%3D%22flowchart%22%20id%3D%22start%22%20transform%3D%22matrix(1%2C0%2C0%2C1%2C249.3984%2C12.9219)%22%3E%3C%2Frect%3E%3Ctext%20x%3D%2210%22%20y%3D%2218.328125%22%20text-anchor%3D%22start%22%20font%3D%2210px%20%26quot%3BArial%26quot%3B%22%20stroke%3D%22none%22%20fill%3D%22%23000000%22%20style%3D%22-webkit-tap-highlight-color%3A%20rgba(0%2C%200%2C%200%2C%200)%3B%20text-anchor%3A%20start%3B%20font-style%3A%20normal%3B%20font-variant%3A%20normal%3B%20font-weight%3A%20normal%3B%20font-stretch%3A%20normal%3B%20font-size%3A%2015px%3B%20line-height%3A%20normal%3B%20font-family%3A%20Arial%3B%22%20id%3D%22startt%22%20class%3D%22flowchartt%22%20font-size%3D%2215px%22%20transform%3D%22matrix(1%2C0%2C0%2C1%2C249.3984%2C12.9219)%22%3E%3Ctspan%20dy%3D%225.171875%22%20style%3D%22-webkit-tap-highlight-color%3A%20rgba(0%2C%200%2C%200%2C%200)%3B%22%3Emain()%3C%2Ftspan%3E%3C%2Ftext%3E%3Crect%20x%3D%220%22%20y%3D%220%22%20width%3D%22553.296875%22%20height%3D%2254.5%22%20r%3D%220%22%20rx%3D%220%22%20ry%3D%220%22%20fill%3D%22%23ffffff%22%20stroke%3D%22%23000000%22%20style%3D%22-webkit-tap-highlight-color%3A%20rgba(0%2C%200%2C%200%2C%200)%3B%22%20stroke-width%3D%222%22%20class%3D%22flowchart%22%20id%3D%22op1%22%20transform%3D%22matrix(1%2C0%2C0%2C1%2C4%2C103.5781)%22%3E%3C%2Frect%3E%3Ctext%20x%3D%2210%22%20y%3D%2227.25%22%20text-anchor%3D%22start%22%20font%3D%2210px%20%26quot%3BArial%26quot%3B%22%20stroke%3D%22none%22%20fill%3D%22%23000000%22%20style%3D%22-webkit-tap-highlight-color%3A%20rgba(0%2C%200%2C%200%2C%200)%3B%20text-anchor%3A%20start%3B%20font-style%3A%20normal%3B%20font-variant%3A%20normal%3B%20font-weight%3A%20normal%3B%20font-stretch%3A%20normal%3B%20font-size%3A%2015px%3B%20line-height%3A%20normal%3B%20font-family%3A%20Arial%3B%22%20id%3D%22op1t%22%20class%3D%22flowchartt%22%20font-size%3D%2215px%22%20transform%3D%22matrix(1%2C0%2C0%2C1%2C4%2C103.5781)%22%3E%3Ctspan%20dy%3D%22-3.75%22%20style%3D%22-webkit-tap-highlight-color%3A%20rgba(0%2C%200%2C%200%2C%200)%3B%22%3E%E8%B0%83%E7%94%A8%20</strong>main_block_impl_0%20%E6%9E%84%E9%80%A0%E5%87%BD%E6%95%B0%E5%88%9D%E5%A7%8B%E5%8C%96%E7%BB%93%E6%9E%84%E4%BD%93%3C%2Ftspan%3E%3Ctspan%20dy%3D%2218%22%20x%3D%2210%22%20style%3D%22-webkit-tap-highlight-color%3A%20rgba(0%2C%200%2C%200%2C%200)%3B%22%3E<strong>main_block_impl_0%EF%BC%88</strong>main_block_func_0%20%2C%20<strong>main_block_desc_0_DATA%EF%BC%89%3B%3C%2Ftspan%3E%3C%2Ftext%3E%3Crect%20x%3D%220%22%20y%3D%220%22%20width%3D%22342.59375%22%20height%3D%2236.5%22%20r%3D%220%22%20rx%3D%220%22%20ry%3D%220%22%20fill%3D%22%23ffffff%22%20stroke%3D%22%23000000%22%20style%3D%22-webkit-tap-highlight-color%3A%20rgba(0%2C%200%2C%200%2C%200)%3B%22%20stroke-width%3D%222%22%20class%3D%22flowchart%22%20id%3D%22op2%22%20transform%3D%22matrix(1%2C0%2C0%2C1%2C109.3516%2C221.0781)%22%3E%3C%2Frect%3E%3Ctext%20x%3D%2210%22%20y%3D%2218.25%22%20text-anchor%3D%22start%22%20font%3D%2210px%20%26quot%3BArial%26quot%3B%22%20stroke%3D%22none%22%20fill%3D%22%23000000%22%20style%3D%22-webkit-tap-highlight-color%3A%20rgba(0%2C%200%2C%200%2C%200)%3B%20text-anchor%3A%20start%3B%20font-style%3A%20normal%3B%20font-variant%3A%20normal%3B%20font-weight%3A%20normal%3B%20font-stretch%3A%20normal%3B%20font-size%3A%2015px%3B%20line-height%3A%20normal%3B%20font-family%3A%20Arial%3B%22%20id%3D%22op2t%22%20class%3D%22flowchartt%22%20font-size%3D%2215px%22%20transform%3D%22matrix(1%2C0%2C0%2C1%2C109.3516%2C221.0781)%22%3E%3Ctspan%20dy%3D%225.25%22%20style%3D%22-webkit-tap-highlight-color%3A%20rgba(0%2C%200%2C%200%2C%200)%3B%22%3E%E5%BE%97%E5%88%B0%E7%9A%84</strong>main_block_impl_0%20%E7%B1%BB%E5%9E%8B%E5%8F%98%E9%87%8F%E8%B5%8B%E5%80%BC%E7%BB%99%20blk%3C%2Ftspan%3E%3C%2Ftext%3E%3Crect%20x%3D%220%22%20y%3D%220%22%20width%3D%22321.109375%22%20height%3D%2236.65625%22%20r%3D%220%22%20rx%3D%220%22%20ry%3D%220%22%20fill%3D%22%23ffffff%22%20stroke%3D%22%23000000%22%20style%3D%22-webkit-tap-highlight-color%3A%20rgba(0%2C%200%2C%200%2C%200)%3B%22%20stroke-width%3D%222%22%20class%3D%22flowchart%22%20id%3D%22op3%22%20transform%3D%22matrix(1%2C0%2C0%2C1%2C120.0938%2C320.5)%22%3E%3C%2Frect%3E%3Ctext%20x%3D%2210%22%20y%3D%2218.328125%22%20text-anchor%3D%22start%22%20font%3D%2210px%20%26quot%3BArial%26quot%3B%22%20stroke%3D%22none%22%20fill%3D%22%23000000%22%20style%3D%22-webkit-tap-highlight-color%3A%20rgba(0%2C%200%2C%200%2C%200)%3B%20text-anchor%3A%20start%3B%20font-style%3A%20normal%3B%20font-variant%3A%20normal%3B%20font-weight%3A%20normal%3B%20font-stretch%3A%20normal%3B%20font-size%3A%2015px%3B%20line-height%3A%20normal%3B%20font-family%3A%20Arial%3B%22%20id%3D%22op3t%22%20class%3D%22flowchartt%22%20font-size%3D%2215px%22%20transform%3D%22matrix(1%2C0%2C0%2C1%2C120.0938%2C320.5)%22%3E%3Ctspan%20dy%3D%225.171875%22%20style%3D%22-webkit-tap-highlight-color%3A%20rgba(0%2C%200%2C%200%2C%200)%3B%22%3E%E6%89%A7%E8%A1%8C%20blk-%26gt%3BFuncPtr()%E5%87%BD%E6%95%B0%EF%BC%8C%E5%8D%B3%20printf(%22Block%5Cn%22)%3B%3C%2Ftspan%3E%3C%2Ftext%3E%3Crect%20x%3D%220%22%20y%3D%220%22%20width%3D%2246.6875%22%20height%3D%2236.5%22%20r%3D%2220%22%20rx%3D%2220%22%20ry%3D%2220%22%20fill%3D%22%23ffffff%22%20stroke%3D%22%23000000%22%20style%3D%22-webkit-tap-highlight-color%3A%20rgba(0%2C%200%2C%200%2C%200)%3B%22%20stroke-width%3D%222%22%20class%3D%22flowchart%22%20id%3D%22end%22%20transform%3D%22matrix(1%2C0%2C0%2C1%2C257.3047%2C420.1563)%22%3E%3C%2Frect%3E%3Ctext%20x%3D%2210%22%20y%3D%2218.25%22%20text-anchor%3D%22start%22%20font%3D%2210px%20%26quot%3BArial%26quot%3B%22%20stroke%3D%22none%22%20fill%3D%22%23000000%22%20style%3D%22-webkit-tap-highlight-color%3A%20rgba(0%2C%200%2C%200%2C%200)%3B%20text-anchor%3A%20start%3B%20font-style%3A%20normal%3B%20font-variant%3A%20normal%3B%20font-weight%3A%20normal%3B%20font-stretch%3A%20normal%3B%20font-size%3A%2015px%3B%20line-height%3A%20normal%3B%20font-family%3A%20Arial%3B%22%20id%3D%22endt%22%20class%3D%22flowchartt%22%20font-size%3D%2215px%22%20transform%3D%22matrix(1%2C0%2C0%2C1%2C257.3047%2C420.1563)%22%3E%3Ctspan%20dy%3D%225.25%22%20style%3D%22-webkit-tap-highlight-color%3A%20rgba(0%2C%200%2C%200%2C%200)%3B%22%3EEnd%3C%2Ftspan%3E%3C%2Ftext%3E%3Cpath%20fill%3D%22none%22%20stroke%3D%22%23000000%22%20d%3D%22M280.6484375%2C49.578125C280.6484375%2C49.578125%2C280.6484375%2C89.23222494125366%2C280.6484375%2C100.57856408460066%22%20stroke-width%3D%222%22%20marker-end%3D%22url(%23raphael-marker-endblock33)%22%20style%3D%22-webkit-tap-highlight-color%3A%20rgba(0%2C%200%2C%200%2C%200)%3B%22%3E%3C%2Fpath%3E%3Cpath%20fill%3D%22none%22%20stroke%3D%22%23000000%22%20d%3D%22M280.6484375%2C158.078125C280.6484375%2C158.078125%2C280.6484375%2C205.56178188323975%2C280.6484375%2C218.08188672550023%22%20stroke-width%3D%222%22%20marker-end%3D%22url(%23raphael-marker-endblock33)%22%20style%3D%22-webkit-tap-highlight-color%3A%20rgba(0%2C%200%2C%200%2C%200)%3B%22%3E%3C%2Fpath%3E%3Cpath%20fill%3D%22none%22%20stroke%3D%22%23000000%22%20d%3D%22M280.6484375%2C257.578125C280.6484375%2C257.578125%2C280.6484375%2C305.00289838016033%2C280.6484375%2C317.5074772987573%22%20stroke-width%3D%222%22%20marker-end%3D%22url(%23raphael-marker-endblock33)%22%20style%3D%22-webkit-tap-highlight-color%3A%20rgba(0%2C%200%2C%200%2C%200)%3B%22%3E%3C%2Fpath%3E%3Cpath%20fill%3D%22none%22%20stroke%3D%22%23000000%22%20d%3D%22M280.6484375%2C357.15625C280.6484375%2C357.15625%2C280.6484375%2C404.63990688323975%2C280.6484375%2C417.1600117255002%22%20stroke-width%3D%222%22%20marker-end%3D%22url(%23raphael-marker-endblock33)%22%20style%3D%22-webkit-tap-highlight-color%3A%20rgba(0%2C%200%2C%200%2C%200)%3B%22%3E%3C%2Fpath%3E%3C%2Fsvg%3E)</p>
+<p>#####block获取外部变量</p>
+<p>block.c</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/************* 使用 __block 的源码 *************/</span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span><br><span class="line"></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> intValue = <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">void</span> (^blk)(<span class="keyword">void</span>) = ^&#123; <span class="built_in">printf</span>(<span class="string">"intValue = %d\n"</span>, intValue); &#125;;</span><br><span class="line">    blk();</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>clang -rewrite-objc block.c 翻译后</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/************* 使用 clang 翻译后如下 *************/</span></span><br><span class="line"><span class="keyword">struct</span> __block_impl</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">void</span> *isa;</span><br><span class="line">    <span class="keyword">int</span> Flags;</span><br><span class="line">    <span class="keyword">int</span> Reserved;</span><br><span class="line">    <span class="keyword">void</span> *FuncPtr;</span><br><span class="line">&#125;;</span><br><span class="line"><span class="keyword">struct</span> __main_block_impl_0</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">struct</span> __block_impl impl;</span><br><span class="line">    <span class="keyword">struct</span> __main_block_desc_0* Desc;</span><br><span class="line">    <span class="keyword">int</span> intValue;</span><br><span class="line">    __main_block_impl_0(<span class="keyword">void</span> *fp, <span class="keyword">struct</span> __main_block_desc_0 *desc, <span class="keyword">int</span> _intValue, <span class="keyword">int</span> flags=<span class="number">0</span>) : intValue(_intValue)</span><br><span class="line">    &#123;</span><br><span class="line">        impl.isa = &amp;_NSConcreteStackBlock;</span><br><span class="line">        impl.Flags = flags;</span><br><span class="line">        impl.FuncPtr = fp;</span><br><span class="line">        Desc = desc;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"><span class="keyword">static</span> <span class="keyword">void</span> __main_block_func_0(<span class="keyword">struct</span> __main_block_impl_0 *__cself)</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">int</span> intValue = __cself-&gt;intValue; <span class="comment">// bound by copy</span></span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"intValue = %d\n"</span>, intValue);</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">static</span> <span class="keyword">struct</span> __main_block_desc_0</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">size_t</span> reserved;</span><br><span class="line">    <span class="keyword">size_t</span> Block_size;</span><br><span class="line">&#125; __main_block_desc_0_DATA = &#123; <span class="number">0</span>, <span class="keyword">sizeof</span>(<span class="keyword">struct</span> __main_block_impl_0)&#125;;</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span><br><span class="line"></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> intValue = <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">void</span> (*blk)(<span class="keyword">void</span>) = (<span class="keyword">void</span> (*)())&amp;__main_block_impl_0((<span class="keyword">void</span> *)__main_block_func_0, &amp;__main_block_desc_0_DATA, intValue);</span><br><span class="line">    ((<span class="keyword">void</span> (*)(__block_impl *))((__block_impl *)blk)-&gt;FuncPtr)((__block_impl *)blk);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>  <code>__main_block_impl_0(void *fp, struct __main_block_desc_0 *desc, int _intValue, int flags=0) : intValue(_intValue)</code></p>
+<p>  构造函数 <code>__main_block_impl_0</code> 冒号后的表达式 <code>intValue(_intValue)</code> 的意思是，用 <code>_intValue</code> 初始化结构体成员变量 <code>intValue</code>。</p>
+<p>  block首先通过上述构造函数将变量保存到 <code>__main_block_impl_0</code> 结构体的同名变量 <code>intValue</code>，</p>
+<p>  然后再通过代码 <code>int intValue = __cself-&gt;intValue;</code> 取出<code>intValue</code>，打印出来</p>
+</blockquote>
+<h5 id="block访问外部block变量"><a href="#block访问外部block变量" class="headerlink" title="block访问外部block变量"></a>block访问外部block变量</h5><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/************* 使用 __block 的源码 *************/</span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span><br><span class="line"></span>&#123;</span><br><span class="line">    __block <span class="keyword">int</span> intValue = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">void</span> (^blk)(<span class="keyword">void</span>) = ^&#123;</span><br><span class="line">        intValue = <span class="number">1</span>;</span><br><span class="line">    &#125;;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/************* 使用 clang 翻译后如下 *************/</span></span><br><span class="line"><span class="keyword">struct</span> __block_impl</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">void</span> *isa;</span><br><span class="line">    <span class="keyword">int</span> Flags;</span><br><span class="line">    <span class="keyword">int</span> Reserved;</span><br><span class="line">    <span class="keyword">void</span> *FuncPtr;</span><br><span class="line">&#125;;</span><br><span class="line"><span class="keyword">struct</span> __Block_byref_intValue_0</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">void</span> *__isa;</span><br><span class="line">    __Block_byref_intValue_0 *__forwarding;</span><br><span class="line">    <span class="keyword">int</span> __flags;</span><br><span class="line">    <span class="keyword">int</span> __size;</span><br><span class="line">    <span class="keyword">int</span> intValue;</span><br><span class="line">&#125;;</span><br><span class="line"><span class="keyword">struct</span> __main_block_impl_0</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">struct</span> __block_impl impl;</span><br><span class="line">    <span class="keyword">struct</span> __main_block_desc_0* Desc;</span><br><span class="line">    __Block_byref_intValue_0 *intValue; <span class="comment">// by ref</span></span><br><span class="line">    __main_block_impl_0(<span class="keyword">void</span> *fp, <span class="keyword">struct</span> __main_block_desc_0 *desc, __Block_byref_intValue_0 *_intValue, <span class="keyword">int</span> flags=<span class="number">0</span>) : intValue(_intValue-&gt;__forwarding)</span><br><span class="line">    &#123;</span><br><span class="line">        impl.isa = &amp;_NSConcreteStackBlock;</span><br><span class="line">        impl.Flags = flags;</span><br><span class="line">        impl.FuncPtr = fp;</span><br><span class="line">        Desc = desc;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"><span class="keyword">static</span> <span class="keyword">void</span> __main_block_func_0(<span class="keyword">struct</span> __main_block_impl_0 *__cself)</span><br><span class="line">&#123;</span><br><span class="line">    __Block_byref_intValue_0 *intValue = __cself-&gt;intValue; <span class="comment">// bound by ref</span></span><br><span class="line">    (intValue-&gt;__forwarding-&gt;intValue) = <span class="number">1</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">static</span> <span class="keyword">void</span> __main_block_copy_0(<span class="keyword">struct</span> __main_block_impl_0 *dst, <span class="keyword">struct</span> __main_block_impl_0 *src)</span><br><span class="line">&#123;</span><br><span class="line">    _Block_object_assign((<span class="keyword">void</span>*)&amp;dst-&gt;intValue, (<span class="keyword">void</span>*)src-&gt;intValue, <span class="number">8</span><span class="comment">/*BLOCK_FIELD_IS_BYREF*/</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">static</span> <span class="keyword">void</span> __main_block_dispose_0(<span class="keyword">struct</span> __main_block_impl_0 *src)</span><br><span class="line">&#123;</span><br><span class="line">    _Block_object_dispose((<span class="keyword">void</span>*)src-&gt;intValue, <span class="number">8</span><span class="comment">/*BLOCK_FIELD_IS_BYREF*/</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">static</span> <span class="keyword">struct</span> __main_block_desc_0</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">size_t</span> reserved;</span><br><span class="line">    <span class="keyword">size_t</span> Block_size;</span><br><span class="line">    <span class="keyword">void</span> (*copy)(<span class="keyword">struct</span> __main_block_impl_0*, <span class="keyword">struct</span> __main_block_impl_0*);</span><br><span class="line">    <span class="keyword">void</span> (*dispose)(<span class="keyword">struct</span> __main_block _impl_0*);</span><br><span class="line">&#125; __main_block_desc_0_DATA = &#123;  <span class="number">0</span>, </span><br><span class="line">                                <span class="keyword">sizeof</span>(<span class="keyword">struct</span> __main_block_impl_0), </span><br><span class="line">                                __main_block_copy_0, </span><br><span class="line">                                __main_block_dispose_0</span><br><span class="line">                             &#125;;</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span><br><span class="line"></span>&#123;</span><br><span class="line">    __attribute__((__blocks__(byref))) __Block_byref_intValue_0 \</span><br><span class="line">    intValue = </span><br><span class="line">    &#123;</span><br><span class="line">        (<span class="keyword">void</span>*)<span class="number">0</span>,</span><br><span class="line">        (__Block_byref_intValue_0 *)&amp;intValue, </span><br><span class="line">        <span class="number">0</span>, </span><br><span class="line">        <span class="keyword">sizeof</span>(__Block_byref_intValue_0), </span><br><span class="line">        <span class="number">0</span></span><br><span class="line">    &#125;;</span><br><span class="line">    <span class="keyword">void</span> (*blk)(<span class="keyword">void</span>) = (<span class="keyword">void</span> (*)()) &amp;__main_block_impl_0   \</span><br><span class="line">                (</span><br><span class="line">                    (<span class="keyword">void</span> *)__main_block_func_0,            \</span><br><span class="line">                    &amp;__main_block_desc_0_DATA,              \</span><br><span class="line">                    (__Block_byref_intValue_0 *)&amp;intValue,  \</span><br><span class="line">                    <span class="number">570425344</span>                               \</span><br><span class="line">                );</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在加了 __block 之后，代码量增加了不少，仔细查看，其实只是比原来多了</p>
+<blockquote>
+<ol>
+<li><code>__Block_byref_intValue_0</code> 结构体：用于封装 __block 修饰的外部变量。</li>
+<li><code>_Block_object_assign</code> 函数：当 block 从栈拷贝到堆时，调用此函数。</li>
+<li><code>_Block_object_dispose</code> 函数：当 block 从堆内存释放时，调用此函数。</li>
+</ol>
+</blockquote>
+<p><code>__Block_byref_intValue_</code>结构体如下</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">// 存储 __block 外部变量的结构体</span><br><span class="line">struct __Block_byref_intValue_0</span><br><span class="line">&#123;</span><br><span class="line">    void *__isa; // 对象指针</span><br><span class="line">    __Block_byref_intValue_0 *__forwarding; // 指向自己的指针</span><br><span class="line">    int __flags; // 标志位变量</span><br><span class="line">    int __size; // 结构体大小</span><br><span class="line">    int intValue; // 外部变量</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>对比block 访问_block修饰的外部变量 &amp;&amp;_block修饰的外部变量，我们可以看出: </p>
+<p>1.非__block修饰的外部变量，直接捕获的是变量的值，传递给内部的变量</p>
+<p>2.__block修饰的外部变量，捕获的是变量的地址，保存在结构体变量中</p>
+<h4 id="block的内存管理"><a href="#block的内存管理" class="headerlink" title="block的内存管理"></a>block的内存管理</h4><p><img src="http://blogofzuoyebuluo.qiniudn.com/image_note57603_2.png" alt=""></p>
+<p>block的常见类型有3种：</p>
+<ul>
+<li>_NSConcreteGlobalBlock（全局）</li>
+<li>_NSConcreteStackBlock（栈）</li>
+<li>_NSConcreteMallocBlock（堆）</li>
+</ul>
+<p><em>_NSConcreteGlobalBlock</em></p>
+<blockquote>
+<p>1、当 block 字面量写在全局作用域时，即为 <code>global block</code>；<br>2、当 block 字面量不获取任何外部变量时，即为 <code>global block</code>；</p>
+</blockquote>
+<p>除了上述描述的两种情况，其他形式创建的 block 均为 <code>stack block</code>。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">// 下面 block 虽然定义在 for 循环内，但符合第二种情况，所以也是 global block</span><br><span class="line">typedef int (^blk_t)(int);</span><br><span class="line">for (int rate = 0; rate &lt; 10; ++rate) </span><br><span class="line">&#123;</span><br><span class="line">    blk_t blk = ^(int count)&#123;return rate * count;&#125;; </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在开启 ARC 时，大部分情况下编译器通常会将创建在栈上的 block 自动拷贝到堆上</p>
+<p>如下：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/************ ARC下编译器自动拷贝block ************/</span></span><br><span class="line"><span class="function"><span class="keyword">typedef</span> <span class="title">int</span> <span class="params">(^<span class="keyword">blk_t</span>)</span><span class="params">(<span class="keyword">int</span>)</span></span>;</span><br><span class="line"><span class="keyword">blk_t</span> func(<span class="keyword">int</span> rate)</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">return</span> ^(<span class="keyword">int</span> count)&#123;<span class="keyword">return</span> rate * count;&#125;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/************* 使用 clang 翻译后如下 *************/</span></span><br><span class="line"><span class="keyword">blk_t</span> func(<span class="keyword">int</span> rate)</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">blk_t</span> tmp = &amp;__func_block_impl_0(__func_block_func_0, &amp;__func_block_desc_0_DATA, rate);</span><br><span class="line">    tmp = objc_retainBlock(tmp);</span><br><span class="line">    <span class="keyword">return</span> objc_autoreleaseReturnValue(tmp); </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/*********** objc_retainBlock() 的实现 ***********/</span></span><br><span class="line"><span class="function">id <span class="title">objc_retainBlock</span><span class="params">(id x)</span> </span><br><span class="line"></span>&#123;</span><br><span class="line"><span class="meta">#<span class="meta-keyword">if</span> ARR_LOGGING</span></span><br><span class="line">    objc_arr_log(<span class="string">"objc_retain_block"</span>, x);</span><br><span class="line">    ++CompilerGenerated.blockCopies;</span><br><span class="line"><span class="meta">#<span class="meta-keyword">endif</span></span></span><br><span class="line">    <span class="keyword">return</span> (id)_Block_copy(x);</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// Create a heap based copy of a Block or simply add a reference to an existing one.</span></span><br><span class="line"><span class="comment">// This must be paired with Block_release to recover memory, even when running</span></span><br><span class="line"><span class="comment">// under Objective-C Garbage Collection.</span></span><br><span class="line">BLOCK_EXPORT <span class="keyword">void</span> *_Block_copy(<span class="keyword">const</span> <span class="keyword">void</span> *aBlock)</span><br><span class="line">    __OSX_AVAILABLE_STARTING(__MAC_10_6, __IPHONE_3_2);</span><br></pre></td></tr></table></figure>
+<p>通过 <code>objc_retainBlock()</code> 函数拷贝到堆内存，让 <code>tmp</code> 重新指向堆上的 block，然后将 <code>tmp</code> 所指的堆上的 block 作为一个 Objective-C 对象放入 autoreleasepool 里面，从而保证了返回后的 block 仍然可以正确执行。</p>
+<blockquote>
+<p>对于block属性，苹果推荐我们使用copy关键字，但这arc下不是必须的，正如前面所说，在arc，即使不适用cop关键字，编译器也会自动将block copy到堆区</p>
+</blockquote>
+<h5 id="block-的循环引用"><a href="#block-的循环引用" class="headerlink" title="block 的循环引用"></a>block 的循环引用</h5><p>一个对象强用用了block,block又强引用了该对象，就会产生循环引用</p>
+<blockquote>
+<p>由于 <code>self</code> 是 <code>__strong</code> 修饰，在 ARC 下，当编译器自动将代码中的 block 从栈拷贝到堆时，block 会强引用和持有<code>self</code>，而 <code>self</code> 恰好也强引用和持有了 block，就造成了传说中的循环引用。</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">@property(nonatomic, copy) completionBlock completionBlock;</span><br><span class="line"></span><br><span class="line">//========================================</span><br><span class="line">self.completionBlock = ^ &#123;	</span><br><span class="line">        if (self.success) &#123;</span><br><span class="line">            self.success(self.responseData);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p><img src="http://blogofzuoyebuluo.qiniudn.com/image_note58470_2.png" alt=""></p>
+<p>用__weak修饰self打断循环引用</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">@property(nonatomic, , copy) completionBlock completionBlock;</span><br><span class="line"></span><br><span class="line">//========================================</span><br><span class="line">__weak typeof(self) weakSelf = self;</span><br><span class="line">self.completionBlock = ^ &#123;</span><br><span class="line">    if (weakSelf.success) &#123;</span><br><span class="line">        weakSelf.success(weakSelf.responseData);</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<p><a href="http://www.ruanyifeng.com/blog/2009/08/learning_javascript_closures.html" target="_blank" rel="external">学习Javascript闭包（Closure）</a></p>
+<p><a href="https://www.zybuluo.com/MicroCai/note/51116" target="_blank" rel="external">block没那么难（一）：block的实现</a></p>
+
+      
+    </div>
+    <footer>
+      
+        <div class="alignleft">
+            <a href="/2016/02/19/block/#more" class="more-link"><i class="fa fa-chevron-right"></i>Read More</a>
+        </div>
+        
+        
+          <div class="alignright"> 
+            <a href="atony2099.github.io/2016/02/19/block/#comment" class="comment-link">
+              <i class="fa fa-comments"></i><span class="ds-thread-count" data-thread-key="/2016/02/19/block/">&nbsp;
+              </span>
+            </a>
+          </div>
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+
+  <article class="post">
+  
+    <div class="gallery">
+  <div class="photoset">
+    
+      <img src="">
+    
+  </div>
+  <div class="control">
+    <div class="prev"></div>
+    <div class="next"></div>
+  </div>
+</div>
+  
+  <div class="post-content">
+    <header>
+      
+      <time datetime="2016-02-07T17:26:58.000Z"><a href="/2016/02/08/atomic/">Mon, Feb 8 2016, 1:26:58 am</a></time>
+
+  
+    <h1 class="title"><a href="/2016/02/08/atomic/">nonatomic VS atomic</a></h1>
+  
+
+
+
+<div class="clear"></div>
+      
+    </header>
+    <div class="entry">
+      
+        <p>stackoverflow上关于这个问题的讨论:<a href="http://stackoverflow.com/questions/588866/whats-the-difference-between-the-atomic-and-nonatomic-attributes" target="_blank" rel="external">What’s the difference between the atomic and nonatomic attributes?</a></p>
+<p>主要在于他们生成的getter 和setter方法有所不同。</p>
+<p>对于atomic关键字，相关伪代码如下:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">- (UITextField *) userName &#123;</span><br><span class="line">    </span><br><span class="line">    @synchronized(self) &#123;</span><br><span class="line">       return _userName;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (void) setUserName:(UITextField *)userName &#123;</span><br><span class="line">    @synchronized(self) &#123;</span><br><span class="line">      _userName = userName;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p> 也就是通过加锁来保证线程安全，能避免线程分配竞争，保证数据操作的完整性</p>
+<p>更具体例子如下:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">@property (atomic)CGRect domain;</span><br></pre></td></tr></table></figure>
+<p><img src="https://www.bignerdranch.com/img/blog/2013/10/puppyrect-1.png" alt=""></p>
+<p>假如你需要在两条线程上修改domin，如下</p>
+<blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&gt; &lt;b&gt;thread 1:&lt;/b&gt; puppy.domain = CGRectMake (1.0, 2.0, 3.0, 4.0);</span><br><span class="line">&gt; &lt;b&gt;thread 2:&lt;/b&gt; puppy.domain = CGRectMake (10.0, 20.0, 30.0, 40.0);</span><br><span class="line">&gt;</span><br></pre></td></tr></table></figure>
+</blockquote>
+<p>你只会得到两种结果:</p>
+<p><img src="https://www.bignerdranch.com/img/blog/2013/10/puppyrect-3.png" alt=""></p>
+<p>或者：</p>
+<p><img src="https://www.bignerdranch.com/img/blog/2013/10/puppyrect-4.png" alt=""></p>
+<p>而不会出现:</p>
+<p><img src="https://www.bignerdranch.com/img/blog/2013/10/puppyrect-2.png" alt=""></p>
+<p>这种混合的状态。</p>
+<p>所以我们可以说atomic是一种线程安全的机制，但要注意这种线程安全是局部的，之所以这样说，我们还是来看一个例子更直观：</p>
+<p>假如puppy有三个成员变量，那我们在A线程设置它的值</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">puppy.name = @&quot;Hoover&quot;;</span><br><span class="line">puppy.domain = CGRectMake (1.0, 2.0, 3.0, 4.0);</span><br></pre></td></tr></table></figure>
+<p>在b线程设置它的值</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">puppy.name = @&quot;Rumpelstiltskin&quot;;</span><br><span class="line">puppy.domain = CGRectMake (1.0, 2.0, 3.0, 4.0);</span><br><span class="line">puppy.housebroken = YES;</span><br></pre></td></tr></table></figure>
+<p>我们有可能得到</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">puppy.name = @&quot;Hoover&quot;;</span><br><span class="line">puppy.housebroken = NO;</span><br><span class="line">puppy.domain = CGRectMake (10.0, 20.0, 30.0, 40.0);</span><br></pre></td></tr></table></figure>
+<p>这样一组结果，这组数据是错误的。所以单纯靠atomic并不能保证真正的线程安全。</p>
+<p>参考:<a href="https://www.bignerdranch.com/blog/property-values/" target="_blank" rel="external">Property Values</a></p>
+
+      
+    </div>
+    <footer>
+      
+        <div class="alignleft">
+            <a href="/2016/02/08/atomic/#more" class="more-link"><i class="fa fa-chevron-right"></i>Read More</a>
+        </div>
+        
+        
+          <div class="alignright"> 
+            <a href="atony2099.github.io/2016/02/08/atomic/#comment" class="comment-link">
+              <i class="fa fa-comments"></i><span class="ds-thread-count" data-thread-key="/2016/02/08/atomic/">&nbsp;
+              </span>
+            </a>
+          </div>
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+
+  <article class="post">
+  
+    <div class="gallery">
+  <div class="photoset">
+    
+      <img src="">
+    
+  </div>
+  <div class="control">
+    <div class="prev"></div>
+    <div class="next"></div>
+  </div>
+</div>
+  
+  <div class="post-content">
+    <header>
+      
+      <time datetime="2016-01-06T16:24:48.000Z"><a href="/2016/01/07/copy/">Thu, Jan 7 2016, 12:24:48 am</a></time>
+
+  
+    <h1 class="title"><a href="/2016/01/07/copy/">copy探究</a></h1>
+  
+
+
+
+<div class="clear"></div>
+      
+    </header>
+    <div class="entry">
+      
+        <h4 id="1-浅拷贝-amp-amp-深拷贝"><a href="#1-浅拷贝-amp-amp-深拷贝" class="headerlink" title="1. 浅拷贝&amp;&amp;深拷贝"></a>1. 浅拷贝&amp;&amp;深拷贝</h4><p><img src="http://upload-images.jianshu.io/upload_images/1111290-d90c09e5df129a5a.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""></p>
+<p><img src="http://upload-images.jianshu.io/upload_images/1111290-bc1700453091b35d.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="2"></p>
+<p>如图所示,浅拷贝只是对指针的复制，而深拷贝不仅复制了指针，而且复制了指针所指向的对象</p>
+<h4 id="2-非集合对象和集合对象的复制"><a href="#2-非集合对象和集合对象的复制" class="headerlink" title="2.非集合对象和集合对象的复制"></a>2.非集合对象和集合对象的复制</h4><p>​    例1：对NSString进行<code>copy</code> 和<code>mutableCopy</code>操作</p>
+<p><img src="http://i4.piimg.com/567571/6ba311780cc68886.png" alt=""></p>
+<p><img src="http://i2.piimg.com/567571/5ef7ea3ff110a20d.png" alt=""></p>
+<p>​    例2：对NSMutableString进行<code>copy</code> 和<code>mutableCopy</code>操作</p>
+<p><img src="http://i2.piimg.com/567571/8a51f2e1269869c1.png" alt=""></p>
+<p><img src="http://i2.piimg.com/567571/272b2ee7212b4f41.png" alt=""></p>
+<p><strong>综合以上两个例子,我们可以得出如下结论</strong></p>
+<blockquote>
+<ul>
+<li>[immutableObject copy] // 浅复制</li>
+<li>[immutableObject mutableCopy] //深复制</li>
+<li>[mutableObject copy] //深复制</li>
+<li>[mutableObject mutableCopy] //深复制</li>
+</ul>
+<p>warnings: 对集合对象(NSArray,NSDictonary…)上面的结论也同样使用，但是对于集合对象里面的元素对象，始终是浅复制，也即只是复制指针。</p>
+</blockquote>
+<h4 id="Copy关键字的使用"><a href="#Copy关键字的使用" class="headerlink" title="Copy关键字的使用"></a>Copy关键字的使用</h4><p>通常我们声明NSString，NSArray，NSDictonary类型的变量的时候，都是使用copy关键字，这是为什么呢？</p>
+<p>stackoverflow有个类似的问题<a href="http://stackoverflow.com/questions/387959/nsstring-property-copy-or-retain" target="_blank" rel="external">NSString property: copy or retain?</a></p>
+<blockquote>
+<p> For attributes whose type is an immutable value class that conforms to the <code>NSCopying</code> protocol, you almost always should specify <code>copy</code> in your <code>@property</code> declaration. Specifying <code>retain</code>(strong) is something you almost never want in such a situation.</p>
+</blockquote>
+<p>从根本上说，由于object-c是一门多态的语言，我们声明变量为NSString，NSArray，NSDictonary类型的时候，本意是想变量为不可变类型，但由于父类的指针可以指向子类对象，所有就有可能发生未知的错误，如下: </p>
+<p><img src="http://i2.piimg.com/567571/348394d76131ec1c.png" alt=""></p>
+<p>上面输出的结果是<code>hi world</code>,而不是我们一开始指定的<code>hello wrold</code>，而如果我们指定关键字为<code>copy</code>, 就能保证name指针指向的是immutableObject，防止数据被篡改而一起不必要的麻烦。</p>
+
+      
+    </div>
+    <footer>
+      
+        <div class="alignleft">
+            <a href="/2016/01/07/copy/#more" class="more-link"><i class="fa fa-chevron-right"></i>Read More</a>
+        </div>
+        
+        
+          <div class="alignright"> 
+            <a href="atony2099.github.io/2016/01/07/copy/#comment" class="comment-link">
+              <i class="fa fa-comments"></i><span class="ds-thread-count" data-thread-key="/2016/01/07/copy/">&nbsp;
+              </span>
+            </a>
+          </div>
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+
+  <article class="post">
+  
+    <div class="gallery">
+  <div class="photoset">
+    
+      <img src="">
+    
+  </div>
+  <div class="control">
+    <div class="prev"></div>
+    <div class="next"></div>
+  </div>
+</div>
+  
+  <div class="post-content">
+    <header>
+      
+      <time datetime="2015-12-12T08:32:39.000Z"><a href="/2015/12/12/load&&initialize/">Sat, Dec 12 2015, 4:32:39 pm</a></time>
+
+  
+    <h1 class="title"><a href="/2015/12/12/load&&initialize/">associated Objects</a></h1>
+  
+
+
+
+<div class="clear"></div>
+      
+    </header>
+    <div class="entry">
+      
+        <h4 id="load-amp-amp-initialize"><a href="#load-amp-amp-initialize" class="headerlink" title="load &amp;&amp; initialize"></a>load &amp;&amp; initialize</h4><ul>
+<li>load</li>
+</ul>
+<blockquote>
+<p>Invoked whenever a class or category is added to the Objective-C runtime; implement this method to perform class-specific behavior upon loading.</p>
+<p>The load message is sent to classes and categories that are both dynamically loaded and statically linked, but only if the newly loaded class or category implements a method that can respond.</p>
+</blockquote>
+<p>从上面的描述可以看出这个方法调用的时机很早，在类(分类)被加载到runtime的时候就会调用，同时只有类实现了这个方法才能被响应。</p>
+<ul>
+<li>initialize</li>
+</ul>
+<blockquote>
+<p>The runtime sends initialize to each class in a program just before the class, or any class that inherits from it, is sent its first message from within the program. </p>
+</blockquote>
+<p>不同于load，initialize只有在类或者它的子类第一次接收到消息之前才会调用,相当于懒加载。</p>
+<h4 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line">int main(int argc, char * argv[]) &#123;</span><br><span class="line">    @autoreleasepool &#123;</span><br><span class="line">        NSLog(@&quot;%s&quot;,__func__);</span><br><span class="line">        return UIApplicationMain(argc, argv, nil, NSStringFromClass([AppDelegate class]));</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">@interface Animal : NSObject</span><br><span class="line"></span><br><span class="line">@end</span><br><span class="line"></span><br><span class="line">@implementation Animal</span><br><span class="line">+ (void)load&#123;</span><br><span class="line">    NSLog(@&quot;%s&quot;,__func__);</span><br><span class="line">&#125;</span><br><span class="line">+ (void)initialize&#123;</span><br><span class="line">    [super initialize];</span><br><span class="line">    NSLog(@&quot;%s %@&quot;,__func__,[self class]);</span><br><span class="line">&#125;</span><br><span class="line">@end</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">@interface Dog : Animal</span><br><span class="line"></span><br><span class="line">@end</span><br><span class="line"></span><br><span class="line">@implementation Dog</span><br><span class="line">+ (void)load&#123;</span><br><span class="line">    NSLog(@&quot;%s &quot;,__func__);</span><br><span class="line">&#125;</span><br><span class="line">+ (void)initialize&#123;</span><br><span class="line">    [super initialize];</span><br><span class="line">    NSLog(@&quot;%s &quot;,__func__);</span><br><span class="line">&#125;</span><br><span class="line">@end</span><br></pre></td></tr></table></figure>
+<p>在main.m文件里执行上述代码，可以输出</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">+[Person load]</span><br><span class="line">+[Girl load] </span><br><span class="line">main</span><br></pre></td></tr></table></figure>
+<p>可以看出在没有主动对类执行操作情况下，load会默认执行，并且在main函数之前执行</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">@interface Animal : NSObject</span><br><span class="line"></span><br><span class="line">@end</span><br><span class="line"></span><br><span class="line">@implementation Animal</span><br><span class="line">+ (void)load&#123;</span><br><span class="line">    NSLog(@&quot;%s &quot;,__func__);</span><br><span class="line">&#125;</span><br><span class="line">  </span><br><span class="line">+ (void)initialize &#123;</span><br><span class="line">    NSLog(@&quot;%s %@&quot;,__func__,[self class]);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">@end</span><br><span class="line"></span><br><span class="line">@interface Dog : Animal</span><br><span class="line"></span><br><span class="line">@end</span><br><span class="line"></span><br><span class="line">@implementation Dog</span><br><span class="line"></span><br><span class="line">@end</span><br><span class="line"></span><br><span class="line">@implementation ViewController</span><br><span class="line">- (void)viewDidLoad &#123;</span><br><span class="line">    [super viewDidLoad];</span><br><span class="line">    Dog *dog = [[Dog alloc] init];</span><br><span class="line">&#125;</span><br><span class="line">@end</span><br></pre></td></tr></table></figure>
+<p>执行结果: </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">+[Animal load]</span><br><span class="line">+[Animal initialize] Animal</span><br><span class="line">+[Animal initialize] Dog</span><br></pre></td></tr></table></figure>
+<p>从上面我们可以看出initialize明显的一个特点是当子类没有实现的时候，它会主动调用父类的方法，而load并没有这一特性，为了解释这一特性，我们得从runtime源码层面剖析: </p>
+<p>load方法的调用核心代码</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">// Call all +loads for the detached list.</span><br><span class="line">for (i = 0; i &lt; used; i++) &#123;</span><br><span class="line">    Class cls = classes[i].cls;</span><br><span class="line">    load_method_t load_method = (load_method_t)classes[i].method;</span><br><span class="line">    if (!cls) continue;</span><br><span class="line"></span><br><span class="line">    if (PrintLoading) &#123;</span><br><span class="line">        _objc_inform(&quot;LOAD: +[%s load]\n&quot;, cls-&gt;nameForLogging());</span><br><span class="line">    &#125;</span><br><span class="line">    (*load_method)(cls, SEL_load);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这段代码循环调用所有类的 +load 方法。<strong>注意</strong>，这里是（调用分类的 +load 方法也是如此）直接使用函数内存地址的方式 <code>(*load_method)(cls, SEL_load);</code> 对 +load 方法进行调用的，而不是使用发送消息 <code>objc_msgSend</code> 的方式。</p>
+<p>这样的调用方式就使得 +load 方法拥有了一个非常有趣的特性，那就是子类、父类和分类中的 +load 方法的实现是被区别对待的。也就是说如果子类没有实现 +load 方法，那么当它被加载时 runtime 是不会去调用父类的 +load 方法的。同理，当一个类和它的分类都实现了 +load 方法时，两个方法都会被调用。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line">void _class_initialize(Class cls)</span><br><span class="line">&#123;</span><br><span class="line">    ...</span><br><span class="line">    Class supercls;</span><br><span class="line">    BOOL reallyInitialize = NO;</span><br><span class="line"></span><br><span class="line">    // Make sure super is done initializing BEFORE beginning to initialize cls.</span><br><span class="line">    // See note about deadlock above.</span><br><span class="line">    supercls = cls-&gt;superclass;</span><br><span class="line">    if (supercls  &amp;&amp;  !supercls-&gt;isInitialized()) &#123;</span><br><span class="line">        _class_initialize(supercls);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    // Try to atomically set CLS_INITIALIZING.</span><br><span class="line">    monitor_enter(&amp;classInitLock);</span><br><span class="line">    if (!cls-&gt;isInitialized() &amp;&amp; !cls-&gt;isInitializing()) &#123;</span><br><span class="line">        cls-&gt;setInitializing();</span><br><span class="line">        reallyInitialize = YES;</span><br><span class="line">    &#125;</span><br><span class="line">    monitor_exit(&amp;classInitLock);</span><br><span class="line"></span><br><span class="line">    if (reallyInitialize) &#123;</span><br><span class="line">        // We successfully set the CLS_INITIALIZING bit. Initialize the class.</span><br><span class="line"></span><br><span class="line">        // Record that we&apos;re initializing this class so we can message it.</span><br><span class="line">        _setThisThreadIsInitializingClass(cls);</span><br><span class="line"></span><br><span class="line">        // Send the +initialize message.</span><br><span class="line">        // Note that +initialize is sent to the superclass (again) if </span><br><span class="line">        // this class doesn&apos;t implement +initialize. 2157218</span><br><span class="line">        if (PrintInitializing) &#123;</span><br><span class="line">            _objc_inform(&quot;INITIALIZE: calling +[%s initialize]&quot;,</span><br><span class="line">                         cls-&gt;nameForLogging());</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        ((void(*)(Class, SEL))objc_msgSend)(cls, SEL_initialize);</span><br><span class="line"></span><br><span class="line">        if (PrintInitializing) &#123;</span><br><span class="line">            _objc_inform(&quot;INITIALIZE: finished +[%s initialize]&quot;,</span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这段代码有两个关键点: </p>
+<ul>
+<li><p>入参的父类进行了递归调用，以确保父类优先于子类初始化</p>
+</li>
+<li><p>runtime 使用了发送消息 <code>objc_msgSend</code>的方式对 +initialize 方法进行调用。也就是说 +initialize 方法的调用与普通方法的调用是一样的，走的都是发送消息的流程。换言之，如果子类没有实现 +initialize 方法，那么继承自父类的实现会被调用；如果一个类的分类实现了 +initialize 方法，那么就会对这个类中的实现造成覆盖</p>
+</li>
+</ul>
+<h4 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h4><table>
+<thead>
+<tr>
+<th></th>
+<th>+load</th>
+<th>+initialize</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>调用时机</td>
+<td>被添加到 runtime 时</td>
+<td>收到第一条消息前，可能永远不调用</td>
+</tr>
+<tr>
+<td>调用顺序</td>
+<td>父类-&gt;子类-&gt;分类</td>
+<td>父类-&gt;子类</td>
+</tr>
+<tr>
+<td>调用次数</td>
+<td>1次</td>
+<td>多次</td>
+</tr>
+<tr>
+<td>若自身未定义，是否沿用父类的方法？</td>
+<td>否</td>
+<td>是</td>
+</tr>
+<tr>
+<td>分类中的实现</td>
+<td>类和分类都执行</td>
+<td>覆盖类中的方法，只执行分类的实现</td>
+</tr>
+</tbody>
+</table>
+<p>参考: </p>
+<p><a href="http://blog.leichunfeng.com/blog/2015/05/02/objective-c-plus-load-vs-plus-initialize/" target="_blank" rel="external">Objective-C +load vs +initialize</a></p>
+
+      
+    </div>
+    <footer>
+      
+        <div class="alignleft">
+            <a href="/2015/12/12/load&&initialize/#more" class="more-link"><i class="fa fa-chevron-right"></i>Read More</a>
+        </div>
+        
+        
+          <div class="alignright"> 
+            <a href="atony2099.github.io/2015/12/12/load&&initialize/#comment" class="comment-link">
+              <i class="fa fa-comments"></i><span class="ds-thread-count" data-thread-key="/2015/12/12/load&&initialize/">&nbsp;
+              </span>
+            </a>
+          </div>
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+
+
+<nav id="pagination">
+  
+  
+    <a href="/page/2/" class="alignright next">Nächste Seite<i class="fa fa-long-arrow-right"></i></a>
+  
+  <div class="clearfix"></div>
+</nav>
+
+<script src="/js/jquery.anystretch.min.js"></script>
+<script src="/js/cover.js"></script>
+
+    <div class="clearfix"></div>
+  </div>
+  <footer id="footer" class="inner"><div>
+  
+  &copy; 2016 托尼的夏天
+  
+</div>
+Powered by <a href="http://zespia.tw/hexo/" title="Hexo" target="_blank" rel="external">Hexo</a> and <a href="http://pages.github.com/" title="GitHub Pages" target="_blank" rel="external">GitHub Pages</a>
+
+<div class="clearfix"></div></footer>
+  
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+<script src="//netdna.bootstrapcdn.com/bootstrap/3.1.0/js/bootstrap.min.js"></script>
+
+
+
+
+    <script type="text/javascript">
+        (function(){
+
+            $(window).scroll(function(){
+
+                var scrollTop = $(window).scrollTop();
+                if ( scrollTop >200 ){
+                    $("#main-nav").removeClass('normal_mode').addClass('top_mode');
+                } else{
+                    $("#main-nav").removeClass('top_mode').addClass('normal_mode');
+                }
+
+            });
+
+        })();
+    </script>
+
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+  <script type="text/javascript">
+  (function($){
+    $('.fancybox').fancybox({
+      'titlePosition': 'inside'
+    });
+  })(jQuery);
+  </script>
+
+
+
+    
+    <script type="text/javascript">
+      var duoshuoQuery = {short_name:"your_id"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.src = 'http://static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0] 
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+
+
+
+<script type="text/javascript">
+  
+  $(function(){
+
+    $('.title').hover(
+      function() {      
+        $(this).stop().animate(
+          {'marginLeft': '10px'}, 200
+        );   
+      }, 
+      function() {       
+        $(this).stop().animate({'marginLeft': '0px'}, 200);      
+      
+    });   
+
+  });
+
+</script>
+
+
+</body>
+</html>

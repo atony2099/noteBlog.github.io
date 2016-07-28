@@ -1,0 +1,322 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>APP启动过程探究 | Hexo</title>
+  <meta name="author" content="托尼的夏天">
+  
+  <meta name="description" content="无关文章的事： 我们一生要爱上几个女孩？
+本文探讨的问题？
+
+应用程序的启动过程是怎么样？
+应用程序的生命周期是怎么样？
+
+应用程序的启动过程
+图片来源外国网友
+上图比较完整的描绘一个app启动过程，让我们一步一步开始分解
+
+main函数执行
+
+12345int main(int argc, cha">
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  <meta property="og:title" content="APP启动过程探究"/>
+  <meta property="og:site_name" content="Hexo"/>
+
+  
+    <meta property="og:image" content="undefined"/>
+  
+
+  <link href="/favicon.ico" rel="icon">
+  <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap.min.css">
+<link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css">
+<link rel="stylesheet" href="/css/style.css">
+  <script src="http://code.jquery.com/jquery-2.1.1.min.js"></script>
+  <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+  
+<script type="text/javascript">
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-368771XX-X']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+</script>
+
+</head>
+
+<body>
+  <header id="header" class='normal_mode'>
+    <nav id="main-nav">
+  <ul class='container'>
+    
+      <li><a href="/">Home</a></li>
+    
+      <li><a href="/archives">Archives</a></li>
+    
+  </ul>
+  <div class="clearfix"></div>
+</nav>
+  </header>
+  <div id="content" class="container">
+    <article class="post">
+  
+    <div class="gallery">
+  <div class="photoset">
+    
+      <img src="">
+    
+  </div>
+  <div class="control">
+    <div class="prev"></div>
+    <div class="next"></div>
+  </div>
+</div>
+  
+  <div class="post-content">
+    <header>
+      
+      <time datetime="2015-11-28T14:05:59.000Z"><a href="/2015/11/28/APP启动过程探究/">Sat, Nov 28 2015, 10:05:59 pm</a></time>
+
+  
+    <h1 class="title">APP启动过程探究</h1>
+  
+
+
+
+<div class="clear"></div>
+      
+    </header>
+    <div class="entry">
+      
+        <p><em>无关文章的事： 我们一生要爱上几个女孩？</em></p>
+<p>本文探讨的问题？</p>
+<ul>
+<li>应用程序的启动过程是怎么样？</li>
+<li>应用程序的生命周期是怎么样？</li>
+</ul>
+<h4 id="应用程序的启动过程"><a href="#应用程序的启动过程" class="headerlink" title="应用程序的启动过程"></a>应用程序的启动过程</h4><p><img src="http://oleb.net/media/xcode-4-2-app-launch-sequence.png" alt=""></p>
+<p><em>图片来源外国网友</em></p>
+<p>上图比较完整的描绘一个app启动过程，让我们一步一步开始分解</p>
+<ul>
+<li>main函数执行</li>
+</ul>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc, <span class="keyword">char</span> *argv[])</span></span>&#123;</span><br><span class="line">    @autoreleasepool &#123;</span><br><span class="line">        <span class="keyword">return</span> UIApplicationMain(argc, argv, nil, NSStringFromClass([AppDelegate <span class="keyword">class</span>]));</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>main函数是程序的入口，app启动时候先执行main函数，main函数再调用UIApplicationMain函数，</p>
+<ul>
+<li><p>UIApplicationMain函数这做了很多事情，首先他会创建一个UIAPPlication的单例对象，并创建UIApplication对象的代理对象AppDelegate</p>
+<blockquote>
+<p>苹果已经为把每个应用包装成一个UIApplication对象，但应用每一步运行的细节并不需要开发者关注，只要关注这个应用对象对应的delegate即可，也就是这个“AppDelegate”。通过AppDelegate我们可以知道Application的运行状态，发生了哪些事件。</p>
+<p>The <code>UIApplicationDelegate</code> protocol defines methods that are called by the singleton <code>UIApplication</code> object in response to important events in the lifetime of your app.</p>
+<p>AppDelegate定义了很多app生命周期中的重要事件</p>
+</blockquote>
+<p>同时他会载入和解析info.plist文件.</p>
+<blockquote>
+<p>info.plist是对工程运行期配置的文件，info常见字段有： </p>
+<p>   1&gt; Localiztion native development region (CFBundleDevelopmentRegion)-本地化相关;</p>
+<pre><code>2&gt; Bundle display name(CFBundleDisplayName)-程序安装后显示的名称,限制在10-12个字符,如果超出,将被显示缩写名称;
+
+3&gt; Icon file(CFBundleIconFile)-app图标名称,一般为Icon.png;
+
+4&gt; Bundle version(CFBundleVersion)-应用程序的版本号,每次往App Store上发布一个新版本时,需要增加这个版本号;
+
+5&gt; Main storyboard file base name(NSMainStoryboardFile)-主storyboard文件名称;
+
+6&gt; Bundle identifier(CFBundleIdentifier)-项目的唯一标识,部署到真机时用到;
+</code></pre></blockquote>
+</li>
+</ul>
+<ul>
+<li><p>UIApplication 对象创建管理runloop，UIApplication对象通过runloop来处理各种事件，runloop是一个无限循环，使UIApplicationMain()永远不返回</p>
+</li>
+<li><p>在UIApplication 对象开始处理事件之前，它会给它的代理发送一个消息application:didFinishLaunchingWithOptions:告诉代理对象AppDelegate，程序已经启动.</p>
+<p>如果之前info.plist没有指定main stroyboard，这时候我们就需要在该方法里面手动创建keyWindow并设置它的rootViewController，相关代码如下</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions</span><br><span class="line">&#123;</span><br><span class="line">    self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];</span><br><span class="line">    // Override point for customization after application launch.</span><br><span class="line">    self.viewController = [[ViewController alloc] initWithNibName:@&quot;ViewController&quot; bundle:nil];</span><br><span class="line">    self.window.rootViewController = self.viewController;</span><br><span class="line">    [self.window makeKeyAndVisible];</span><br><span class="line">    return YES;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h4 id="应用程序的生命周期"><a href="#应用程序的生命周期" class="headerlink" title="应用程序的生命周期"></a>应用程序的生命周期</h4><p>应用程序的状态大概如下: </p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">状态</th>
+<th>运行机制</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">Not Runing</td>
+<td>程序没有启动</td>
+</tr>
+<tr>
+<td style="text-align:left">Inactive</td>
+<td>过渡的状态，或者被系统打断(短信，电话), ，应用程序不接收消息或事件</td>
+</tr>
+<tr>
+<td style="text-align:left">Active</td>
+<td>前台运行的正常状态,能够接收消息和事件</td>
+</tr>
+<tr>
+<td style="text-align:left">Background</td>
+<td>进入后台的状态，不会停留太久就会进如挂起状态</td>
+</tr>
+<tr>
+<td style="text-align:left">suspended</td>
+<td>程序在暂停时不能执行代码、但是不会被释放内存。但是当系统内存不足的情况下，暂停的程序有可能会被释放。</td>
+</tr>
+</tbody>
+</table>
+<p><img src="https://developer.apple.com/library/ios/documentation/iPhone/Conceptual/iPhoneOSProgrammingGuide/Art/app_interruptions_2x.png" alt=""></p>
+<p>初次启动：</p>
+<p><code>applicationdidFinishLaunchingWithOptions</code><br><code>applicationDidBecomeActive</code></p>
+<p>按下home键：</p>
+<p><code>applicationWillResignActive</code><br><code>applicationDidEnterBackground</code></p>
+<p><code>applicationWillTerminate</code> // 即将推出</p>
+<p>点击APP重新进入：</p>
+<p><code>applicationWillEnterForeground</code><br><code>applicationDidBecomeActive</code></p>
+<p>参考文档: </p>
+<p><a href="http://blog.csdn.net/yang8456211/article/details/11662891" target="_blank" rel="external">iOS application生命周期研究、发现与总结</a></p>
+<p><a href="http://oleb.net/blog/2012/02/app-launch-sequence-ios-revisited/" target="_blank" rel="external">Revisiting the App Launch Sequence on iOS</a></p>
+<p><a href="http://www.molotang.com/articles/1254.html" target="_blank" rel="external">iOS应用程序的状态及其切换（生命周期)</a></p>
+
+      
+    </div>
+    <footer>
+      
+          
+<!-- JiaThis Button BEGIN -->
+<div class="jiathis_style">
+  <span class="jiathis_txt">分享到：</span>
+  <a class="jiathis_button_weixin">微信</a>
+  <a class="jiathis_button_tsina">新浪微博</a>
+  <a class="jiathis_button_renren">人人网</a>
+  <a class="jiathis_button_qzone">QQ空间</a>
+  <a class="jiathis_button_douban">豆瓣</a>
+  <a class="jiathis_button_pocket">Pocket</a>
+  <a href="http://www.jiathis.com/share?uid=901656" class="jiathis jiathis_txt jiathis_separator jtico jtico_jiathis" target="_blank">更多</a>
+  <a class="jiathis_counter_style"></a>
+</div>
+<script type="text/javascript" src="http://v3.jiathis.com/code_mini/jia.js?uid=901656" charset="utf-8"></script>
+<!-- JiaThis Button END -->
+
+          <div class="clearfix"></div>
+          <nav id="pagination">
+  
+    <a href="/2015/12/12/load&&initialize/" class="alignleft prev"><i class="fa fa-long-arrow-left"></i>Next</a>
+  
+  
+    <a href="/2015/10/17/观察者/" class="alignright next">Prev<i class="fa fa-long-arrow-right"></i></a>
+  
+  <div class="clearfix"></div>
+</nav>
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+<section id="comment">
+  <h1 class="title">Kommentare</h1>
+
+  
+      <!-- Duoshuo Comment BEGIN -->
+<div class="ds-thread" data-thread-key="/2015/11/28/APP启动过程探究/"></div>
+<!-- Duoshuo Comment END -->
+  
+</section>
+
+
+
+    <div class="clearfix"></div>
+  </div>
+  <footer id="footer" class="inner"><div>
+  
+  &copy; 2016 托尼的夏天
+  
+</div>
+Powered by <a href="http://zespia.tw/hexo/" title="Hexo" target="_blank" rel="external">Hexo</a> and <a href="http://pages.github.com/" title="GitHub Pages" target="_blank" rel="external">GitHub Pages</a>
+
+<div class="clearfix"></div></footer>
+  
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+<script src="//netdna.bootstrapcdn.com/bootstrap/3.1.0/js/bootstrap.min.js"></script>
+
+
+
+
+    <script type="text/javascript">
+        (function(){
+
+            $(window).scroll(function(){
+
+                var scrollTop = $(window).scrollTop();
+                if ( scrollTop >200 ){
+                    $("#main-nav").removeClass('normal_mode').addClass('top_mode');
+                } else{
+                    $("#main-nav").removeClass('top_mode').addClass('normal_mode');
+                }
+
+            });
+
+        })();
+    </script>
+
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+  <script type="text/javascript">
+  (function($){
+    $('.fancybox').fancybox({
+      'titlePosition': 'inside'
+    });
+  })(jQuery);
+  </script>
+
+
+
+    
+    <script type="text/javascript">
+      var duoshuoQuery = {short_name:"your_id"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.src = 'http://static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0] 
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+
+
+
+<script type="text/javascript">
+  
+  $(function(){
+
+    $('.title').hover(
+      function() {      
+        $(this).stop().animate(
+          {'marginLeft': '10px'}, 200
+        );   
+      }, 
+      function() {       
+        $(this).stop().animate({'marginLeft': '0px'}, 200);      
+      
+    });   
+
+  });
+
+</script>
+
+
+</body>
+</html>

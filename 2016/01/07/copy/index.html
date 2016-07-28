@@ -1,0 +1,255 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>copy探究 | Hexo</title>
+  <meta name="author" content="托尼的夏天">
+  
+  <meta name="description" content="1. 浅拷贝&amp;amp;&amp;amp;深拷贝
+
+如图所示,浅拷贝只是对指针的复制，而深拷贝不仅复制了指针，而且复制了指针所指向的对象
+2.非集合对象和集合对象的复制​    例1：对NSString进行copy 和mutableCopy操作
+
+
+​    例2：对NSMutableString进行copy">
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  <meta property="og:title" content="copy探究"/>
+  <meta property="og:site_name" content="Hexo"/>
+
+  
+    <meta property="og:image" content="undefined"/>
+  
+
+  <link href="/favicon.ico" rel="icon">
+  <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap.min.css">
+<link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css">
+<link rel="stylesheet" href="/css/style.css">
+  <script src="http://code.jquery.com/jquery-2.1.1.min.js"></script>
+  <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+  
+<script type="text/javascript">
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-368771XX-X']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+</script>
+
+</head>
+
+<body>
+  <header id="header" class='normal_mode'>
+    <nav id="main-nav">
+  <ul class='container'>
+    
+      <li><a href="/">Home</a></li>
+    
+      <li><a href="/archives">Archives</a></li>
+    
+  </ul>
+  <div class="clearfix"></div>
+</nav>
+  </header>
+  <div id="content" class="container">
+    <article class="post">
+  
+    <div class="gallery">
+  <div class="photoset">
+    
+      <img src="">
+    
+  </div>
+  <div class="control">
+    <div class="prev"></div>
+    <div class="next"></div>
+  </div>
+</div>
+  
+  <div class="post-content">
+    <header>
+      
+      <time datetime="2016-01-06T16:24:48.000Z"><a href="/2016/01/07/copy/">Thu, Jan 7 2016, 12:24:48 am</a></time>
+
+  
+    <h1 class="title">copy探究</h1>
+  
+
+
+
+<div class="clear"></div>
+      
+    </header>
+    <div class="entry">
+      
+        <h4 id="1-浅拷贝-amp-amp-深拷贝"><a href="#1-浅拷贝-amp-amp-深拷贝" class="headerlink" title="1. 浅拷贝&amp;&amp;深拷贝"></a>1. 浅拷贝&amp;&amp;深拷贝</h4><p><img src="http://upload-images.jianshu.io/upload_images/1111290-d90c09e5df129a5a.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""></p>
+<p><img src="http://upload-images.jianshu.io/upload_images/1111290-bc1700453091b35d.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="2"></p>
+<p>如图所示,浅拷贝只是对指针的复制，而深拷贝不仅复制了指针，而且复制了指针所指向的对象</p>
+<h4 id="2-非集合对象和集合对象的复制"><a href="#2-非集合对象和集合对象的复制" class="headerlink" title="2.非集合对象和集合对象的复制"></a>2.非集合对象和集合对象的复制</h4><p>​    例1：对NSString进行<code>copy</code> 和<code>mutableCopy</code>操作</p>
+<p><img src="http://i4.piimg.com/567571/6ba311780cc68886.png" alt=""></p>
+<p><img src="http://i2.piimg.com/567571/5ef7ea3ff110a20d.png" alt=""></p>
+<p>​    例2：对NSMutableString进行<code>copy</code> 和<code>mutableCopy</code>操作</p>
+<p><img src="http://i2.piimg.com/567571/8a51f2e1269869c1.png" alt=""></p>
+<p><img src="http://i2.piimg.com/567571/272b2ee7212b4f41.png" alt=""></p>
+<p><strong>综合以上两个例子,我们可以得出如下结论</strong></p>
+<blockquote>
+<ul>
+<li>[immutableObject copy] // 浅复制</li>
+<li>[immutableObject mutableCopy] //深复制</li>
+<li>[mutableObject copy] //深复制</li>
+<li>[mutableObject mutableCopy] //深复制</li>
+</ul>
+<p>warnings: 对集合对象(NSArray,NSDictonary…)上面的结论也同样使用，但是对于集合对象里面的元素对象，始终是浅复制，也即只是复制指针。</p>
+</blockquote>
+<h4 id="Copy关键字的使用"><a href="#Copy关键字的使用" class="headerlink" title="Copy关键字的使用"></a>Copy关键字的使用</h4><p>通常我们声明NSString，NSArray，NSDictonary类型的变量的时候，都是使用copy关键字，这是为什么呢？</p>
+<p>stackoverflow有个类似的问题<a href="http://stackoverflow.com/questions/387959/nsstring-property-copy-or-retain" target="_blank" rel="external">NSString property: copy or retain?</a></p>
+<blockquote>
+<p> For attributes whose type is an immutable value class that conforms to the <code>NSCopying</code> protocol, you almost always should specify <code>copy</code> in your <code>@property</code> declaration. Specifying <code>retain</code>(strong) is something you almost never want in such a situation.</p>
+</blockquote>
+<p>从根本上说，由于object-c是一门多态的语言，我们声明变量为NSString，NSArray，NSDictonary类型的时候，本意是想变量为不可变类型，但由于父类的指针可以指向子类对象，所有就有可能发生未知的错误，如下: </p>
+<p><img src="http://i2.piimg.com/567571/348394d76131ec1c.png" alt=""></p>
+<p>上面输出的结果是<code>hi world</code>,而不是我们一开始指定的<code>hello wrold</code>，而如果我们指定关键字为<code>copy</code>, 就能保证name指针指向的是immutableObject，防止数据被篡改而一起不必要的麻烦。</p>
+
+      
+    </div>
+    <footer>
+      
+          
+<!-- JiaThis Button BEGIN -->
+<div class="jiathis_style">
+  <span class="jiathis_txt">分享到：</span>
+  <a class="jiathis_button_weixin">微信</a>
+  <a class="jiathis_button_tsina">新浪微博</a>
+  <a class="jiathis_button_renren">人人网</a>
+  <a class="jiathis_button_qzone">QQ空间</a>
+  <a class="jiathis_button_douban">豆瓣</a>
+  <a class="jiathis_button_pocket">Pocket</a>
+  <a href="http://www.jiathis.com/share?uid=901656" class="jiathis jiathis_txt jiathis_separator jtico jtico_jiathis" target="_blank">更多</a>
+  <a class="jiathis_counter_style"></a>
+</div>
+<script type="text/javascript" src="http://v3.jiathis.com/code_mini/jia.js?uid=901656" charset="utf-8"></script>
+<!-- JiaThis Button END -->
+
+          <div class="clearfix"></div>
+          <nav id="pagination">
+  
+    <a href="/2016/02/08/atomic/" class="alignleft prev"><i class="fa fa-long-arrow-left"></i>Next</a>
+  
+  
+    <a href="/2015/12/12/load&&initialize/" class="alignright next">Prev<i class="fa fa-long-arrow-right"></i></a>
+  
+  <div class="clearfix"></div>
+</nav>
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+<section id="comment">
+  <h1 class="title">Kommentare</h1>
+
+  
+      <!-- Duoshuo Comment BEGIN -->
+<div class="ds-thread" data-thread-key="/2016/01/07/copy/"></div>
+<!-- Duoshuo Comment END -->
+  
+</section>
+
+
+
+    <div class="clearfix"></div>
+  </div>
+  <footer id="footer" class="inner"><div>
+  
+  &copy; 2016 托尼的夏天
+  
+</div>
+Powered by <a href="http://zespia.tw/hexo/" title="Hexo" target="_blank" rel="external">Hexo</a> and <a href="http://pages.github.com/" title="GitHub Pages" target="_blank" rel="external">GitHub Pages</a>
+
+<div class="clearfix"></div></footer>
+  
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+<script src="//netdna.bootstrapcdn.com/bootstrap/3.1.0/js/bootstrap.min.js"></script>
+
+
+
+
+    <script type="text/javascript">
+        (function(){
+
+            $(window).scroll(function(){
+
+                var scrollTop = $(window).scrollTop();
+                if ( scrollTop >200 ){
+                    $("#main-nav").removeClass('normal_mode').addClass('top_mode');
+                } else{
+                    $("#main-nav").removeClass('top_mode').addClass('normal_mode');
+                }
+
+            });
+
+        })();
+    </script>
+
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+  <script type="text/javascript">
+  (function($){
+    $('.fancybox').fancybox({
+      'titlePosition': 'inside'
+    });
+  })(jQuery);
+  </script>
+
+
+
+    
+    <script type="text/javascript">
+      var duoshuoQuery = {short_name:"your_id"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.src = 'http://static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0] 
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+
+
+
+<script type="text/javascript">
+  
+  $(function(){
+
+    $('.title').hover(
+      function() {      
+        $(this).stop().animate(
+          {'marginLeft': '10px'}, 200
+        );   
+      }, 
+      function() {       
+        $(this).stop().animate({'marginLeft': '0px'}, 200);      
+      
+    });   
+
+  });
+
+</script>
+
+
+</body>
+</html>

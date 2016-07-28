@@ -1,0 +1,710 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>Seite 2 | Hexo</title>
+  <meta name="author" content="托尼的夏天">
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  
+  <meta property="og:site_name" content="Hexo"/>
+
+  
+    <meta property="og:image" content="undefined"/>
+  
+
+  <link href="/favicon.ico" rel="icon">
+  <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap.min.css">
+<link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css">
+<link rel="stylesheet" href="/css/style.css">
+  <script src="http://code.jquery.com/jquery-2.1.1.min.js"></script>
+  <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+  
+<script type="text/javascript">
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-368771XX-X']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+</script>
+
+</head>
+
+<body>
+  <header id="header" class='normal_mode'>
+    <nav id="main-nav">
+  <ul class='container'>
+    
+      <li><a href="/">Home</a></li>
+    
+      <li><a href="/archives">Archives</a></li>
+    
+  </ul>
+  <div class="clearfix"></div>
+</nav>
+  </header>
+  <div id="content" class="container">
+    <div id="cover">
+	<div id="profile" alt="http://ww1.sinaimg.cn/large/6cea169fjw1edgyzma1xcj21kw16ohba.jpg">
+		<a href="/">
+			<div class="logo">
+				<img src="/logo.png" alt="Profile Picture">
+			</div>
+			<div id="title">Hexo</div>
+		</a>
+
+		
+		 <ul class="my-socials">
+  
+  <li>
+  	<a href="https://github.com/your_id" class="github" target="_blank">
+  		<i class="fa fa-github"></i>
+  	</a>
+  </li>
+  
+  <li>
+  	<a href="http://weibo.com/your_id" class="weibo" target="_blank">
+  		<i class="fa fa-weibo"></i>
+  	</a>
+  </li>
+  
+ 
+</ul>
+	</div>
+</div>
+
+
+  <article class="post">
+  
+    <div class="gallery">
+  <div class="photoset">
+    
+      <img src="">
+    
+  </div>
+  <div class="control">
+    <div class="prev"></div>
+    <div class="next"></div>
+  </div>
+</div>
+  
+  <div class="post-content">
+    <header>
+      
+      <time datetime="2015-11-28T14:05:59.000Z"><a href="/2015/11/28/APP启动过程探究/">Sat, Nov 28 2015, 10:05:59 pm</a></time>
+
+  
+    <h1 class="title"><a href="/2015/11/28/APP启动过程探究/">APP启动过程探究</a></h1>
+  
+
+
+
+<div class="clear"></div>
+      
+    </header>
+    <div class="entry">
+      
+        <p><em>无关文章的事： 我们一生要爱上几个女孩？</em></p>
+<p>本文探讨的问题？</p>
+<ul>
+<li>应用程序的启动过程是怎么样？</li>
+<li>应用程序的生命周期是怎么样？</li>
+</ul>
+<h4 id="应用程序的启动过程"><a href="#应用程序的启动过程" class="headerlink" title="应用程序的启动过程"></a>应用程序的启动过程</h4><p><img src="http://oleb.net/media/xcode-4-2-app-launch-sequence.png" alt=""></p>
+<p><em>图片来源外国网友</em></p>
+<p>上图比较完整的描绘一个app启动过程，让我们一步一步开始分解</p>
+<ul>
+<li>main函数执行</li>
+</ul>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc, <span class="keyword">char</span> *argv[])</span></span>&#123;</span><br><span class="line">    @autoreleasepool &#123;</span><br><span class="line">        <span class="keyword">return</span> UIApplicationMain(argc, argv, nil, NSStringFromClass([AppDelegate <span class="keyword">class</span>]));</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>main函数是程序的入口，app启动时候先执行main函数，main函数再调用UIApplicationMain函数，</p>
+<ul>
+<li><p>UIApplicationMain函数这做了很多事情，首先他会创建一个UIAPPlication的单例对象，并创建UIApplication对象的代理对象AppDelegate</p>
+<blockquote>
+<p>苹果已经为把每个应用包装成一个UIApplication对象，但应用每一步运行的细节并不需要开发者关注，只要关注这个应用对象对应的delegate即可，也就是这个“AppDelegate”。通过AppDelegate我们可以知道Application的运行状态，发生了哪些事件。</p>
+<p>The <code>UIApplicationDelegate</code> protocol defines methods that are called by the singleton <code>UIApplication</code> object in response to important events in the lifetime of your app.</p>
+<p>AppDelegate定义了很多app生命周期中的重要事件</p>
+</blockquote>
+<p>同时他会载入和解析info.plist文件.</p>
+<blockquote>
+<p>info.plist是对工程运行期配置的文件，info常见字段有： </p>
+<p>   1&gt; Localiztion native development region (CFBundleDevelopmentRegion)-本地化相关;</p>
+<pre><code>2&gt; Bundle display name(CFBundleDisplayName)-程序安装后显示的名称,限制在10-12个字符,如果超出,将被显示缩写名称;
+
+3&gt; Icon file(CFBundleIconFile)-app图标名称,一般为Icon.png;
+
+4&gt; Bundle version(CFBundleVersion)-应用程序的版本号,每次往App Store上发布一个新版本时,需要增加这个版本号;
+
+5&gt; Main storyboard file base name(NSMainStoryboardFile)-主storyboard文件名称;
+
+6&gt; Bundle identifier(CFBundleIdentifier)-项目的唯一标识,部署到真机时用到;
+</code></pre></blockquote>
+</li>
+</ul>
+<ul>
+<li><p>UIApplication 对象创建管理runloop，UIApplication对象通过runloop来处理各种事件，runloop是一个无限循环，使UIApplicationMain()永远不返回</p>
+</li>
+<li><p>在UIApplication 对象开始处理事件之前，它会给它的代理发送一个消息application:didFinishLaunchingWithOptions:告诉代理对象AppDelegate，程序已经启动.</p>
+<p>如果之前info.plist没有指定main stroyboard，这时候我们就需要在该方法里面手动创建keyWindow并设置它的rootViewController，相关代码如下</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions</span><br><span class="line">&#123;</span><br><span class="line">    self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];</span><br><span class="line">    // Override point for customization after application launch.</span><br><span class="line">    self.viewController = [[ViewController alloc] initWithNibName:@&quot;ViewController&quot; bundle:nil];</span><br><span class="line">    self.window.rootViewController = self.viewController;</span><br><span class="line">    [self.window makeKeyAndVisible];</span><br><span class="line">    return YES;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h4 id="应用程序的生命周期"><a href="#应用程序的生命周期" class="headerlink" title="应用程序的生命周期"></a>应用程序的生命周期</h4><p>应用程序的状态大概如下: </p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">状态</th>
+<th>运行机制</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">Not Runing</td>
+<td>程序没有启动</td>
+</tr>
+<tr>
+<td style="text-align:left">Inactive</td>
+<td>过渡的状态，或者被系统打断(短信，电话), ，应用程序不接收消息或事件</td>
+</tr>
+<tr>
+<td style="text-align:left">Active</td>
+<td>前台运行的正常状态,能够接收消息和事件</td>
+</tr>
+<tr>
+<td style="text-align:left">Background</td>
+<td>进入后台的状态，不会停留太久就会进如挂起状态</td>
+</tr>
+<tr>
+<td style="text-align:left">suspended</td>
+<td>程序在暂停时不能执行代码、但是不会被释放内存。但是当系统内存不足的情况下，暂停的程序有可能会被释放。</td>
+</tr>
+</tbody>
+</table>
+<p><img src="https://developer.apple.com/library/ios/documentation/iPhone/Conceptual/iPhoneOSProgrammingGuide/Art/app_interruptions_2x.png" alt=""></p>
+<p>初次启动：</p>
+<p><code>applicationdidFinishLaunchingWithOptions</code><br><code>applicationDidBecomeActive</code></p>
+<p>按下home键：</p>
+<p><code>applicationWillResignActive</code><br><code>applicationDidEnterBackground</code></p>
+<p><code>applicationWillTerminate</code> // 即将推出</p>
+<p>点击APP重新进入：</p>
+<p><code>applicationWillEnterForeground</code><br><code>applicationDidBecomeActive</code></p>
+<p>参考文档: </p>
+<p><a href="http://blog.csdn.net/yang8456211/article/details/11662891" target="_blank" rel="external">iOS application生命周期研究、发现与总结</a></p>
+<p><a href="http://oleb.net/blog/2012/02/app-launch-sequence-ios-revisited/" target="_blank" rel="external">Revisiting the App Launch Sequence on iOS</a></p>
+<p><a href="http://www.molotang.com/articles/1254.html" target="_blank" rel="external">iOS应用程序的状态及其切换（生命周期)</a></p>
+
+      
+    </div>
+    <footer>
+      
+        <div class="alignleft">
+            <a href="/2015/11/28/APP启动过程探究/#more" class="more-link"><i class="fa fa-chevron-right"></i>Read More</a>
+        </div>
+        
+        
+          <div class="alignright"> 
+            <a href="atony2099.github.io/2015/11/28/APP启动过程探究/#comment" class="comment-link">
+              <i class="fa fa-comments"></i><span class="ds-thread-count" data-thread-key="/2015/11/28/APP启动过程探究/">&nbsp;
+              </span>
+            </a>
+          </div>
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+
+  <article class="post">
+  
+    <div class="gallery">
+  <div class="photoset">
+    
+      <img src="">
+    
+  </div>
+  <div class="control">
+    <div class="prev"></div>
+    <div class="next"></div>
+  </div>
+</div>
+  
+  <div class="post-content">
+    <header>
+      
+      <time datetime="2015-10-17T11:35:27.000Z"><a href="/2015/10/17/观察者/">Sat, Oct 17 2015, 7:35:27 pm</a></time>
+
+  
+    <h1 class="title"><a href="/2015/10/17/观察者/">观察者模式</a></h1>
+  
+
+
+
+<div class="clear"></div>
+      
+    </header>
+    <div class="entry">
+      
+        <h4 id="观察者模式定义-发布-订阅模式"><a href="#观察者模式定义-发布-订阅模式" class="headerlink" title="观察者模式定义(发布-订阅模式)"></a>观察者模式定义(发布-订阅模式)</h4><h4 id=""><a href="#" class="headerlink" title=""></a><img src="http://img1.51cto.com/attachment/200909/200909141252899046109.png" alt=""></h4><p>主题: 一个具体主题实现主题接口方法，主要包括，注册，移除，通知方法</p>
+<p>观察者: 具体观察者实现update以便接收时间</p>
+<blockquote>
+<p>Define a one-to-many dependency between objects so that when one object changes state, all its dependents are notified and updated automatically.(定义对象间一种一对多的依赖关系，使得每当一个对象改变状态，则所有依赖于他的对象都会得到通知并被自动更新。)</p>
+</blockquote>
+<h4 id="观察者模式的实现"><a href="#观察者模式的实现" class="headerlink" title="观察者模式的实现"></a>观察者模式的实现</h4><h5 id="通知"><a href="#通知" class="headerlink" title="通知"></a>通知</h5><blockquote>
+<p>  通知机制中对某个感兴趣的所有对象都可以成为接受者。首先，需要对象向通知中心（NSNotificationCenter）发出addObserver:selector:name:object:消息进行注册，在投送对象投送通知给消息中心时，通知中心会把通知广播给注册过的接收者。所有的接收者都不知道是谁投送的，更不关心它的细节。投送对象与接收者是一对多关系。接收者如果对通知不再关注</p>
+</blockquote>
+<p><img src="http://jbcdn2.b0.upaiyun.com/2014/01/5cb6c1777313e3ca9bfb58053461f71f.jpg" alt=""></p>
+<h5 id="kvo"><a href="#kvo" class="headerlink" title="kvo"></a>kvo</h5><blockquote>
+<p>  KVO不想通知机制那样通过一个通知中心通知所有观察者对象，而是在对象属性变化时通知会被直接发送给观察者对象。</p>
+</blockquote>
+<p><img src="http://img1.tuicool.com/yA32Uj.jpg!web" alt=""></p>
+<p><a href="http://www.tuicool.com/articles/ZnuEjm" target="_blank" rel="external">设计模式深入学习IOS版（7）观察者模式</a></p>
+
+      
+    </div>
+    <footer>
+      
+        <div class="alignleft">
+            <a href="/2015/10/17/观察者/#more" class="more-link"><i class="fa fa-chevron-right"></i>Read More</a>
+        </div>
+        
+        
+          <div class="alignright"> 
+            <a href="atony2099.github.io/2015/10/17/观察者/#comment" class="comment-link">
+              <i class="fa fa-comments"></i><span class="ds-thread-count" data-thread-key="/2015/10/17/观察者/">&nbsp;
+              </span>
+            </a>
+          </div>
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+
+  <article class="post">
+  
+    <div class="gallery">
+  <div class="photoset">
+    
+      <img src="">
+    
+  </div>
+  <div class="control">
+    <div class="prev"></div>
+    <div class="next"></div>
+  </div>
+</div>
+  
+  <div class="post-content">
+    <header>
+      
+      <time datetime="2015-09-19T06:36:32.000Z"><a href="/2015/09/19/函数式编程/">Sat, Sep 19 2015, 2:36:32 pm</a></time>
+
+  
+    <h1 class="title"><a href="/2015/09/19/函数式编程/">函数式编程</a></h1>
+  
+
+
+
+<div class="clear"></div>
+      
+    </header>
+    <div class="entry">
+      
+        <p>####概念</p>
+<blockquote>
+<p>函数式编程是一种编程规范，也就是如何编写方程的方法论，主要思想是把运算过程尽量写成一系列嵌套的函数调用。举例来说，现在有这样一个数学表达式。</p>
+<p>　　(1 + 2) * 3 - 4</p>
+</blockquote>
+<p>传统的过程式编程，可能这样写：</p>
+<blockquote>
+<p>　　var a = 1 + 2;</p>
+<p>　　var b = a * 3;</p>
+<p>　　var c = b - 4;</p>
+</blockquote>
+<p>函数式编程要求使用函数，我们可以把运算过程<a href="http://lostechies.com/derickbailey/2012/01/24/some-thoughts-on-functional-javascript/" target="_blank" rel="external">定义</a>为不同的函数，然后写成下面这样：</p>
+<blockquote>
+<p>　　var result = subtract(multiply(add(1,2), 3), 4);</p>
+</blockquote>
+<h4 id="特点"><a href="#特点" class="headerlink" title="特点"></a>特点</h4><p>函数式编程具有五个鲜明的特点。</p>
+<p><strong>1. 函数是”第一等公民”</strong></p>
+<p>所谓<a href="http://en.wikipedia.org/wiki/First-class_function" target="_blank" rel="external">“第一等公民”</a>（first class），指的是函数与其他数据类型一样，处于平等地位，可以赋值给其他变量，也可以作为参数，传入另一个函数，或者作为别的函数的返回值。</p>
+<p>举例来说，下面代码中的print变量就是一个函数，可以作为另一个函数的参数。</p>
+<blockquote>
+<p>　　var print = function(i){ console.log(i);};<br>　　[1,2,3].forEach(print);</p>
+</blockquote>
+<p><strong>2. 只用”表达式”，不用”语句”</strong></p>
+<p>“表达式”（expression）是一个单纯的运算过程，总是有返回值；”语句”（statement）是执行某种操作，没有返回值。函数式编程要求，只使用表达式，不使用语句。也就是说，每一步都是单纯的运算，而且都有返回值。</p>
+<p>原因是函数式编程的开发动机，一开始就是为了处理运算（computation），不考虑系统的读写（I/O）。”语句”属于对系统的读写操作，所以就被排斥在外。</p>
+<p>当然，实际应用中，不做I/O是不可能的。因此，编程过程中，函数式编程只要求把I/O限制到最小，不要有不必要的读写行为，保持计算过程的单纯性。</p>
+<p><strong>3. 没有”副作用”</strong></p>
+<p>所谓<a href="http://en.wikipedia.org/wiki/Side_effect_(computer_science" target="_blank" rel="external">“副作用”</a>)（side effect），指的是函数内部与外部互动（最典型的情况，就是修改全局变量的值），产生运算以外的其他结果。</p>
+<p>函数式编程强调没有”副作用”，意味着函数要保持独立，所有功能就是返回一个新的值，没有其他行为，尤其是不得修改外部变量的值。</p>
+<p><strong>4. 不修改状态</strong></p>
+<p>上一点已经提到，函数式编程只是返回新的值，不修改系统变量。因此，不修改变量，也是它的一个重要特点。</p>
+<p>在其他类型的语言中，变量往往用来保存”状态”（state）。不修改变量，意味着状态不能保存在变量中。函数式编程使用参数保存状态，最好的例子就是递归。下面的代码是一个将字符串逆序排列的函数，它演示了不同的参数如何决定了运算所处的”状态”。</p>
+<blockquote>
+<p>　　function reverse(string) {</p>
+<p>　　　　if(string.length == 0) {</p>
+<p>　　　　　　return string;</p>
+<p>　　　　} else {</p>
+<p>　　　　　　return reverse(string.substring(1, string.length)) + string.substring(0, 1);</p>
+<p>　　　　}</p>
+<p>　　}</p>
+</blockquote>
+<p>由于使用了递归，函数式语言的运行速度比较慢，这是它长期不能在业界推广的主要原因。</p>
+<p><strong>5. 引用透明</strong></p>
+<p>引用透明（Referential transparency），指的是函数的运行不依赖于外部变量或”状态”，只依赖于输入的参数，任何时候只要参数相同，引用函数所得到的返回值总是相同的。</p>
+<p>有了前面的第三点和第四点，这点是很显然的。其他类型的语言，函数的返回值往往与系统状态有关，不同的状态之下，返回值是不一样的。这就叫”引用不透明”，很不利于观察和理解程序的行为。</p>
+<h4 id="意义"><a href="#意义" class="headerlink" title="意义"></a>意义</h4><p>函数式编程到底有什么好处，为什么会变得越来越流行？</p>
+<p><strong>1. 代码简洁，开发快速</strong></p>
+<p>函数式编程大量使用函数，减少了代码的重复，因此程序比较短，开发速度较快。</p>
+<p>Paul Graham在<a href="http://www.ruanyifeng.com/docs/pg/" target="_blank" rel="external">《黑客与画家》</a>一书中<a href="http://www.ruanyifeng.com/blog/2010/10/why_lisp_is_superior.html" target="_blank" rel="external">写道</a>：同样功能的程序，极端情况下，Lisp代码的长度可能是C代码的二十分之一。</p>
+<p>如果程序员每天所写的代码行数基本相同，这就意味着，”C语言需要一年时间完成开发某个功能，Lisp语言只需要不到三星期。反过来说，如果某个新功能，Lisp语言完成开发需要三个月，C语言需要写五年。”当然，这样的对比故意夸大了差异，但是”在一个高度竞争的市场中，即使开发速度只相差两三倍，也足以使得你永远处在落后的位置。”</p>
+<p><strong>2. 接近自然语言，易于理解</strong></p>
+<p>函数式编程的自由度很高，可以写出很接近自然语言的代码。</p>
+<p>前文曾经将表达式(1 + 2) * 3 - 4，写成函数式语言：</p>
+<blockquote>
+<p>　　subtract(multiply(add(1,2), 3), 4)</p>
+</blockquote>
+<p>对它进行变形，不难得到另一种写法：</p>
+<blockquote>
+<p>　　add(1,2).multiply(3).subtract(4)</p>
+</blockquote>
+<p>这基本就是自然语言的表达了。再看下面的代码，大家应该一眼就能明白它的意思吧：</p>
+<blockquote>
+<p>　　merge([1,2],[3,4]).sort().search(“2”)</p>
+</blockquote>
+<p><strong>参考</strong></p>
+<p><a href="http://www.ruanyifeng.com/blog/2012/04/functional_programming.html" target="_blank" rel="external">函数式编程初探</a></p>
+
+      
+    </div>
+    <footer>
+      
+        <div class="alignleft">
+            <a href="/2015/09/19/函数式编程/#more" class="more-link"><i class="fa fa-chevron-right"></i>Read More</a>
+        </div>
+        
+        
+          <div class="alignright"> 
+            <a href="atony2099.github.io/2015/09/19/函数式编程/#comment" class="comment-link">
+              <i class="fa fa-comments"></i><span class="ds-thread-count" data-thread-key="/2015/09/19/函数式编程/">&nbsp;
+              </span>
+            </a>
+          </div>
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+
+  <article class="post">
+  
+    <div class="gallery">
+  <div class="photoset">
+    
+      <img src="">
+    
+  </div>
+  <div class="control">
+    <div class="prev"></div>
+    <div class="next"></div>
+  </div>
+</div>
+  
+  <div class="post-content">
+    <header>
+      
+      <time datetime="2015-03-12T14:27:40.000Z"><a href="/2015/03/12/面向对象/">Thu, Mar 12 2015, 10:27:40 pm</a></time>
+
+  
+    <h1 class="title"><a href="/2015/03/12/面向对象/">聚合与耦合</a></h1>
+  
+
+
+
+<div class="clear"></div>
+      
+    </header>
+    <div class="entry">
+      
+        <p>本文来源: <a href="http://www.nowamagic.net/program/program_PolymerizationAndCoupling.php" target="_blank" rel="external">面向对象编程中的聚合与耦合</a> </p>
+<h4 id="聚合"><a href="#聚合" class="headerlink" title="聚合"></a>聚合</h4><blockquote>
+<p>聚合（Cohesion）是一个模块内部各成分之间相关联程度的度量。</p>
+</blockquote>
+<p>这里有多个含义值得考虑。首先，聚合是对一个模块内部的度量，这也是许多情况下我们把聚合称之为内聚的原因。第二，这里出现的模块是广义的模块，它可能是子系统，可能是功能模块，也可能是功能模块中的某一个类。从不同的层次看，聚合的程度也会有所不同。至于为什么不同，后面会有解释。第三，模块的成分包括模块的行为和状态。要做到高聚合，那么模块内部的行为必须要与模块的内部状态紧密关联。通俗来讲，<strong>一个模块仅完成一个独立的功能，模块内部不存在与该功能无关的操作或状态。</strong></p>
+<p>举一个生活中的例子。</p>
+<p>有两座城市Sidtown和Fredborough，连接两座城市的公路一天到晚总是拥堵不堪。经过”有关部门”调查之后发现，这两座城市中有两家公司Better Mousetrap和 Zokko Soda，Better Mousetrap的工厂建造在Sidtown,而该工厂的员工都居住在Fredborough,所以每天早上大批员工从Fredborough出发前往Sidtown，并在傍晚返回；类似的，Zokko Soda公司的运输车在每天的工作时间都需要在制瓶工厂和灌装工厂穿梭来往。</p>
+<p><img src="http://img.blog.csdn.net/20140326234013250?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvdHVtaXo=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt=""></p>
+<p>很明显，如果Better Mousetrap的工厂和员工居住地都在同一城市，而Zokko Soda的两座工厂都建造在另一座城市，那么城市之间的交通状况将会明显改善。</p>
+<p><img src="http://img.blog.csdn.net/20140326234049875?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvdHVtaXo=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt=""></p>
+<p>对比两图，上面两座城市间之所以出现交通的问题，是因为每座城市的”聚合性”都比较低：不相关的两个公司出现在了同一座城市，使得城市内部交通的利用率比较低，而城市之间的交通出现了超负荷。</p>
+<h4 id="耦合"><a href="#耦合" class="headerlink" title="耦合"></a>耦合</h4><blockquote>
+<p>耦合（Couping）是模块之间相关联程度的度量</p>
+</blockquote>
+<p>相对于聚合的内向性，耦合关注的是某一模块和其他模块之间的关联性。其实从前面的例子里，我们已经不可避免的提到了耦合的问题：由于两座城市之间的相互联系过于紧密，导致了城市之间的交通拥堵。另外一个潜在的问题就是，如果其中一座城市内部的交通出现了问题，另一座城市也会受到影响。<strong>我们所追求的低耦合，就是将两个模块之间的关联尽可能的降低，一个模块发生变化对于其他模块的影响尽可能的小</strong>。</p>
+<p>再讲一个生活中的例子，相信大部分的80后小的时候都玩过一种掌上游戏机，这种游戏机内含一个俄罗斯方块的游戏。这种游戏机虽然风靡一时，但是不多久就渐渐淡出了市场，因为这种游戏机只有俄罗斯方块可以玩儿，当我们玩儿腻了的时候，这个游戏机也就如同废物一个了。</p>
+<p>同期，任天堂推出一款后来风靡了将近20年的红白机，这种游戏机市场寿命如此之长并非游戏机本身质量有多好，而是因为基于红白机开发的游戏层出不穷，经典无数。魂斗罗、超级玛丽在当时哪怕是现在也是无人不知。红白机的游戏本身并不存储在游戏机当中，每当有新游戏推出的时候，只需要购买新的卡带即可。正是这种游戏机和卡带相对独立的设计，使得游戏的设计厂商无需关心游戏机的实现细节，只要遵循游戏机提供的接口（插槽）。很多游戏的设计厂商也从红白机庞大的市场中分得一杯羹。大多数的玩家可能不知道，魂斗罗并非任天堂推出的产品，而是目前以《实况足球》系列闻名世界的KONAMI公司于1988年从街机移植到红白机上的。</p>
+<p>回到耦合的话题上来，因为早先的掌上游戏机将游戏本身内置在机器当中，游戏和机器这两个模块之间的关系过于紧密，所以游戏玩儿腻了，游戏机就没用了，游戏机出问题了，游戏也再也不能玩儿了。而红白机的游戏和游戏机之间的关系是相对独立的，只要它们都遵循制定好的协议，就可以独立的发展和变化。游戏卡带摔坏了，其他的游戏一样可以在机器上运行；自己的游戏机坏了，把卡带拿到朋友家的游戏机上也能玩儿。红白机发展到后期，连游戏机的手柄也是可插拔的，如果手柄坏了，也只需要更换手柄即可</p>
+<h4 id="编程运用"><a href="#编程运用" class="headerlink" title="编程运用"></a>编程运用</h4><p>前面曾经提到，从不同的层次看，聚合和耦合的程度也会有所不同。Sidtown和Fredborough的例子当中，从城市的层次来看，第二种设计完全达到了高内聚和低耦合的目标，然而，如果从城市的不同区域来看，这样的设计内聚性还不够。如果我们一直追究下去，恐怕Better Mousetrap所有的员工都要住在生产线上了。一味的追求高内聚，必然会造成模块的功能过于单一，而模块的数量出现急剧膨胀。所以，我们在设计和实现程序时必须要斟酌模块间的聚合和耦合程。</p>
+
+      
+    </div>
+    <footer>
+      
+        <div class="alignleft">
+            <a href="/2015/03/12/面向对象/#more" class="more-link"><i class="fa fa-chevron-right"></i>Read More</a>
+        </div>
+        
+        
+          <div class="alignright"> 
+            <a href="atony2099.github.io/2015/03/12/面向对象/#comment" class="comment-link">
+              <i class="fa fa-comments"></i><span class="ds-thread-count" data-thread-key="/2015/03/12/面向对象/">&nbsp;
+              </span>
+            </a>
+          </div>
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+
+  <article class="post">
+  
+    <div class="gallery">
+  <div class="photoset">
+    
+      <img src="">
+    
+  </div>
+  <div class="control">
+    <div class="prev"></div>
+    <div class="next"></div>
+  </div>
+</div>
+  
+  <div class="post-content">
+    <header>
+      
+      <time datetime="2015-01-08T11:30:25.000Z"><a href="/2015/01/08/runtime/">Thu, Jan 8 2015, 7:30:25 pm</a></time>
+
+  
+    <h1 class="title"><a href="/2015/01/08/runtime/">runtime</a></h1>
+  
+
+
+
+<div class="clear"></div>
+      
+    </header>
+    <div class="entry">
+      
+        <ol>
+<li>动态语言VS静态语言<ul>
+<li>c语言: 代码执行的逻辑在在编译的时候会决定好，编译完成之后直接顺序执行，无任何二义性</li>
+<li>oc:它会尽可能地把代码执行的决策从编译和链接的时候，推迟到运行时。(关于编译和连接，参考这篇文章<a href="http://www.ruanyifeng.com/blog/2014/11/compiler.html" target="_blank" rel="external">编译器的工作过程</a><br>oc的动态性是依靠runtime 库实现的,runtime库是由c和汇编语言写成的。<br>runtime库主要做了下面几件事: </li>
+</ul>
+</li>
+</ol>
+<ul>
+<li>封装L:对象用C语言结构体表示，而方法可以用函数来实现，</li>
+<li>找出方法最终执行的代码: </li>
+</ul>
+<p>####一个方法的旅程<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">typedef struct objc_class *Class;</span><br></pre></td></tr></table></figure></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line">struct objc_class &#123;</span><br><span class="line"></span><br><span class="line">    Class isa  OBJC_ISA_AVAILABILITY;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">#if !__OBJC2__</span><br><span class="line"></span><br><span class="line">    Class super_class                       OBJC2_UNAVAILABLE;  // 父类</span><br><span class="line"></span><br><span class="line">    const char *name                        OBJC2_UNAVAILABLE;  // 类名</span><br><span class="line"></span><br><span class="line">    long version                            OBJC2_UNAVAILABLE;  // 类的版本信息，默认为0</span><br><span class="line"></span><br><span class="line">    long info                               OBJC2_UNAVAILABLE;  // 类信息，供运行期使用的一些位标识</span><br><span class="line"></span><br><span class="line">    long instance_size                      OBJC2_UNAVAILABLE;  // 该类的实例变量大小</span><br><span class="line"></span><br><span class="line">    struct objc_ivar_list *ivars            OBJC2_UNAVAILABLE;  // 该类的成员变量链表</span><br><span class="line"></span><br><span class="line">    struct objc_method_list *methodLists   OBJC2_UNAVAILABLE;  // 方法定义的链表</span><br><span class="line"></span><br><span class="line">    struct objc_cache *cache                OBJC2_UNAVAILABLE;  // 方法缓存的链表</span><br><span class="line"></span><br><span class="line">    struct objc_protocol_list *protocols    OBJC2_UNAVAILABLE;  // 协议链表</span><br><span class="line"></span><br><span class="line">#endif</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">&#125; OBJC2_UNAVAILABLE;</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">struct objc_object &#123;</span><br><span class="line"></span><br><span class="line">    Class isa  OBJC_ISA_AVAILABILITY;</span><br><span class="line"></span><br><span class="line">&#125;;</span><br><span class="line">typedef struct objc_object *id;</span><br></pre></td></tr></table></figure>
+<ol>
+<li>先解释一下参数的意义: </li>
+</ol>
+<p>SEL</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">typedef struct objc_selector *SEL;</span><br></pre></td></tr></table></figure>
+<p>Objective-C在编译时，会依据每一个方法的名字、参数序列，生成一个唯一的整型标识(Int类型的地址)，这个标识就是SEL，<strong>这个类型本质是类方法的编号</strong>。</p>
+<ul>
+<li>SEL 和 IMP 就是我们上文提到的，所以我们可以理解为objc_class中 method list保存了一组SEL&lt;-&gt;IMP的映射。</li>
+</ul>
+<p><img src="http://img.blog.csdn.net/20130718230259187?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQveWl5YWFpeHVleGk=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt=""></p>
+<p>IMP的定义 ：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">typedef id (*IMP)(id, SEL, ...);</span><br></pre></td></tr></table></figure>
+<p>IMP本质是一个函数指针，我们可以通过SEL获得对应的IMP，获得IMP之后也意味着我们取得需要指向方法的代码入口。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line">id objc_msgSend(id self, SEL op, ...) &#123;</span><br><span class="line">    if (!self) return nil;</span><br><span class="line">	IMP imp = class_getMethodImplementation(self-&gt;isa, SEL op);</span><br><span class="line">	imp(self, op, ...); //调用这个函数，伪代码...</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"> </span><br><span class="line">//查找IMP</span><br><span class="line">IMP class_getMethodImplementation(Class cls, SEL sel) &#123;</span><br><span class="line"></span><br><span class="line">    if (!cls || !sel) return nil;</span><br><span class="line">    IMP imp = lookUpImpOrNil(cls, sel);</span><br><span class="line">   if (!imp) return _objc_msgForward; //这个是用于消息转发的</span><br><span class="line">    return imp;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">IMP lookUpImpOrNil(Class cls, SEL sel) &#123;</span><br><span class="line"></span><br><span class="line">    if (!cls-&gt;initialize()) &#123;</span><br><span class="line">        _class_initialize(cls);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"> </span><br><span class="line"></span><br><span class="line">    Class curClass = cls;</span><br><span class="line"></span><br><span class="line">    IMP imp = nil;</span><br><span class="line"></span><br><span class="line">    do &#123; //先查缓存,缓存没有时重建,仍旧没有则向父类查询</span><br><span class="line"></span><br><span class="line">        if (!curClass) break;</span><br><span class="line"></span><br><span class="line">        if (!curClass-&gt;cache) fill_cache(cls, curClass);</span><br><span class="line"></span><br><span class="line">        imp = cache_getImp(curClass, sel);</span><br><span class="line"></span><br><span class="line">        if (imp) break;</span><br><span class="line"></span><br><span class="line">    &#125; while (curClass = curClass-&gt;superclass);</span><br><span class="line">    return imp;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>我们可以梳理出相关方法的执行过程: </p>
+<ol>
+<li><p>检查receiver是否为nil，如果为nil，直接return(这也是为什么我们向一个nil发送消息不会crash)</p>
+</li>
+<li><p>根据receiver 内部的iSA指针找到它所指向的类对象，然后再根据SEL查询IMP </p>
+<ul>
+<li>先查询cache 方法链表</li>
+<li>再从methodList查找</li>
+<li>还没找到，就沿着继承体系向上查找，一直找到NSObject</li>
+<li>如果一直查找到根类仍旧没有实现，则用_objc_msgForward函数指针代替imp。_objc_msgForward的作用是在程序抛出<em>unrecognized selector sent to</em> 之前调用消息转发的方法，让你有机会拯救程序</li>
+</ul>
+</li>
+<li><p>消息转发阶段: </p>
+<ul>
+<li><p>Method resolution: 调用 <code>+resolveInstanceMethod:</code> 或者 <code>+resolveClassMethod:</code>，让你有机会提供一个函数实现。如果你添加了函数并返回 YES</p>
+</li>
+<li><p>fast forwarding: 调用这个方法，给你把这个消息转发给其他对象的机会,如果获取到，直接转发给它。如果返回nil，继续下面操作</p>
+</li>
+<li><p>Normal forwarding :这一步是 Runtime 最后一次给你挽救的机会。运行时系统会在这一步给消息接收者最后一次机会将消息转发给其它对象。对象会创建一个表示消息的NSInvocation对象，把与尚未处理的消息 有关的全部细节都封装在anInvocation中，包括selector，目标(target)和参数。我们可以在forwardInvocation 方法中选择将消息转发给其它对象。​​</p>
+</li>
+</ul>
+</li>
+</ol>
+<h3 id="iVar变量"><a href="#iVar变量" class="headerlink" title="iVar变量"></a>iVar变量</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">typedef struct objc_ivar *Ivar;</span><br></pre></td></tr></table></figure>
+<p>再来看一下结构体结构</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">struct objc_ivar &#123;</span><br><span class="line">    char *ivar_name      // 变量名                                    </span><br><span class="line">    char *ivar_type      // 变量类型                                    </span><br><span class="line">    int ivar_offset      // 基地址偏移字节                                    </span><br><span class="line"> #ifdef __LP64__</span><br><span class="line">    int space                                                </span><br><span class="line"> #endif</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>相关参考文档: </p>
+<p><a href="http://blog.ibireme.com/2013/11/26/objective-c-messaging/" target="_blank" rel="external">Objective-C 中的消息与消息转发</a></p>
+<p><a href="http://www.cocoachina.com/ios/20150604/12013.html" target="_blank" rel="external">轻松学习之 Objective-C消息转发</a></p>
+<p><a href="http://tech.glowing.com/cn/objective-c-runtime/" target="_blank" rel="external">Objective-C Runtime</a></p>
+<p><a href="http://southpeak.github.io/blog/2014/10/25/objective-c-runtime-yun-xing-shi-zhi-lei-yu-dui-xiang/" target="_blank" rel="external">Objective-C Runtime 运行时之一：类与对象</a></p>
+<p>在马泉营住了大半年，鉴于我是一个很无趣的人，住在马泉营的日子也没什么有趣的事情发生，但是为了以后回村里跟隔，，我的假装记录这边</p>
+<p>  有段时间</p>
+
+      
+    </div>
+    <footer>
+      
+        <div class="alignleft">
+            <a href="/2015/01/08/runtime/#more" class="more-link"><i class="fa fa-chevron-right"></i>Read More</a>
+        </div>
+        
+        
+          <div class="alignright"> 
+            <a href="atony2099.github.io/2015/01/08/runtime/#comment" class="comment-link">
+              <i class="fa fa-comments"></i><span class="ds-thread-count" data-thread-key="/2015/01/08/runtime/">&nbsp;
+              </span>
+            </a>
+          </div>
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+
+
+<nav id="pagination">
+  
+    <a href="/" class="alignleft prev"><i class="fa fa-long-arrow-left"></i>Vorherige Seite</a>
+  
+  
+  <div class="clearfix"></div>
+</nav>
+
+<script src="/js/jquery.anystretch.min.js"></script>
+<script src="/js/cover.js"></script>
+
+    <div class="clearfix"></div>
+  </div>
+  <footer id="footer" class="inner"><div>
+  
+  &copy; 2016 托尼的夏天
+  
+</div>
+Powered by <a href="http://zespia.tw/hexo/" title="Hexo" target="_blank" rel="external">Hexo</a> and <a href="http://pages.github.com/" title="GitHub Pages" target="_blank" rel="external">GitHub Pages</a>
+
+<div class="clearfix"></div></footer>
+  
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+<script src="//netdna.bootstrapcdn.com/bootstrap/3.1.0/js/bootstrap.min.js"></script>
+
+
+
+
+    <script type="text/javascript">
+        (function(){
+
+            $(window).scroll(function(){
+
+                var scrollTop = $(window).scrollTop();
+                if ( scrollTop >200 ){
+                    $("#main-nav").removeClass('normal_mode').addClass('top_mode');
+                } else{
+                    $("#main-nav").removeClass('top_mode').addClass('normal_mode');
+                }
+
+            });
+
+        })();
+    </script>
+
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+  <script type="text/javascript">
+  (function($){
+    $('.fancybox').fancybox({
+      'titlePosition': 'inside'
+    });
+  })(jQuery);
+  </script>
+
+
+
+    
+    <script type="text/javascript">
+      var duoshuoQuery = {short_name:"your_id"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.src = 'http://static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0] 
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+
+
+
+<script type="text/javascript">
+  
+  $(function(){
+
+    $('.title').hover(
+      function() {      
+        $(this).stop().animate(
+          {'marginLeft': '10px'}, 200
+        );   
+      }, 
+      function() {       
+        $(this).stop().animate({'marginLeft': '0px'}, 200);      
+      
+    });   
+
+  });
+
+</script>
+
+
+</body>
+</html>

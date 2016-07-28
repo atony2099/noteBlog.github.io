@@ -1,0 +1,307 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>category笔记 | Hexo</title>
+  <meta name="author" content="托尼的夏天">
+  
+  <meta name="description" content="category是什么?苹果文档如是说: 
+
+You use categories to define additional methods of an existing class—even one whose source code is unavailable to you—without s">
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  <meta property="og:title" content="category笔记"/>
+  <meta property="og:site_name" content="Hexo"/>
+
+  
+    <meta property="og:image" content="undefined"/>
+  
+
+  <link href="/favicon.ico" rel="icon">
+  <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap.min.css">
+<link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css">
+<link rel="stylesheet" href="/css/style.css">
+  <script src="http://code.jquery.com/jquery-2.1.1.min.js"></script>
+  <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+  
+<script type="text/javascript">
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-368771XX-X']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+</script>
+
+</head>
+
+<body>
+  <header id="header" class='normal_mode'>
+    <nav id="main-nav">
+  <ul class='container'>
+    
+      <li><a href="/">Home</a></li>
+    
+      <li><a href="/archives">Archives</a></li>
+    
+  </ul>
+  <div class="clearfix"></div>
+</nav>
+  </header>
+  <div id="content" class="container">
+    <article class="post">
+  
+    <div class="gallery">
+  <div class="photoset">
+    
+      <img src="">
+    
+  </div>
+  <div class="control">
+    <div class="prev"></div>
+    <div class="next"></div>
+  </div>
+</div>
+  
+  <div class="post-content">
+    <header>
+      
+      <time datetime="2016-04-09T12:46:08.000Z"><a href="/2016/04/09/category/">Sat, Apr 9 2016, 8:46:08 pm</a></time>
+
+  
+    <h1 class="title">category笔记</h1>
+  
+
+
+
+<div class="clear"></div>
+      
+    </header>
+    <div class="entry">
+      
+        <h4 id="category是什么"><a href="#category是什么" class="headerlink" title="category是什么?"></a>category是什么?</h4><p>苹果文档如是说: </p>
+<blockquote>
+<p>You use categories to define additional methods of an existing class—even one whose source code is unavailable to you—without subclassin</p>
+</blockquote>
+<p>也就是说category主要是用来向一个已存在的类拓展方法，用category拓展方法明显的好处是可以用来拆分功能,让一个大型的类让一个大型的类分治管理。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">// Sark.h</span><br><span class="line">@interface tfenglin : NSObject</span><br><span class="line">@end</span><br><span class="line"></span><br><span class="line">@interface Sark (play)  // 学习的分类</span><br><span class="line">- (void)play;</span><br><span class="line">@end</span><br><span class="line"></span><br><span class="line">@interface Sark (study) // 工作的分类 </span><br><span class="line">- (void)study;</span><br><span class="line">@end</span><br></pre></td></tr></table></figure>
+<p>category使用要注意的原则:category 的实现可以依赖主类，但主类一定不依赖 category，也就是说移除任何一个 Category 的代码不会对主类产生任何影响。</p>
+<blockquote>
+<p> 所以 Category 一定是简单插拔的，就像买个外接键盘来扩展在 MacBook 上的写码能力，但当拔了键盘，MacBook 的运行不会受到任何影响。–sunnyxx</p>
+</blockquote>
+<h4 id="category-和extension"><a href="#category-和extension" class="headerlink" title="category 和extension"></a>category 和extension</h4><p>category在语法上一般被成视为匿名的extension，但他们在实现机制上差别很大。</p>
+<blockquote>
+<p>Class Extension 在编译期就会将定义的 Ivar、属性、方法等直接合入主类，而 Category 在程序启动 Runtime Loading 时才会将属性（没 Ivar）和方法合入主类。</p>
+</blockquote>
+<p>由于category是运行期决议的，我们可以推导出category是无法添加成员变量的，因为在运行期，对象的内存布局已经确定好，如果添加成员变量，会破会对象的内存布局。</p>
+<blockquote>
+<p> this(extension)  is a way to declare “pseudo-private” methods (pseudo-private in that they’re not really private, just not externally exposed). –stackoverflow </p>
+<p>extension可以理解为声明”私有方法”的一种方式</p>
+</blockquote>
+<h4 id="runtime对category处理"><a href="#runtime对category处理" class="headerlink" title="runtime对category处理"></a>runtime对category处理</h4><p>我们知道OC中的类和对象都可以用category来表示，category也不例外:</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="keyword">struct</span> <span class="keyword">category_t</span> &#123;</span><br><span class="line">    <span class="keyword">const</span> <span class="keyword">char</span> *name; <span class="comment">// 类名</span></span><br><span class="line">    <span class="keyword">classref_t</span> cls; <span class="comment">// 要关联的类对象</span></span><br><span class="line">    <span class="keyword">struct</span> <span class="keyword">method_list_t</span> *instanceMethods; <span class="comment">// 给类添加的实例方法的列表</span></span><br><span class="line">    <span class="keyword">struct</span> <span class="keyword">method_list_t</span> *classMethods; <span class="comment">//给类添加的类方法的列表</span></span><br><span class="line">    <span class="keyword">struct</span> <span class="keyword">protocol_list_t</span> *protocols; <span class="comment">// 给类添加协议列表</span></span><br><span class="line">    <span class="keyword">struct</span> <span class="keyword">property_list_t</span> *instanceProperties; <span class="comment">// 给类添加实例属性</span></span><br><span class="line">&#125; <span class="keyword">category_t</span>;</span><br></pre></td></tr></table></figure>
+<p>从category的数据结构可以看出没有实例变量这一项，这再一次佐证了category                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    无法添加实例变量的特性。</p>
+<p>runtime处理category时候，会调用两拨方法， 一组是实例对象相关的调用<code>addUnattachedCategoryForClass</code>，一拨是类对象相关的调用<code>addUnattachedCategoryForClass</code>，然后会调到<code>attachCategoryMethods</code>方法，这个方法把一个类所有的category_list的所有方法取出来组成一个<code>method_list_t **</code></p>
+<p>attachCategoryMethods方法如下所示: </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">static void</span><br><span class="line">attachCategoryMethods(class_t *cls, category_list *cats,</span><br><span class="line">                      BOOL *inoutVtablesAffected)</span><br><span class="line">&#123;</span><br><span class="line">    if (!cats) return;</span><br><span class="line">    if (PrintReplacedMethods) printReplacements(cls, cats);</span><br><span class="line"></span><br><span class="line">    BOOL isMeta = isMetaClass(cls);</span><br><span class="line">    method_list_t **mlists = (method_list_t **)</span><br><span class="line">        _malloc_internal(cats-&gt;count * sizeof(*mlists));</span><br><span class="line"></span><br><span class="line">    // Count backwards through cats to get newest categories first</span><br><span class="line">    int mcount = 0;</span><br><span class="line">    int i = cats-&gt;count;</span><br><span class="line">    BOOL fromBundle = NO;</span><br><span class="line">    while (i--) &#123;</span><br><span class="line">        method_list_t *mlist = cat_method_list(cats-&gt;list[i].cat, isMeta);</span><br><span class="line">        if (mlist) &#123;</span><br><span class="line">            mlists[mcount++] = mlist;</span><br><span class="line">            fromBundle |= cats-&gt;list[i].fromBundle;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    attachMethodLists(cls, mlists, mcount, NO, fromBundle, inoutVtablesAffected);</span><br><span class="line"></span><br><span class="line">    _free_internal(mlists);</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这边有两个核心点: </p>
+<ol>
+<li>category的方法没有“完全替换掉”原来类已经有的方法，也就是说如果category和原来类都有methodA，那么category附加完成之后，类的方法列表里会有两个method</li>
+<li>category的方法被放到了新方法列表的前面，而原来类的方法被放到了新方法列表的后面，这也就是我们平常所说的category的方法会“覆盖”掉原来类的同名方法，这是因为运行时在查找方法的时候是顺着方法列表的顺序查找的，它只要一找到对应名字的方法, ，就会罢休，殊不知后面可能还有一样名字的方法</li>
+</ol>
+<h4 id="associated-object"><a href="#associated-object" class="headerlink" title="associated  object"></a>associated  object</h4><p>虽然category不能添加成员变量，但通过associated  object却可以弥补这一不足，顾名思义，他是一个关联对象，把一个key-object和已知的对象关联起来。</p>
+<p><strong>相关函数</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">void objc_setAssociatedObject(id object, const void *key, id value, objc_AssociationPolicy policy); // 类似set方法</span><br><span class="line">id objc_getAssociatedObject(id object, const void *key); // 类似get方法</span><br><span class="line">void objc_removeAssociatedObjects(id object);</span><br></pre></td></tr></table></figure>
+<p><code>objc_removeAssociatedObjects</code> 函数我们一般是用不上的，因为这个函数会移除一个对象的所有关联对象，将该对象恢复成“原始”状态<br>上文函数key指针参数，推荐使用@selector(),它能确保key值是唯一的常量</p>
+<p><strong>关联策略</strong></p>
+<p>主要有五种关联策略</p>
+<table>
+<thead>
+<tr>
+<th>关联策略</th>
+<th>等价属性</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>OBJC_ASSOCIATION_ASSIGN</td>
+<td>@property (assign) or @property (unsafe_unretained)</td>
+<td>弱引用关联对象</td>
+</tr>
+<tr>
+<td>OBJC_ASSOCIATION_RETAIN_NONATOMIC</td>
+<td>@property (strong, nonatomic)</td>
+<td>强引用关联对象，且为非原子操作</td>
+</tr>
+<tr>
+<td>OBJC_ASSOCIATION_COPY_NONATOMIC</td>
+<td>@property (copy, nonatomic)</td>
+<td>复制关联对象，且为非原子操作</td>
+</tr>
+<tr>
+<td>OBJC_ASSOCIATION_RETAIN</td>
+<td>@property (strong, atomic)</td>
+<td>强引用关联对象，且为原子操作</td>
+</tr>
+<tr>
+<td>OBJC_ASSOCIATION_COPY</td>
+<td>@property (copy, atomic)</td>
+<td>复制关联对象，且为原子操作</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<ol>
+<li>关联对象与被关联对象本身的存储并没有直接的关系，它是存储在单独的哈希表中的；</li>
+<li>关联对象的五种关联策略与属性的限定符非常类似，在绝大多数情况下，我们都会使用<code>OBJC_ASSOCIATION_RETAIN_NONATOMIC</code> 的关联策略，这可以保证我们持有关联对象；</li>
+</ol>
+</blockquote>
+<p><a href="http://nshipster.com/associated-objects/" target="_blank" rel="external"><a href="http://nshipster.com/associated-objects/" target="_blank" rel="external">Associated Objects</a></a></p>
+<p><a href="http://tech.meituan.com/DiveIntoCategory.html" target="_blank" rel="external">深入理解Objective-C：Category</a></p>
+<p><a href="http://blog.devtang.com/2013/10/15/objective-c-object-model/" target="_blank" rel="external">Objective-C对象模型及应用</a></p>
+<p><a href="http://blog.leichunfeng.com/blog/2015/06/26/objective-c-associated-objects-implementation-principle/" target="_blank" rel="external">Objective-C Associated Objects 的实现原理</a></p>
+<p><a href="http://blog.sunnyxx.com/2014/03/05/objc_category_secret/" target="_blank" rel="external">objc category的秘密</a></p>
+
+      
+    </div>
+    <footer>
+      
+          
+<!-- JiaThis Button BEGIN -->
+<div class="jiathis_style">
+  <span class="jiathis_txt">分享到：</span>
+  <a class="jiathis_button_weixin">微信</a>
+  <a class="jiathis_button_tsina">新浪微博</a>
+  <a class="jiathis_button_renren">人人网</a>
+  <a class="jiathis_button_qzone">QQ空间</a>
+  <a class="jiathis_button_douban">豆瓣</a>
+  <a class="jiathis_button_pocket">Pocket</a>
+  <a href="http://www.jiathis.com/share?uid=901656" class="jiathis jiathis_txt jiathis_separator jtico jtico_jiathis" target="_blank">更多</a>
+  <a class="jiathis_counter_style"></a>
+</div>
+<script type="text/javascript" src="http://v3.jiathis.com/code_mini/jia.js?uid=901656" charset="utf-8"></script>
+<!-- JiaThis Button END -->
+
+          <div class="clearfix"></div>
+          <nav id="pagination">
+  
+    <a href="/2016/04/12/runloop学习/" class="alignleft prev"><i class="fa fa-long-arrow-left"></i>Next</a>
+  
+  
+    <a href="/2016/04/02/coreAnimation学习/" class="alignright next">Prev<i class="fa fa-long-arrow-right"></i></a>
+  
+  <div class="clearfix"></div>
+</nav>
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+<section id="comment">
+  <h1 class="title">Kommentare</h1>
+
+  
+      <!-- Duoshuo Comment BEGIN -->
+<div class="ds-thread" data-thread-key="/2016/04/09/category/"></div>
+<!-- Duoshuo Comment END -->
+  
+</section>
+
+
+
+    <div class="clearfix"></div>
+  </div>
+  <footer id="footer" class="inner"><div>
+  
+  &copy; 2016 托尼的夏天
+  
+</div>
+Powered by <a href="http://zespia.tw/hexo/" title="Hexo" target="_blank" rel="external">Hexo</a> and <a href="http://pages.github.com/" title="GitHub Pages" target="_blank" rel="external">GitHub Pages</a>
+
+<div class="clearfix"></div></footer>
+  
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+<script src="//netdna.bootstrapcdn.com/bootstrap/3.1.0/js/bootstrap.min.js"></script>
+
+
+
+
+    <script type="text/javascript">
+        (function(){
+
+            $(window).scroll(function(){
+
+                var scrollTop = $(window).scrollTop();
+                if ( scrollTop >200 ){
+                    $("#main-nav").removeClass('normal_mode').addClass('top_mode');
+                } else{
+                    $("#main-nav").removeClass('top_mode').addClass('normal_mode');
+                }
+
+            });
+
+        })();
+    </script>
+
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+  <script type="text/javascript">
+  (function($){
+    $('.fancybox').fancybox({
+      'titlePosition': 'inside'
+    });
+  })(jQuery);
+  </script>
+
+
+
+    
+    <script type="text/javascript">
+      var duoshuoQuery = {short_name:"your_id"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.src = 'http://static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0] 
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+
+
+
+<script type="text/javascript">
+  
+  $(function(){
+
+    $('.title').hover(
+      function() {      
+        $(this).stop().animate(
+          {'marginLeft': '10px'}, 200
+        );   
+      }, 
+      function() {       
+        $(this).stop().animate({'marginLeft': '0px'}, 200);      
+      
+    });   
+
+  });
+
+</script>
+
+
+</body>
+</html>
