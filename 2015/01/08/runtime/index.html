@@ -94,7 +94,7 @@ oc:它会尽可能地把代码执行的决策从编译和链接的时候，推�
 </li>
 </ol>
 <ul>
-<li>封装L:对象用C语言结构体表示，而方法可以用函数来实现，</li>
+<li>封装:对象用C语言结构体表示，而方法可以用函数来实现，</li>
 <li>找出方法最终执行的代码: </li>
 </ul>
 <p>####一个方法的旅程<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">typedef struct objc_class *Class;</span><br></pre></td></tr></table></figure></p>
@@ -132,21 +132,18 @@ oc:它会尽可能地把代码执行的决策从编译和链接的时候，推�
 </li>
 <li><p>fast forwarding: 调用这个方法，给你把这个消息转发给其他对象的机会,如果获取到，直接转发给它。如果返回nil，继续下面操作</p>
 </li>
-<li><p>Normal forwarding :这一步是 Runtime 最后一次给你挽救的机会。运行时系统会在这一步给消息接收者最后一次机会将消息转发给其它对象。对象会创建一个表示消息的NSInvocation对象，把与尚未处理的消息 有关的全部细节都封装在anInvocation中，包括selector，目标(target)和参数。我们可以在forwardInvocation 方法中选择将消息转发给其它对象。​​</p>
+<li><p>Normal forwarding :这一步是 Runtime 最后一次给你挽救的机会。运行时系统会在这一步给消息接收者最后一次机会将消息转发给其它对象。对象会创建一个表示消息的NSInvocation对象，把与尚未处理的消息 有关的全部细节都封装在anInvocation中，包括selector，目标(target)和参数。我们可以在forwardInvocation 方法中选择将消息转发给其它对象。</p>
 </li>
 </ul>
 </li>
 </ol>
 <h3 id="iVar变量"><a href="#iVar变量" class="headerlink" title="iVar变量"></a>iVar变量</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">typedef struct objc_ivar *Ivar;</span><br></pre></td></tr></table></figure>
-<p>再来看一下结构体结构</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">struct objc_ivar &#123;</span><br><span class="line">    char *ivar_name      // 变量名                                    </span><br><span class="line">    char *ivar_type      // 变量类型                                    </span><br><span class="line">    int ivar_offset      // 基地址偏移字节                                    </span><br><span class="line"> #ifdef __LP64__</span><br><span class="line">    int space                                                </span><br><span class="line"> #endif</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>相关参考文档: </p>
 <p><a href="http://blog.ibireme.com/2013/11/26/objective-c-messaging/" target="_blank" rel="external">Objective-C 中的消息与消息转发</a></p>
 <p><a href="http://www.cocoachina.com/ios/20150604/12013.html" target="_blank" rel="external">轻松学习之 Objective-C消息转发</a></p>
 <p><a href="http://tech.glowing.com/cn/objective-c-runtime/" target="_blank" rel="external">Objective-C Runtime</a></p>
 <p><a href="http://southpeak.github.io/blog/2014/10/25/objective-c-runtime-yun-xing-shi-zhi-lei-yu-dui-xiang/" target="_blank" rel="external">Objective-C Runtime 运行时之一：类与对象</a></p>
-<p>在马泉营住了大半年，鉴于我是一个很无趣的人，住在马泉营的日子也没什么有趣的事情发生，但是为了以后回村里跟隔，，我的假装记录这边</p>
-<p>  有段时间</p>
 
       
     </div>
@@ -184,7 +181,7 @@ oc:它会尽可能地把代码执行的决策从编译和链接的时候，推�
 
 
 <section id="comment">
-  <h1 class="title">Comments</h1>
+  <h1 class="title">Kommentare</h1>
 
   
       <!-- Duoshuo Comment BEGIN -->

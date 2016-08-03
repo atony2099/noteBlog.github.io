@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   
-  <title>Page 2 | 托尼的夏天</title>
+  <title>Seite 2 | 托尼的夏天</title>
   <meta name="author" content="tony2009">
   
   
@@ -80,6 +80,445 @@
 </ul>
 	</div>
 </div>
+
+
+  <article class="post">
+  
+    <div class="gallery">
+  <div class="photoset">
+    
+      <img src="">
+    
+  </div>
+  <div class="control">
+    <div class="prev"></div>
+    <div class="next"></div>
+  </div>
+</div>
+  
+  <div class="post-content">
+    <header>
+      
+      <time datetime="2016-02-19T09:14:18.000Z"><a href="/2016/02/19/block/">Fri, Feb 19 2016, 5:14:18 pm</a></time>
+
+  
+    <h1 class="title"><a href="/2016/02/19/block/">block探究</a></h1>
+  
+
+
+
+<div class="clear"></div>
+      
+    </header>
+    <div class="entry">
+      
+        <h4 id="关于闭包"><a href="#关于闭包" class="headerlink" title="关于闭包"></a>关于闭包</h4><blockquote>
+<p>闭包:首先，闭包是一个<strong>函数</strong>,它1.定义在函数内部 2.能读取其他函数内部变量</p>
+</blockquote>
+<p><strong>JS例子</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">　　<span class="function"><span class="keyword">function</span> <span class="title">f1</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line"></span><br><span class="line">　　　　<span class="keyword">var</span> n=<span class="number">999</span>;</span><br><span class="line"></span><br><span class="line">　　　　nAdd=<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;n+=<span class="number">1</span>&#125;</span><br><span class="line"></span><br><span class="line">　　　　<span class="function"><span class="keyword">function</span> <span class="title">f2</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line"></span><br><span class="line">　　　　　　alert(n);</span><br><span class="line"></span><br><span class="line">　　　　&#125;</span><br><span class="line"></span><br><span class="line">　　　　<span class="keyword">return</span> f2;</span><br><span class="line"></span><br><span class="line">　　&#125;</span><br><span class="line"></span><br><span class="line">　　<span class="keyword">var</span> result=f1();</span><br><span class="line"></span><br><span class="line">　　result(); <span class="comment">// 999</span></span><br><span class="line"></span><br><span class="line">　　nAdd();</span><br><span class="line"></span><br><span class="line">　　result(); <span class="comment">// 1000</span></span><br></pre></td></tr></table></figure>
+<p>result实际上就是闭包f2函数。它一共运行了两次，第一次的值是999，第二次的值是1000。这证明了，函数f1中的局部变量n一直保存在内存中，并没有在f1调用后被自动清除。</p>
+<p>为什么会这样呢？原因就在于=f1是f2的父函数，而f2被赋给了一个全局变量，这导致f2始终在内存中，而f2的存在依赖于f1，因此f1也始终在内存中，不会在调用结束后，被垃圾回收机制（garbage collection）回收。</p>
+<h4 id="block实现"><a href="#block实现" class="headerlink" title="block实现"></a>block实现</h4><blockquote>
+<p> block 实际上就是 Objective-C 语言对于闭包的实现。</p>
+</blockquote>
+<p>block数据结构定义如下</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">struct __block_impl</span><br><span class="line">&#123;</span><br><span class="line">    void *isa;</span><br><span class="line">    int Flags;</span><br><span class="line">    int Reserved;</span><br><span class="line">    void *FuncPtr;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<ol>
+<li>isa 指针，所有对象都有该指针，用于实现对象相关的功能。</li>
+<li>flags，用于按 bit 位表示一些 block 的附加信息，本文后面介绍 block copy 的实现代码可以看到对该变量的使用。</li>
+<li>reserved，保留变量。</li>
+<li>FuncPtr函数指针，指向 Block 要执行的函数</li>
+</ol>
+<blockquote>
+<p>“<em>Blocks are Objective-C objects, which means they can be added to collections like NSArray or NSDictionary.</em> ”</p>
+</blockquote>
+<p>###block执行过程</p>
+<p>   ​</p>
+<p>   block.c</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span><br><span class="line"></span>&#123;</span><br><span class="line">    ^&#123; <span class="built_in">printf</span>(<span class="string">"Hello, World!\n"</span>); &#125; ();</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>clang -rewrite-objc block.c 翻译后</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">struct</span> __block_impl &#123;</span><br><span class="line">    <span class="keyword">void</span> *isa;</span><br><span class="line">    <span class="keyword">int</span> Flags;</span><br><span class="line">    <span class="keyword">int</span> Reserved;</span><br><span class="line">    <span class="keyword">void</span> *FuncPtr;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">struct</span> __main_block_impl_0 &#123;</span><br><span class="line">    <span class="keyword">struct</span> __block_impl impl;</span><br><span class="line">    <span class="keyword">struct</span> __main_block_desc_0* Desc;</span><br><span class="line">    __main_block_impl_0(<span class="keyword">void</span> *fp, <span class="keyword">struct</span> __main_block_desc_0 *desc, <span class="keyword">int</span> flags=<span class="number">0</span>) &#123;</span><br><span class="line">        impl.isa = &amp;_NSConcreteStackBlock;</span><br><span class="line">        impl.Flags = flags;</span><br><span class="line">        impl.FuncPtr = fp;</span><br><span class="line">        Desc = desc;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"><span class="keyword">static</span> <span class="keyword">void</span> __main_block_func_0(<span class="keyword">struct</span> __main_block_impl_0 *__cself) &#123;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"Hello, World!\n"</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">static</span> <span class="keyword">struct</span> __main_block_desc_0 &#123;</span><br><span class="line">    <span class="keyword">size_t</span> reserved;</span><br><span class="line">    <span class="keyword">size_t</span> Block_size;</span><br><span class="line">&#125; __main_block_desc_0_DATA = &#123; <span class="number">0</span>, <span class="keyword">sizeof</span>(<span class="keyword">struct</span> __main_block_impl_0) &#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span><br><span class="line"></span>&#123;</span><br><span class="line">    (<span class="keyword">void</span> (*)())&amp;__main_block_impl_0((<span class="keyword">void</span> *)__main_block_func_0, &amp;__main_block_desc_0_DATA) ();</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>通过上面的代码，block的代码可以表示为: </p>
+<p><img src="data:image/svg+xml,%3C%3Fxml%20version%3D%221.0%22%20encoding%3D%22utf-8%22%20standalone%3D%22no%22%3F%3E%3C!DOCTYPE%20svg%20PUBLIC%20%22-%2F%2FW3C%2F%2FDTD%20SVG%2020010904%2F%2FEN%22%20%22http%3A%2F%2Fwww.w3.org%2FTR%2F2001%2FREC-SVG-20010904%2FDTD%2Fsvg10.dtd%22%3E%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22559%22%20height%3D%22458%22%20xmlns%3Axlink%3D%22http%3A%2F%2Fwww.w3.org%2F1999%2Fxlink%22%3E%3Csource%3E%3C!%5BCDATA%5BCreated%20with%20Rapha%C3%ABl%202.1.2main(" alt="">%E8%B0%83%E7%94%A8%20<strong>main_block_impl_0%20%E6%9E%84%E9%80%A0%E5%87%BD%E6%95%B0%E5%88%9D%E5%A7%8B%E5%8C%96%E7%BB%93%E6%9E%84%E4%BD%93</strong>main_block_impl_0%EF%BC%88<strong>main_block_func_0%20%2C%20</strong>main_block_desc_0_DATA%EF%BC%89%3B%E5%BE%97%E5%88%B0%E7%9A%84<strong>main_block_impl_0%20%E7%B1%BB%E5%9E%8B%E5%8F%98%E9%87%8F%E8%B5%8B%E5%80%BC%E7%BB%99%20blk%E6%89%A7%E8%A1%8C%20blk-%3EFuncPtr()%E5%87%BD%E6%95%B0%EF%BC%8C%E5%8D%B3%20printf(%22Block%5Cn%22)%3BEnd%5D%5D%3E%3C%2Fsource%3E%3Cdesc%20style%3D%22-webkit-tap-highlight-color%3A%20rgba(0%2C%200%2C%200%2C%200)%3B%22%3ECreated%20with%20Rapha%C3%ABl%202.1.2%3C%2Fdesc%3E%3Cdefs%20style%3D%22-webkit-tap-highlight-color%3A%20rgba(0%2C%200%2C%200%2C%200)%3B%22%3E%3Cpath%20stroke-linecap%3D%22round%22%20d%3D%22M5%2C0%200%2C2.5%205%2C5z%22%20id%3D%22raphael-marker-block%22%20style%3D%22-webkit-tap-highlight-color%3A%20rgba(0%2C%200%2C%200%2C%200)%3B%22%3E%3C%2Fpath%3E%3Cmarker%20id%3D%22raphael-marker-endblock33%22%20markerHeight%3D%223%22%20markerWidth%3D%223%22%20orient%3D%22auto%22%20refX%3D%221.5%22%20refY%3D%221.5%22%20style%3D%22-webkit-tap-highlight-color%3A%20rgba(0%2C%200%2C%200%2C%200)%3B%22%3E%3Cuse%20xmlns%3Axlink%3D%22http%3A%2F%2Fwww.w3.org%2F1999%2Fxlink%22%20xlink%3Ahref%3D%22%23raphael-marker-block%22%20transform%3D%22rotate(180%201.5%201.5)%20scale(0.6%2C0.6)%22%20stroke-width%3D%221.6667%22%20fill%3D%22black%22%20stroke%3D%22none%22%20style%3D%22-webkit-tap-highlight-color%3A%20rgba(0%2C%200%2C%200%2C%200)%3B%22%3E%3C%2Fuse%3E%3C%2Fmarker%3E%3C%2Fdefs%3E%3Crect%20x%3D%220%22%20y%3D%220%22%20width%3D%2262.5%22%20height%3D%2236.65625%22%20r%3D%2220%22%20rx%3D%2220%22%20ry%3D%2220%22%20fill%3D%22%23ffffff%22%20stroke%3D%22%23000000%22%20style%3D%22-webkit-tap-highlight-color%3A%20rgba(0%2C%200%2C%200%2C%200)%3B%22%20stroke-width%3D%222%22%20class%3D%22flowchart%22%20id%3D%22start%22%20transform%3D%22matrix(1%2C0%2C0%2C1%2C249.3984%2C12.9219)%22%3E%3C%2Frect%3E%3Ctext%20x%3D%2210%22%20y%3D%2218.328125%22%20text-anchor%3D%22start%22%20font%3D%2210px%20%26quot%3BArial%26quot%3B%22%20stroke%3D%22none%22%20fill%3D%22%23000000%22%20style%3D%22-webkit-tap-highlight-color%3A%20rgba(0%2C%200%2C%200%2C%200)%3B%20text-anchor%3A%20start%3B%20font-style%3A%20normal%3B%20font-variant%3A%20normal%3B%20font-weight%3A%20normal%3B%20font-stretch%3A%20normal%3B%20font-size%3A%2015px%3B%20line-height%3A%20normal%3B%20font-family%3A%20Arial%3B%22%20id%3D%22startt%22%20class%3D%22flowchartt%22%20font-size%3D%2215px%22%20transform%3D%22matrix(1%2C0%2C0%2C1%2C249.3984%2C12.9219)%22%3E%3Ctspan%20dy%3D%225.171875%22%20style%3D%22-webkit-tap-highlight-color%3A%20rgba(0%2C%200%2C%200%2C%200)%3B%22%3Emain()%3C%2Ftspan%3E%3C%2Ftext%3E%3Crect%20x%3D%220%22%20y%3D%220%22%20width%3D%22553.296875%22%20height%3D%2254.5%22%20r%3D%220%22%20rx%3D%220%22%20ry%3D%220%22%20fill%3D%22%23ffffff%22%20stroke%3D%22%23000000%22%20style%3D%22-webkit-tap-highlight-color%3A%20rgba(0%2C%200%2C%200%2C%200)%3B%22%20stroke-width%3D%222%22%20class%3D%22flowchart%22%20id%3D%22op1%22%20transform%3D%22matrix(1%2C0%2C0%2C1%2C4%2C103.5781)%22%3E%3C%2Frect%3E%3Ctext%20x%3D%2210%22%20y%3D%2227.25%22%20text-anchor%3D%22start%22%20font%3D%2210px%20%26quot%3BArial%26quot%3B%22%20stroke%3D%22none%22%20fill%3D%22%23000000%22%20style%3D%22-webkit-tap-highlight-color%3A%20rgba(0%2C%200%2C%200%2C%200)%3B%20text-anchor%3A%20start%3B%20font-style%3A%20normal%3B%20font-variant%3A%20normal%3B%20font-weight%3A%20normal%3B%20font-stretch%3A%20normal%3B%20font-size%3A%2015px%3B%20line-height%3A%20normal%3B%20font-family%3A%20Arial%3B%22%20id%3D%22op1t%22%20class%3D%22flowchartt%22%20font-size%3D%2215px%22%20transform%3D%22matrix(1%2C0%2C0%2C1%2C4%2C103.5781)%22%3E%3Ctspan%20dy%3D%22-3.75%22%20style%3D%22-webkit-tap-highlight-color%3A%20rgba(0%2C%200%2C%200%2C%200)%3B%22%3E%E8%B0%83%E7%94%A8%20</strong>main_block_impl_0%20%E6%9E%84%E9%80%A0%E5%87%BD%E6%95%B0%E5%88%9D%E5%A7%8B%E5%8C%96%E7%BB%93%E6%9E%84%E4%BD%93%3C%2Ftspan%3E%3Ctspan%20dy%3D%2218%22%20x%3D%2210%22%20style%3D%22-webkit-tap-highlight-color%3A%20rgba(0%2C%200%2C%200%2C%200)%3B%22%3E<strong>main_block_impl_0%EF%BC%88</strong>main_block_func_0%20%2C%20<strong>main_block_desc_0_DATA%EF%BC%89%3B%3C%2Ftspan%3E%3C%2Ftext%3E%3Crect%20x%3D%220%22%20y%3D%220%22%20width%3D%22342.59375%22%20height%3D%2236.5%22%20r%3D%220%22%20rx%3D%220%22%20ry%3D%220%22%20fill%3D%22%23ffffff%22%20stroke%3D%22%23000000%22%20style%3D%22-webkit-tap-highlight-color%3A%20rgba(0%2C%200%2C%200%2C%200)%3B%22%20stroke-width%3D%222%22%20class%3D%22flowchart%22%20id%3D%22op2%22%20transform%3D%22matrix(1%2C0%2C0%2C1%2C109.3516%2C221.0781)%22%3E%3C%2Frect%3E%3Ctext%20x%3D%2210%22%20y%3D%2218.25%22%20text-anchor%3D%22start%22%20font%3D%2210px%20%26quot%3BArial%26quot%3B%22%20stroke%3D%22none%22%20fill%3D%22%23000000%22%20style%3D%22-webkit-tap-highlight-color%3A%20rgba(0%2C%200%2C%200%2C%200)%3B%20text-anchor%3A%20start%3B%20font-style%3A%20normal%3B%20font-variant%3A%20normal%3B%20font-weight%3A%20normal%3B%20font-stretch%3A%20normal%3B%20font-size%3A%2015px%3B%20line-height%3A%20normal%3B%20font-family%3A%20Arial%3B%22%20id%3D%22op2t%22%20class%3D%22flowchartt%22%20font-size%3D%2215px%22%20transform%3D%22matrix(1%2C0%2C0%2C1%2C109.3516%2C221.0781)%22%3E%3Ctspan%20dy%3D%225.25%22%20style%3D%22-webkit-tap-highlight-color%3A%20rgba(0%2C%200%2C%200%2C%200)%3B%22%3E%E5%BE%97%E5%88%B0%E7%9A%84</strong>main_block_impl_0%20%E7%B1%BB%E5%9E%8B%E5%8F%98%E9%87%8F%E8%B5%8B%E5%80%BC%E7%BB%99%20blk%3C%2Ftspan%3E%3C%2Ftext%3E%3Crect%20x%3D%220%22%20y%3D%220%22%20width%3D%22321.109375%22%20height%3D%2236.65625%22%20r%3D%220%22%20rx%3D%220%22%20ry%3D%220%22%20fill%3D%22%23ffffff%22%20stroke%3D%22%23000000%22%20style%3D%22-webkit-tap-highlight-color%3A%20rgba(0%2C%200%2C%200%2C%200)%3B%22%20stroke-width%3D%222%22%20class%3D%22flowchart%22%20id%3D%22op3%22%20transform%3D%22matrix(1%2C0%2C0%2C1%2C120.0938%2C320.5)%22%3E%3C%2Frect%3E%3Ctext%20x%3D%2210%22%20y%3D%2218.328125%22%20text-anchor%3D%22start%22%20font%3D%2210px%20%26quot%3BArial%26quot%3B%22%20stroke%3D%22none%22%20fill%3D%22%23000000%22%20style%3D%22-webkit-tap-highlight-color%3A%20rgba(0%2C%200%2C%200%2C%200)%3B%20text-anchor%3A%20start%3B%20font-style%3A%20normal%3B%20font-variant%3A%20normal%3B%20font-weight%3A%20normal%3B%20font-stretch%3A%20normal%3B%20font-size%3A%2015px%3B%20line-height%3A%20normal%3B%20font-family%3A%20Arial%3B%22%20id%3D%22op3t%22%20class%3D%22flowchartt%22%20font-size%3D%2215px%22%20transform%3D%22matrix(1%2C0%2C0%2C1%2C120.0938%2C320.5)%22%3E%3Ctspan%20dy%3D%225.171875%22%20style%3D%22-webkit-tap-highlight-color%3A%20rgba(0%2C%200%2C%200%2C%200)%3B%22%3E%E6%89%A7%E8%A1%8C%20blk-%26gt%3BFuncPtr()%E5%87%BD%E6%95%B0%EF%BC%8C%E5%8D%B3%20printf(%22Block%5Cn%22)%3B%3C%2Ftspan%3E%3C%2Ftext%3E%3Crect%20x%3D%220%22%20y%3D%220%22%20width%3D%2246.6875%22%20height%3D%2236.5%22%20r%3D%2220%22%20rx%3D%2220%22%20ry%3D%2220%22%20fill%3D%22%23ffffff%22%20stroke%3D%22%23000000%22%20style%3D%22-webkit-tap-highlight-color%3A%20rgba(0%2C%200%2C%200%2C%200)%3B%22%20stroke-width%3D%222%22%20class%3D%22flowchart%22%20id%3D%22end%22%20transform%3D%22matrix(1%2C0%2C0%2C1%2C257.3047%2C420.1563)%22%3E%3C%2Frect%3E%3Ctext%20x%3D%2210%22%20y%3D%2218.25%22%20text-anchor%3D%22start%22%20font%3D%2210px%20%26quot%3BArial%26quot%3B%22%20stroke%3D%22none%22%20fill%3D%22%23000000%22%20style%3D%22-webkit-tap-highlight-color%3A%20rgba(0%2C%200%2C%200%2C%200)%3B%20text-anchor%3A%20start%3B%20font-style%3A%20normal%3B%20font-variant%3A%20normal%3B%20font-weight%3A%20normal%3B%20font-stretch%3A%20normal%3B%20font-size%3A%2015px%3B%20line-height%3A%20normal%3B%20font-family%3A%20Arial%3B%22%20id%3D%22endt%22%20class%3D%22flowchartt%22%20font-size%3D%2215px%22%20transform%3D%22matrix(1%2C0%2C0%2C1%2C257.3047%2C420.1563)%22%3E%3Ctspan%20dy%3D%225.25%22%20style%3D%22-webkit-tap-highlight-color%3A%20rgba(0%2C%200%2C%200%2C%200)%3B%22%3EEnd%3C%2Ftspan%3E%3C%2Ftext%3E%3Cpath%20fill%3D%22none%22%20stroke%3D%22%23000000%22%20d%3D%22M280.6484375%2C49.578125C280.6484375%2C49.578125%2C280.6484375%2C89.23222494125366%2C280.6484375%2C100.57856408460066%22%20stroke-width%3D%222%22%20marker-end%3D%22url(%23raphael-marker-endblock33)%22%20style%3D%22-webkit-tap-highlight-color%3A%20rgba(0%2C%200%2C%200%2C%200)%3B%22%3E%3C%2Fpath%3E%3Cpath%20fill%3D%22none%22%20stroke%3D%22%23000000%22%20d%3D%22M280.6484375%2C158.078125C280.6484375%2C158.078125%2C280.6484375%2C205.56178188323975%2C280.6484375%2C218.08188672550023%22%20stroke-width%3D%222%22%20marker-end%3D%22url(%23raphael-marker-endblock33)%22%20style%3D%22-webkit-tap-highlight-color%3A%20rgba(0%2C%200%2C%200%2C%200)%3B%22%3E%3C%2Fpath%3E%3Cpath%20fill%3D%22none%22%20stroke%3D%22%23000000%22%20d%3D%22M280.6484375%2C257.578125C280.6484375%2C257.578125%2C280.6484375%2C305.00289838016033%2C280.6484375%2C317.5074772987573%22%20stroke-width%3D%222%22%20marker-end%3D%22url(%23raphael-marker-endblock33)%22%20style%3D%22-webkit-tap-highlight-color%3A%20rgba(0%2C%200%2C%200%2C%200)%3B%22%3E%3C%2Fpath%3E%3Cpath%20fill%3D%22none%22%20stroke%3D%22%23000000%22%20d%3D%22M280.6484375%2C357.15625C280.6484375%2C357.15625%2C280.6484375%2C404.63990688323975%2C280.6484375%2C417.1600117255002%22%20stroke-width%3D%222%22%20marker-end%3D%22url(%23raphael-marker-endblock33)%22%20style%3D%22-webkit-tap-highlight-color%3A%20rgba(0%2C%200%2C%200%2C%200)%3B%22%3E%3C%2Fpath%3E%3C%2Fsvg%3E)</p>
+<p>#####block获取外部变量</p>
+<p>block.c</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/************* 使用 __block 的源码 *************/</span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span><br><span class="line"></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> intValue = <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">void</span> (^blk)(<span class="keyword">void</span>) = ^&#123; <span class="built_in">printf</span>(<span class="string">"intValue = %d\n"</span>, intValue); &#125;;</span><br><span class="line">    blk();</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>clang -rewrite-objc block.c 翻译后</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/************* 使用 clang 翻译后如下 *************/</span></span><br><span class="line"><span class="keyword">struct</span> __block_impl</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">void</span> *isa;</span><br><span class="line">    <span class="keyword">int</span> Flags;</span><br><span class="line">    <span class="keyword">int</span> Reserved;</span><br><span class="line">    <span class="keyword">void</span> *FuncPtr;</span><br><span class="line">&#125;;</span><br><span class="line"><span class="keyword">struct</span> __main_block_impl_0</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">struct</span> __block_impl impl;</span><br><span class="line">    <span class="keyword">struct</span> __main_block_desc_0* Desc;</span><br><span class="line">    <span class="keyword">int</span> intValue;</span><br><span class="line">    __main_block_impl_0(<span class="keyword">void</span> *fp, <span class="keyword">struct</span> __main_block_desc_0 *desc, <span class="keyword">int</span> _intValue, <span class="keyword">int</span> flags=<span class="number">0</span>) : intValue(_intValue)</span><br><span class="line">    &#123;</span><br><span class="line">        impl.isa = &amp;_NSConcreteStackBlock;</span><br><span class="line">        impl.Flags = flags;</span><br><span class="line">        impl.FuncPtr = fp;</span><br><span class="line">        Desc = desc;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"><span class="keyword">static</span> <span class="keyword">void</span> __main_block_func_0(<span class="keyword">struct</span> __main_block_impl_0 *__cself)</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">int</span> intValue = __cself-&gt;intValue; <span class="comment">// bound by copy</span></span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"intValue = %d\n"</span>, intValue);</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">static</span> <span class="keyword">struct</span> __main_block_desc_0</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">size_t</span> reserved;</span><br><span class="line">    <span class="keyword">size_t</span> Block_size;</span><br><span class="line">&#125; __main_block_desc_0_DATA = &#123; <span class="number">0</span>, <span class="keyword">sizeof</span>(<span class="keyword">struct</span> __main_block_impl_0)&#125;;</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span><br><span class="line"></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> intValue = <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">void</span> (*blk)(<span class="keyword">void</span>) = (<span class="keyword">void</span> (*)())&amp;__main_block_impl_0((<span class="keyword">void</span> *)__main_block_func_0, &amp;__main_block_desc_0_DATA, intValue);</span><br><span class="line">    ((<span class="keyword">void</span> (*)(__block_impl *))((__block_impl *)blk)-&gt;FuncPtr)((__block_impl *)blk);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>  <code>__main_block_impl_0(void *fp, struct __main_block_desc_0 *desc, int _intValue, int flags=0) : intValue(_intValue)</code></p>
+<p>  构造函数 <code>__main_block_impl_0</code> 冒号后的表达式 <code>intValue(_intValue)</code> 的意思是，用 <code>_intValue</code> 初始化结构体成员变量 <code>intValue</code>。</p>
+<p>  block首先通过上述构造函数将变量保存到 <code>__main_block_impl_0</code> 结构体的同名变量 <code>intValue</code>，</p>
+<p>  然后再通过代码 <code>int intValue = __cself-&gt;intValue;</code> 取出<code>intValue</code>，打印出来</p>
+</blockquote>
+<h5 id="block访问外部block变量"><a href="#block访问外部block变量" class="headerlink" title="block访问外部block变量"></a>block访问外部block变量</h5><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/************* 使用 __block 的源码 *************/</span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span><br><span class="line"></span>&#123;</span><br><span class="line">    __block <span class="keyword">int</span> intValue = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">void</span> (^blk)(<span class="keyword">void</span>) = ^&#123;</span><br><span class="line">        intValue = <span class="number">1</span>;</span><br><span class="line">    &#125;;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/************* 使用 clang 翻译后如下 *************/</span></span><br><span class="line"><span class="keyword">struct</span> __block_impl</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">void</span> *isa;</span><br><span class="line">    <span class="keyword">int</span> Flags;</span><br><span class="line">    <span class="keyword">int</span> Reserved;</span><br><span class="line">    <span class="keyword">void</span> *FuncPtr;</span><br><span class="line">&#125;;</span><br><span class="line"><span class="keyword">struct</span> __Block_byref_intValue_0</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">void</span> *__isa;</span><br><span class="line">    __Block_byref_intValue_0 *__forwarding;</span><br><span class="line">    <span class="keyword">int</span> __flags;</span><br><span class="line">    <span class="keyword">int</span> __size;</span><br><span class="line">    <span class="keyword">int</span> intValue;</span><br><span class="line">&#125;;</span><br><span class="line"><span class="keyword">struct</span> __main_block_impl_0</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">struct</span> __block_impl impl;</span><br><span class="line">    <span class="keyword">struct</span> __main_block_desc_0* Desc;</span><br><span class="line">    __Block_byref_intValue_0 *intValue; <span class="comment">// by ref</span></span><br><span class="line">    __main_block_impl_0(<span class="keyword">void</span> *fp, <span class="keyword">struct</span> __main_block_desc_0 *desc, __Block_byref_intValue_0 *_intValue, <span class="keyword">int</span> flags=<span class="number">0</span>) : intValue(_intValue-&gt;__forwarding)</span><br><span class="line">    &#123;</span><br><span class="line">        impl.isa = &amp;_NSConcreteStackBlock;</span><br><span class="line">        impl.Flags = flags;</span><br><span class="line">        impl.FuncPtr = fp;</span><br><span class="line">        Desc = desc;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"><span class="keyword">static</span> <span class="keyword">void</span> __main_block_func_0(<span class="keyword">struct</span> __main_block_impl_0 *__cself)</span><br><span class="line">&#123;</span><br><span class="line">    __Block_byref_intValue_0 *intValue = __cself-&gt;intValue; <span class="comment">// bound by ref</span></span><br><span class="line">    (intValue-&gt;__forwarding-&gt;intValue) = <span class="number">1</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">static</span> <span class="keyword">void</span> __main_block_copy_0(<span class="keyword">struct</span> __main_block_impl_0 *dst, <span class="keyword">struct</span> __main_block_impl_0 *src)</span><br><span class="line">&#123;</span><br><span class="line">    _Block_object_assign((<span class="keyword">void</span>*)&amp;dst-&gt;intValue, (<span class="keyword">void</span>*)src-&gt;intValue, <span class="number">8</span><span class="comment">/*BLOCK_FIELD_IS_BYREF*/</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">static</span> <span class="keyword">void</span> __main_block_dispose_0(<span class="keyword">struct</span> __main_block_impl_0 *src)</span><br><span class="line">&#123;</span><br><span class="line">    _Block_object_dispose((<span class="keyword">void</span>*)src-&gt;intValue, <span class="number">8</span><span class="comment">/*BLOCK_FIELD_IS_BYREF*/</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">static</span> <span class="keyword">struct</span> __main_block_desc_0</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">size_t</span> reserved;</span><br><span class="line">    <span class="keyword">size_t</span> Block_size;</span><br><span class="line">    <span class="keyword">void</span> (*copy)(<span class="keyword">struct</span> __main_block_impl_0*, <span class="keyword">struct</span> __main_block_impl_0*);</span><br><span class="line">    <span class="keyword">void</span> (*dispose)(<span class="keyword">struct</span> __main_block _impl_0*);</span><br><span class="line">&#125; __main_block_desc_0_DATA = &#123;  <span class="number">0</span>, </span><br><span class="line">                                <span class="keyword">sizeof</span>(<span class="keyword">struct</span> __main_block_impl_0), </span><br><span class="line">                                __main_block_copy_0, </span><br><span class="line">                                __main_block_dispose_0</span><br><span class="line">                             &#125;;</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span><br><span class="line"></span>&#123;</span><br><span class="line">    __attribute__((__blocks__(byref))) __Block_byref_intValue_0 \</span><br><span class="line">    intValue = </span><br><span class="line">    &#123;</span><br><span class="line">        (<span class="keyword">void</span>*)<span class="number">0</span>,</span><br><span class="line">        (__Block_byref_intValue_0 *)&amp;intValue, </span><br><span class="line">        <span class="number">0</span>, </span><br><span class="line">        <span class="keyword">sizeof</span>(__Block_byref_intValue_0), </span><br><span class="line">        <span class="number">0</span></span><br><span class="line">    &#125;;</span><br><span class="line">    <span class="keyword">void</span> (*blk)(<span class="keyword">void</span>) = (<span class="keyword">void</span> (*)()) &amp;__main_block_impl_0   \</span><br><span class="line">                (</span><br><span class="line">                    (<span class="keyword">void</span> *)__main_block_func_0,            \</span><br><span class="line">                    &amp;__main_block_desc_0_DATA,              \</span><br><span class="line">                    (__Block_byref_intValue_0 *)&amp;intValue,  \</span><br><span class="line">                    <span class="number">570425344</span>                               \</span><br><span class="line">                );</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在加了 __block 之后，代码量增加了不少，仔细查看，其实只是比原来多了</p>
+<blockquote>
+<ol>
+<li><code>__Block_byref_intValue_0</code> 结构体：用于封装 __block 修饰的外部变量。</li>
+<li><code>_Block_object_assign</code> 函数：当 block 从栈拷贝到堆时，调用此函数。</li>
+<li><code>_Block_object_dispose</code> 函数：当 block 从堆内存释放时，调用此函数。</li>
+</ol>
+</blockquote>
+<p><code>__Block_byref_intValue_</code>结构体如下</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">// 存储 __block 外部变量的结构体</span><br><span class="line">struct __Block_byref_intValue_0</span><br><span class="line">&#123;</span><br><span class="line">    void *__isa; // 对象指针</span><br><span class="line">    __Block_byref_intValue_0 *__forwarding; // 指向自己的指针</span><br><span class="line">    int __flags; // 标志位变量</span><br><span class="line">    int __size; // 结构体大小</span><br><span class="line">    int intValue; // 外部变量</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>对比block 访问_block修饰的外部变量 &amp;&amp;_block修饰的外部变量，我们可以看出: </p>
+<p>1.非__block修饰的外部变量，直接捕获的是变量的值，传递给内部的变量</p>
+<p>2.__block修饰的外部变量，捕获的是变量的地址，保存在结构体变量中</p>
+<h4 id="block的内存管理"><a href="#block的内存管理" class="headerlink" title="block的内存管理"></a>block的内存管理</h4><p><img src="http://blogofzuoyebuluo.qiniudn.com/image_note57603_2.png" alt=""></p>
+<p>block的常见类型有3种：</p>
+<ul>
+<li>_NSConcreteGlobalBlock（全局）</li>
+<li>_NSConcreteStackBlock（栈）</li>
+<li>_NSConcreteMallocBlock（堆）</li>
+</ul>
+<p><em>_NSConcreteGlobalBlock</em></p>
+<blockquote>
+<p>1、当 block 字面量写在全局作用域时，即为 <code>global block</code>；<br>2、当 block 字面量不获取任何外部变量时，即为 <code>global block</code>；</p>
+</blockquote>
+<p>除了上述描述的两种情况，其他形式创建的 block 均为 <code>stack block</code>。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">// 下面 block 虽然定义在 for 循环内，但符合第二种情况，所以也是 global block</span><br><span class="line">typedef int (^blk_t)(int);</span><br><span class="line">for (int rate = 0; rate &lt; 10; ++rate) </span><br><span class="line">&#123;</span><br><span class="line">    blk_t blk = ^(int count)&#123;return rate * count;&#125;; </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在开启 ARC 时，大部分情况下编译器通常会将创建在栈上的 block 自动拷贝到堆上</p>
+<p>如下：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/************ ARC下编译器自动拷贝block ************/</span></span><br><span class="line"><span class="function"><span class="keyword">typedef</span> <span class="title">int</span> <span class="params">(^<span class="keyword">blk_t</span>)</span><span class="params">(<span class="keyword">int</span>)</span></span>;</span><br><span class="line"><span class="keyword">blk_t</span> func(<span class="keyword">int</span> rate)</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">return</span> ^(<span class="keyword">int</span> count)&#123;<span class="keyword">return</span> rate * count;&#125;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/************* 使用 clang 翻译后如下 *************/</span></span><br><span class="line"><span class="keyword">blk_t</span> func(<span class="keyword">int</span> rate)</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">blk_t</span> tmp = &amp;__func_block_impl_0(__func_block_func_0, &amp;__func_block_desc_0_DATA, rate);</span><br><span class="line">    tmp = objc_retainBlock(tmp);</span><br><span class="line">    <span class="keyword">return</span> objc_autoreleaseReturnValue(tmp); </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/*********** objc_retainBlock() 的实现 ***********/</span></span><br><span class="line"><span class="function">id <span class="title">objc_retainBlock</span><span class="params">(id x)</span> </span><br><span class="line"></span>&#123;</span><br><span class="line"><span class="meta">#<span class="meta-keyword">if</span> ARR_LOGGING</span></span><br><span class="line">    objc_arr_log(<span class="string">"objc_retain_block"</span>, x);</span><br><span class="line">    ++CompilerGenerated.blockCopies;</span><br><span class="line"><span class="meta">#<span class="meta-keyword">endif</span></span></span><br><span class="line">    <span class="keyword">return</span> (id)_Block_copy(x);</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// Create a heap based copy of a Block or simply add a reference to an existing one.</span></span><br><span class="line"><span class="comment">// This must be paired with Block_release to recover memory, even when running</span></span><br><span class="line"><span class="comment">// under Objective-C Garbage Collection.</span></span><br><span class="line">BLOCK_EXPORT <span class="keyword">void</span> *_Block_copy(<span class="keyword">const</span> <span class="keyword">void</span> *aBlock)</span><br><span class="line">    __OSX_AVAILABLE_STARTING(__MAC_10_6, __IPHONE_3_2);</span><br></pre></td></tr></table></figure>
+<p>通过 <code>objc_retainBlock()</code> 函数拷贝到堆内存，让 <code>tmp</code> 重新指向堆上的 block，然后将 <code>tmp</code> 所指的堆上的 block 作为一个 Objective-C 对象放入 autoreleasepool 里面，从而保证了返回后的 block 仍然可以正确执行。</p>
+<blockquote>
+<p>对于block属性，苹果推荐我们使用copy关键字，但这arc下不是必须的，正如前面所说，在arc，即使不适用cop关键字，编译器也会自动将block copy到堆区</p>
+</blockquote>
+<h5 id="block-的循环引用"><a href="#block-的循环引用" class="headerlink" title="block 的循环引用"></a>block 的循环引用</h5><p>一个对象强用用了block,block又强引用了该对象，就会产生循环引用</p>
+<blockquote>
+<p>由于 <code>self</code> 是 <code>__strong</code> 修饰，在 ARC 下，当编译器自动将代码中的 block 从栈拷贝到堆时，block 会强引用和持有<code>self</code>，而 <code>self</code> 恰好也强引用和持有了 block，就造成了传说中的循环引用。</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">@property(nonatomic, copy) completionBlock completionBlock;</span><br><span class="line"></span><br><span class="line">//========================================</span><br><span class="line">self.completionBlock = ^ &#123;	</span><br><span class="line">        if (self.success) &#123;</span><br><span class="line">            self.success(self.responseData);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p><img src="http://blogofzuoyebuluo.qiniudn.com/image_note58470_2.png" alt=""></p>
+<p>用__weak修饰self打断循环引用</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">@property(nonatomic, , copy) completionBlock completionBlock;</span><br><span class="line"></span><br><span class="line">//========================================</span><br><span class="line">__weak typeof(self) weakSelf = self;</span><br><span class="line">self.completionBlock = ^ &#123;</span><br><span class="line">    if (weakSelf.success) &#123;</span><br><span class="line">        weakSelf.success(weakSelf.responseData);</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<p><a href="http://www.ruanyifeng.com/blog/2009/08/learning_javascript_closures.html" target="_blank" rel="external">学习Javascript闭包（Closure）</a></p>
+<p><a href="https://www.zybuluo.com/MicroCai/note/51116" target="_blank" rel="external">block没那么难（一）：block的实现</a></p>
+
+      
+    </div>
+    <footer>
+      
+        <div class="alignleft">
+            <a href="/2016/02/19/block/#more" class="more-link"><i class="fa fa-chevron-right"></i>Read More</a>
+        </div>
+        
+        
+          <div class="alignright"> 
+            <a href="atony2099.github.io/2016/02/19/block/#comment" class="comment-link">
+              <i class="fa fa-comments"></i><span class="ds-thread-count" data-thread-key="/2016/02/19/block/">&nbsp;
+              </span>
+            </a>
+          </div>
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+
+  <article class="post">
+  
+    <div class="gallery">
+  <div class="photoset">
+    
+      <img src="">
+    
+  </div>
+  <div class="control">
+    <div class="prev"></div>
+    <div class="next"></div>
+  </div>
+</div>
+  
+  <div class="post-content">
+    <header>
+      
+      <time datetime="2016-02-07T17:26:58.000Z"><a href="/2016/02/08/atomic/">Mon, Feb 8 2016, 1:26:58 am</a></time>
+
+  
+    <h1 class="title"><a href="/2016/02/08/atomic/">nonatomic VS atomic</a></h1>
+  
+
+
+
+<div class="clear"></div>
+      
+    </header>
+    <div class="entry">
+      
+        <p>stackoverflow上关于这个问题的讨论:<a href="http://stackoverflow.com/questions/588866/whats-the-difference-between-the-atomic-and-nonatomic-attributes" target="_blank" rel="external">What’s the difference between the atomic and nonatomic attributes?</a></p>
+<p>主要在于他们生成的getter 和setter方法有所不同。</p>
+<p>对于atomic关键字，相关伪代码如下:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">- (UITextField *) userName &#123;</span><br><span class="line">    </span><br><span class="line">    @synchronized(self) &#123;</span><br><span class="line">       return _userName;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (void) setUserName:(UITextField *)userName &#123;</span><br><span class="line">    @synchronized(self) &#123;</span><br><span class="line">      _userName = userName;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p> 也就是通过加锁来保证线程安全，能避免线程分配竞争，保证数据操作的完整性</p>
+<p>更具体例子如下:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">@property (atomic)CGRect domain;</span><br></pre></td></tr></table></figure>
+<p><img src="https://www.bignerdranch.com/img/blog/2013/10/puppyrect-1.png" alt=""></p>
+<p>假如你需要在两条线程上修改domin，如下</p>
+<blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&gt; &lt;b&gt;thread 1:&lt;/b&gt; puppy.domain = CGRectMake (1.0, 2.0, 3.0, 4.0);</span><br><span class="line">&gt; &lt;b&gt;thread 2:&lt;/b&gt; puppy.domain = CGRectMake (10.0, 20.0, 30.0, 40.0);</span><br><span class="line">&gt;</span><br></pre></td></tr></table></figure>
+</blockquote>
+<p>你只会得到两种结果:</p>
+<p><img src="https://www.bignerdranch.com/img/blog/2013/10/puppyrect-3.png" alt=""></p>
+<p>或者：</p>
+<p><img src="https://www.bignerdranch.com/img/blog/2013/10/puppyrect-4.png" alt=""></p>
+<p>而不会出现:</p>
+<p><img src="https://www.bignerdranch.com/img/blog/2013/10/puppyrect-2.png" alt=""></p>
+<p>这种混合的状态。</p>
+<p>所以我们可以说atomic是一种线程安全的机制，但要注意这种线程安全是局部的，之所以这样说，我们还是来看一个例子更直观：</p>
+<p>假如puppy有三个成员变量，那我们在A线程设置它的值</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">puppy.name = @&quot;Hoover&quot;;</span><br><span class="line">puppy.domain = CGRectMake (1.0, 2.0, 3.0, 4.0);</span><br></pre></td></tr></table></figure>
+<p>在b线程设置它的值</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">puppy.name = @&quot;Rumpelstiltskin&quot;;</span><br><span class="line">puppy.domain = CGRectMake (1.0, 2.0, 3.0, 4.0);</span><br><span class="line">puppy.housebroken = YES;</span><br></pre></td></tr></table></figure>
+<p>我们有可能得到</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">puppy.name = @&quot;Hoover&quot;;</span><br><span class="line">puppy.housebroken = NO;</span><br><span class="line">puppy.domain = CGRectMake (10.0, 20.0, 30.0, 40.0);</span><br></pre></td></tr></table></figure>
+<p>这样一组结果，这组数据是错误的。所以单纯靠atomic并不能保证真正的线程安全。</p>
+<p>参考:<a href="https://www.bignerdranch.com/blog/property-values/" target="_blank" rel="external">Property Values</a></p>
+
+      
+    </div>
+    <footer>
+      
+        <div class="alignleft">
+            <a href="/2016/02/08/atomic/#more" class="more-link"><i class="fa fa-chevron-right"></i>Read More</a>
+        </div>
+        
+        
+          <div class="alignright"> 
+            <a href="atony2099.github.io/2016/02/08/atomic/#comment" class="comment-link">
+              <i class="fa fa-comments"></i><span class="ds-thread-count" data-thread-key="/2016/02/08/atomic/">&nbsp;
+              </span>
+            </a>
+          </div>
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+
+  <article class="post">
+  
+    <div class="gallery">
+  <div class="photoset">
+    
+      <img src="">
+    
+  </div>
+  <div class="control">
+    <div class="prev"></div>
+    <div class="next"></div>
+  </div>
+</div>
+  
+  <div class="post-content">
+    <header>
+      
+      <time datetime="2016-01-06T16:24:48.000Z"><a href="/2016/01/07/copy/">Thu, Jan 7 2016, 12:24:48 am</a></time>
+
+  
+    <h1 class="title"><a href="/2016/01/07/copy/">copy探究</a></h1>
+  
+
+
+
+<div class="clear"></div>
+      
+    </header>
+    <div class="entry">
+      
+        <h4 id="1-浅拷贝-amp-amp-深拷贝"><a href="#1-浅拷贝-amp-amp-深拷贝" class="headerlink" title="1. 浅拷贝&amp;&amp;深拷贝"></a>1. 浅拷贝&amp;&amp;深拷贝</h4><p><img src="http://upload-images.jianshu.io/upload_images/1111290-d90c09e5df129a5a.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""></p>
+<p><img src="http://upload-images.jianshu.io/upload_images/1111290-bc1700453091b35d.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="2"></p>
+<p>如图所示,浅拷贝只是对指针的复制，而深拷贝不仅复制了指针，而且复制了指针所指向的对象</p>
+<h4 id="2-非集合对象和集合对象的复制"><a href="#2-非集合对象和集合对象的复制" class="headerlink" title="2.非集合对象和集合对象的复制"></a>2.非集合对象和集合对象的复制</h4><p>​    例1：对NSString进行<code>copy</code> 和<code>mutableCopy</code>操作</p>
+<p><img src="http://i4.piimg.com/567571/6ba311780cc68886.png" alt=""></p>
+<p><img src="http://i2.piimg.com/567571/5ef7ea3ff110a20d.png" alt=""></p>
+<p>​    例2：对NSMutableString进行<code>copy</code> 和<code>mutableCopy</code>操作</p>
+<p><img src="http://i2.piimg.com/567571/8a51f2e1269869c1.png" alt=""></p>
+<p><img src="http://i2.piimg.com/567571/272b2ee7212b4f41.png" alt=""></p>
+<p><strong>综合以上两个例子,我们可以得出如下结论</strong></p>
+<blockquote>
+<ul>
+<li>[immutableObject copy] // 浅复制</li>
+<li>[immutableObject mutableCopy] //深复制</li>
+<li>[mutableObject copy] //深复制</li>
+<li>[mutableObject mutableCopy] //深复制</li>
+</ul>
+<p>warnings: 对集合对象(NSArray,NSDictonary…)上面的结论也同样使用，但是对于集合对象里面的元素对象，始终是浅复制，也即只是复制指针。</p>
+</blockquote>
+<h4 id="Copy关键字的使用"><a href="#Copy关键字的使用" class="headerlink" title="Copy关键字的使用"></a>Copy关键字的使用</h4><p>通常我们声明NSString，NSArray，NSDictonary类型的变量的时候，都是使用copy关键字，这是为什么呢？</p>
+<p>stackoverflow有个类似的问题<a href="http://stackoverflow.com/questions/387959/nsstring-property-copy-or-retain" target="_blank" rel="external">NSString property: copy or retain?</a></p>
+<blockquote>
+<p> For attributes whose type is an immutable value class that conforms to the <code>NSCopying</code> protocol, you almost always should specify <code>copy</code> in your <code>@property</code> declaration. Specifying <code>retain</code>(strong) is something you almost never want in such a situation.</p>
+</blockquote>
+<p>从根本上说，由于object-c是一门多态的语言，我们声明变量为NSString，NSArray，NSDictonary类型的时候，本意是想变量为不可变类型，但由于父类的指针可以指向子类对象，所有就有可能发生未知的错误，如下: </p>
+<p><img src="http://i2.piimg.com/567571/348394d76131ec1c.png" alt=""></p>
+<p>上面输出的结果是<code>hi world</code>,而不是我们一开始指定的<code>hello wrold</code>，而如果我们指定关键字为<code>copy</code>, 就能保证name指针指向的是immutableObject，防止数据被篡改而一起不必要的麻烦。</p>
+
+      
+    </div>
+    <footer>
+      
+        <div class="alignleft">
+            <a href="/2016/01/07/copy/#more" class="more-link"><i class="fa fa-chevron-right"></i>Read More</a>
+        </div>
+        
+        
+          <div class="alignright"> 
+            <a href="atony2099.github.io/2016/01/07/copy/#comment" class="comment-link">
+              <i class="fa fa-comments"></i><span class="ds-thread-count" data-thread-key="/2016/01/07/copy/">&nbsp;
+              </span>
+            </a>
+          </div>
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+
+  <article class="post">
+  
+    <div class="gallery">
+  <div class="photoset">
+    
+      <img src="">
+    
+  </div>
+  <div class="control">
+    <div class="prev"></div>
+    <div class="next"></div>
+  </div>
+</div>
+  
+  <div class="post-content">
+    <header>
+      
+      <time datetime="2015-12-12T08:32:39.000Z"><a href="/2015/12/12/load&&initialize/">Sat, Dec 12 2015, 4:32:39 pm</a></time>
+
+  
+    <h1 class="title"><a href="/2015/12/12/load&&initialize/">associated Objects</a></h1>
+  
+
+
+
+<div class="clear"></div>
+      
+    </header>
+    <div class="entry">
+      
+        <h4 id="load-amp-amp-initialize"><a href="#load-amp-amp-initialize" class="headerlink" title="load &amp;&amp; initialize"></a>load &amp;&amp; initialize</h4><ul>
+<li>load</li>
+</ul>
+<blockquote>
+<p>Invoked whenever a class or category is added to the Objective-C runtime; implement this method to perform class-specific behavior upon loading.</p>
+<p>The load message is sent to classes and categories that are both dynamically loaded and statically linked, but only if the newly loaded class or category implements a method that can respond.</p>
+</blockquote>
+<p>从上面的描述可以看出这个方法调用的时机很早，在类(分类)被加载到runtime的时候就会调用，同时只有类实现了这个方法才能被响应。</p>
+<ul>
+<li>initialize</li>
+</ul>
+<blockquote>
+<p>The runtime sends initialize to each class in a program just before the class, or any class that inherits from it, is sent its first message from within the program. </p>
+</blockquote>
+<p>不同于load，initialize只有在类或者它的子类第一次接收到消息之前才会调用,相当于懒加载。</p>
+<h4 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line">int main(int argc, char * argv[]) &#123;</span><br><span class="line">    @autoreleasepool &#123;</span><br><span class="line">        NSLog(@&quot;%s&quot;,__func__);</span><br><span class="line">        return UIApplicationMain(argc, argv, nil, NSStringFromClass([AppDelegate class]));</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">@interface Animal : NSObject</span><br><span class="line"></span><br><span class="line">@end</span><br><span class="line"></span><br><span class="line">@implementation Animal</span><br><span class="line">+ (void)load&#123;</span><br><span class="line">    NSLog(@&quot;%s&quot;,__func__);</span><br><span class="line">&#125;</span><br><span class="line">+ (void)initialize&#123;</span><br><span class="line">    [super initialize];</span><br><span class="line">    NSLog(@&quot;%s %@&quot;,__func__,[self class]);</span><br><span class="line">&#125;</span><br><span class="line">@end</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">@interface Dog : Animal</span><br><span class="line"></span><br><span class="line">@end</span><br><span class="line"></span><br><span class="line">@implementation Dog</span><br><span class="line">+ (void)load&#123;</span><br><span class="line">    NSLog(@&quot;%s &quot;,__func__);</span><br><span class="line">&#125;</span><br><span class="line">+ (void)initialize&#123;</span><br><span class="line">    [super initialize];</span><br><span class="line">    NSLog(@&quot;%s &quot;,__func__);</span><br><span class="line">&#125;</span><br><span class="line">@end</span><br></pre></td></tr></table></figure>
+<p>在main.m文件里执行上述代码，可以输出</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">+[Person load]</span><br><span class="line">+[Girl load] </span><br><span class="line">main</span><br></pre></td></tr></table></figure>
+<p>可以看出在没有主动对类执行操作情况下，load会默认执行，并且在main函数之前执行</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">@interface Animal : NSObject</span><br><span class="line"></span><br><span class="line">@end</span><br><span class="line"></span><br><span class="line">@implementation Animal</span><br><span class="line">+ (void)load&#123;</span><br><span class="line">    NSLog(@&quot;%s &quot;,__func__);</span><br><span class="line">&#125;</span><br><span class="line">  </span><br><span class="line">+ (void)initialize &#123;</span><br><span class="line">    NSLog(@&quot;%s %@&quot;,__func__,[self class]);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">@end</span><br><span class="line"></span><br><span class="line">@interface Dog : Animal</span><br><span class="line"></span><br><span class="line">@end</span><br><span class="line"></span><br><span class="line">@implementation Dog</span><br><span class="line"></span><br><span class="line">@end</span><br><span class="line"></span><br><span class="line">@implementation ViewController</span><br><span class="line">- (void)viewDidLoad &#123;</span><br><span class="line">    [super viewDidLoad];</span><br><span class="line">    Dog *dog = [[Dog alloc] init];</span><br><span class="line">&#125;</span><br><span class="line">@end</span><br></pre></td></tr></table></figure>
+<p>执行结果: </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">+[Animal load]</span><br><span class="line">+[Animal initialize] Animal</span><br><span class="line">+[Animal initialize] Dog</span><br></pre></td></tr></table></figure>
+<p>从上面我们可以看出initialize明显的一个特点是当子类没有实现的时候，它会主动调用父类的方法，而load并没有这一特性，为了解释这一特性，我们得从runtime源码层面剖析: </p>
+<p>load方法的调用核心代码</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">// Call all +loads for the detached list.</span><br><span class="line">for (i = 0; i &lt; used; i++) &#123;</span><br><span class="line">    Class cls = classes[i].cls;</span><br><span class="line">    load_method_t load_method = (load_method_t)classes[i].method;</span><br><span class="line">    if (!cls) continue;</span><br><span class="line"></span><br><span class="line">    if (PrintLoading) &#123;</span><br><span class="line">        _objc_inform(&quot;LOAD: +[%s load]\n&quot;, cls-&gt;nameForLogging());</span><br><span class="line">    &#125;</span><br><span class="line">    (*load_method)(cls, SEL_load);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这段代码循环调用所有类的 +load 方法。<strong>注意</strong>，这里是（调用分类的 +load 方法也是如此）直接使用函数内存地址的方式 <code>(*load_method)(cls, SEL_load);</code> 对 +load 方法进行调用的，而不是使用发送消息 <code>objc_msgSend</code> 的方式。</p>
+<p>这样的调用方式就使得 +load 方法拥有了一个非常有趣的特性，那就是子类、父类和分类中的 +load 方法的实现是被区别对待的。也就是说如果子类没有实现 +load 方法，那么当它被加载时 runtime 是不会去调用父类的 +load 方法的。同理，当一个类和它的分类都实现了 +load 方法时，两个方法都会被调用。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line">void _class_initialize(Class cls)</span><br><span class="line">&#123;</span><br><span class="line">    ...</span><br><span class="line">    Class supercls;</span><br><span class="line">    BOOL reallyInitialize = NO;</span><br><span class="line"></span><br><span class="line">    // Make sure super is done initializing BEFORE beginning to initialize cls.</span><br><span class="line">    // See note about deadlock above.</span><br><span class="line">    supercls = cls-&gt;superclass;</span><br><span class="line">    if (supercls  &amp;&amp;  !supercls-&gt;isInitialized()) &#123;</span><br><span class="line">        _class_initialize(supercls);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    // Try to atomically set CLS_INITIALIZING.</span><br><span class="line">    monitor_enter(&amp;classInitLock);</span><br><span class="line">    if (!cls-&gt;isInitialized() &amp;&amp; !cls-&gt;isInitializing()) &#123;</span><br><span class="line">        cls-&gt;setInitializing();</span><br><span class="line">        reallyInitialize = YES;</span><br><span class="line">    &#125;</span><br><span class="line">    monitor_exit(&amp;classInitLock);</span><br><span class="line"></span><br><span class="line">    if (reallyInitialize) &#123;</span><br><span class="line">        // We successfully set the CLS_INITIALIZING bit. Initialize the class.</span><br><span class="line"></span><br><span class="line">        // Record that we&apos;re initializing this class so we can message it.</span><br><span class="line">        _setThisThreadIsInitializingClass(cls);</span><br><span class="line"></span><br><span class="line">        // Send the +initialize message.</span><br><span class="line">        // Note that +initialize is sent to the superclass (again) if </span><br><span class="line">        // this class doesn&apos;t implement +initialize. 2157218</span><br><span class="line">        if (PrintInitializing) &#123;</span><br><span class="line">            _objc_inform(&quot;INITIALIZE: calling +[%s initialize]&quot;,</span><br><span class="line">                         cls-&gt;nameForLogging());</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        ((void(*)(Class, SEL))objc_msgSend)(cls, SEL_initialize);</span><br><span class="line"></span><br><span class="line">        if (PrintInitializing) &#123;</span><br><span class="line">            _objc_inform(&quot;INITIALIZE: finished +[%s initialize]&quot;,</span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这段代码有两个关键点: </p>
+<ul>
+<li><p>入参的父类进行了递归调用，以确保父类优先于子类初始化</p>
+</li>
+<li><p>runtime 使用了发送消息 <code>objc_msgSend</code>的方式对 +initialize 方法进行调用。也就是说 +initialize 方法的调用与普通方法的调用是一样的，走的都是发送消息的流程。换言之，如果子类没有实现 +initialize 方法，那么继承自父类的实现会被调用；如果一个类的分类实现了 +initialize 方法，那么就会对这个类中的实现造成覆盖</p>
+</li>
+</ul>
+<h4 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h4><table>
+<thead>
+<tr>
+<th></th>
+<th>+load</th>
+<th>+initialize</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>调用时机</td>
+<td>被添加到 runtime 时</td>
+<td>收到第一条消息前，可能永远不调用</td>
+</tr>
+<tr>
+<td>调用顺序</td>
+<td>父类-&gt;子类-&gt;分类</td>
+<td>父类-&gt;子类</td>
+</tr>
+<tr>
+<td>调用次数</td>
+<td>1次</td>
+<td>多次</td>
+</tr>
+<tr>
+<td>若自身未定义，是否沿用父类的方法？</td>
+<td>否</td>
+<td>是</td>
+</tr>
+<tr>
+<td>分类中的实现</td>
+<td>类和分类都执行</td>
+<td>覆盖类中的方法，只执行分类的实现</td>
+</tr>
+</tbody>
+</table>
+<p>参考: </p>
+<p><a href="http://blog.leichunfeng.com/blog/2015/05/02/objective-c-plus-load-vs-plus-initialize/" target="_blank" rel="external">Objective-C +load vs +initialize</a></p>
+
+      
+    </div>
+    <footer>
+      
+        <div class="alignleft">
+            <a href="/2015/12/12/load&&initialize/#more" class="more-link"><i class="fa fa-chevron-right"></i>Read More</a>
+        </div>
+        
+        
+          <div class="alignright"> 
+            <a href="atony2099.github.io/2015/12/12/load&&initialize/#comment" class="comment-link">
+              <i class="fa fa-comments"></i><span class="ds-thread-count" data-thread-key="/2015/12/12/load&&initialize/">&nbsp;
+              </span>
+            </a>
+          </div>
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
 
 
   <article class="post">
@@ -531,7 +970,7 @@
 </li>
 </ol>
 <ul>
-<li>封装L:对象用C语言结构体表示，而方法可以用函数来实现，</li>
+<li>封装:对象用C语言结构体表示，而方法可以用函数来实现，</li>
 <li>找出方法最终执行的代码: </li>
 </ul>
 <p>####一个方法的旅程<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">typedef struct objc_class *Class;</span><br></pre></td></tr></table></figure></p>
@@ -569,21 +1008,18 @@
 </li>
 <li><p>fast forwarding: 调用这个方法，给你把这个消息转发给其他对象的机会,如果获取到，直接转发给它。如果返回nil，继续下面操作</p>
 </li>
-<li><p>Normal forwarding :这一步是 Runtime 最后一次给你挽救的机会。运行时系统会在这一步给消息接收者最后一次机会将消息转发给其它对象。对象会创建一个表示消息的NSInvocation对象，把与尚未处理的消息 有关的全部细节都封装在anInvocation中，包括selector，目标(target)和参数。我们可以在forwardInvocation 方法中选择将消息转发给其它对象。​​</p>
+<li><p>Normal forwarding :这一步是 Runtime 最后一次给你挽救的机会。运行时系统会在这一步给消息接收者最后一次机会将消息转发给其它对象。对象会创建一个表示消息的NSInvocation对象，把与尚未处理的消息 有关的全部细节都封装在anInvocation中，包括selector，目标(target)和参数。我们可以在forwardInvocation 方法中选择将消息转发给其它对象。</p>
 </li>
 </ul>
 </li>
 </ol>
 <h3 id="iVar变量"><a href="#iVar变量" class="headerlink" title="iVar变量"></a>iVar变量</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">typedef struct objc_ivar *Ivar;</span><br></pre></td></tr></table></figure>
-<p>再来看一下结构体结构</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">struct objc_ivar &#123;</span><br><span class="line">    char *ivar_name      // 变量名                                    </span><br><span class="line">    char *ivar_type      // 变量类型                                    </span><br><span class="line">    int ivar_offset      // 基地址偏移字节                                    </span><br><span class="line"> #ifdef __LP64__</span><br><span class="line">    int space                                                </span><br><span class="line"> #endif</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>相关参考文档: </p>
 <p><a href="http://blog.ibireme.com/2013/11/26/objective-c-messaging/" target="_blank" rel="external">Objective-C 中的消息与消息转发</a></p>
 <p><a href="http://www.cocoachina.com/ios/20150604/12013.html" target="_blank" rel="external">轻松学习之 Objective-C消息转发</a></p>
 <p><a href="http://tech.glowing.com/cn/objective-c-runtime/" target="_blank" rel="external">Objective-C Runtime</a></p>
 <p><a href="http://southpeak.github.io/blog/2014/10/25/objective-c-runtime-yun-xing-shi-zhi-lei-yu-dui-xiang/" target="_blank" rel="external">Objective-C Runtime 运行时之一：类与对象</a></p>
-<p>在马泉营住了大半年，鉴于我是一个很无趣的人，住在马泉营的日子也没什么有趣的事情发生，但是为了以后回村里跟隔，，我的假装记录这边</p>
-<p>  有段时间</p>
 
       
     </div>
@@ -613,7 +1049,7 @@
 
 <nav id="pagination">
   
-    <a href="/" class="alignleft prev"><i class="fa fa-long-arrow-left"></i>Prev</a>
+    <a href="/" class="alignleft prev"><i class="fa fa-long-arrow-left"></i>Vorherige Seite</a>
   
   
   <div class="clearfix"></div>

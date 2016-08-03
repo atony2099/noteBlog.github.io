@@ -3,18 +3,16 @@
 <head>
   <meta charset="utf-8">
   
-  <title>观察者模式 | 托尼的夏天</title>
+  <title>reactive cocoa学习笔记 | 托尼的夏天</title>
   <meta name="author" content="tony2009">
   
-  <meta name="description" content="观察者模式定义(发布-订阅模式)主题: 一个具体主题实现主题接口方法，主要包括，注册，移除，通知方法
-观察者: 具体观察者实现update以便接收时间
-
-Define a one-to-many dependency between objects so that when one object c">
+  <meta name="description" content="响应式编程？1234567int a = 3;int b = 4;int c = a + b;NSLog(@&amp;quot;c is %d&amp;quot;, c); // =&amp;gt; 12a = 5;b = 7;NSLog(@&amp;quot;c is %d&amp;quot;, c); // 仍然是12
+上面是一段命令">
   
   
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
-  <meta property="og:title" content="观察者模式"/>
+  <meta property="og:title" content="reactive cocoa学习笔记"/>
   <meta property="og:site_name" content="托尼的夏天"/>
 
   
@@ -74,10 +72,10 @@ Define a one-to-many dependency between objects so that when one object c">
   <div class="post-content">
     <header>
       
-      <time datetime="2015-10-17T11:35:27.000Z"><a href="/2015/10/17/观察者/">Sat, Oct 17 2015, 7:35:27 pm</a></time>
+      <time datetime="2016-07-28T11:05:25.000Z"><a href="/2016/07/28/reactive-cocoa学习笔记/">Thu, Jul 28 2016, 7:05:25 pm</a></time>
 
   
-    <h1 class="title">观察者模式</h1>
+    <h1 class="title">reactive cocoa学习笔记</h1>
   
 
 
@@ -87,20 +85,18 @@ Define a one-to-many dependency between objects so that when one object c">
     </header>
     <div class="entry">
       
-        <h4 id="观察者模式定义-发布-订阅模式"><a href="#观察者模式定义-发布-订阅模式" class="headerlink" title="观察者模式定义(发布-订阅模式)"></a>观察者模式定义(发布-订阅模式)</h4><h4 id=""><a href="#" class="headerlink" title=""></a><img src="http://img1.51cto.com/attachment/200909/200909141252899046109.png" alt=""></h4><p>主题: 一个具体主题实现主题接口方法，主要包括，注册，移除，通知方法</p>
-<p>观察者: 具体观察者实现update以便接收时间</p>
+        <h4 id="响应式编程？"><a href="#响应式编程？" class="headerlink" title="响应式编程？"></a>响应式编程？</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">int a = 3;</span><br><span class="line">int b = 4;</span><br><span class="line">int c = a + b;</span><br><span class="line">NSLog(@&quot;c is %d&quot;, c); // =&gt; 12</span><br><span class="line">a = 5;</span><br><span class="line">b = 7;</span><br><span class="line">NSLog(@&quot;c is %d&quot;, c); // 仍然是12</span><br></pre></td></tr></table></figure>
+<p>上面是一段命令式编程的代码， c = a + b，只是一个瞬时的过程，随后a的变化和c没有关系了。</p>
+<p>而响应编程则相反</p>
 <blockquote>
-<p>Define a one-to-many dependency between objects so that when one object changes state, all its dependents are notified and updated automatically.(定义对象间一种一对多的依赖关系，使得每当一个对象改变状态，则所有依赖于他的对象都会得到通知并被自动更新。)</p>
+<p>响应式编程构是对象关系的描述</p>
 </blockquote>
-<h4 id="观察者模式的实现"><a href="#观察者模式的实现" class="headerlink" title="观察者模式的实现"></a>观察者模式的实现</h4><h5 id="通知"><a href="#通知" class="headerlink" title="通知"></a>通知</h5><blockquote>
-<p>  通知机制中对某个感兴趣的所有对象都可以成为接受者。首先，需要对象向通知中心（NSNotificationCenter）发出addObserver:selector:name:object:消息进行注册，在投送对象投送通知给消息中心时，通知中心会把通知广播给注册过的接收者。所有的接收者都不知道是谁投送的，更不关心它的细节。投送对象与接收者是一对多关系。接收者如果对通知不再关注</p>
+<p>响应式编程实现的思路如下: </p>
+<blockquote>
+<p>你可以用包括 Click 和 Hover 事件在内的任何东西创建 Data stream。Stream 廉价且常见，任何东西都可以是一个 Stream：变量、用户输入、属性、Cache、数据结构等等。举个例子，想像一下你的 Twitter feed 就像是 Click events 那样的 Data stream，你可以监听它并相应的作出响应。</p>
+<p>在这个基础上，你还有令人惊艳的函数去组合、创建、过滤这些 Streams</p>
 </blockquote>
-<p><img src="http://jbcdn2.b0.upaiyun.com/2014/01/5cb6c1777313e3ca9bfb58053461f71f.jpg" alt=""></p>
-<h5 id="kvo"><a href="#kvo" class="headerlink" title="kvo"></a>kvo</h5><blockquote>
-<p>  KVO不想通知机制那样通过一个通知中心通知所有观察者对象，而是在对象属性变化时通知会被直接发送给观察者对象。</p>
-</blockquote>
-<p><img src="http://img1.tuicool.com/yA32Uj.jpg!web" alt=""></p>
-<p><a href="http://www.tuicool.com/articles/ZnuEjm" target="_blank" rel="external">设计模式深入学习IOS版（7）观察者模式</a></p>
+<p><a href="http://wiki.jikexueyuan.com/project/android-weekly/issue-145/introduction-to-RP.html" target="_blank" rel="external">响应式编程（Reactive Programming）介绍</a></p>
 
       
     </div>
@@ -125,10 +121,10 @@ Define a one-to-many dependency between objects so that when one object c">
           <div class="clearfix"></div>
           <nav id="pagination">
   
-    <a href="/2015/11/28/APP启动过程探究/" class="alignleft prev"><i class="fa fa-long-arrow-left"></i>Next</a>
+    <a href="/2016/07/29/可选/" class="alignleft prev"><i class="fa fa-long-arrow-left"></i>Next</a>
   
   
-    <a href="/2015/09/19/函数式编程/" class="alignright next">Prev<i class="fa fa-long-arrow-right"></i></a>
+    <a href="/2016/07/03/dispatch-group/" class="alignright next">Prev<i class="fa fa-long-arrow-right"></i></a>
   
   <div class="clearfix"></div>
 </nav>
@@ -144,7 +140,7 @@ Define a one-to-many dependency between objects so that when one object c">
 
   
       <!-- Duoshuo Comment BEGIN -->
-<div class="ds-thread" data-thread-key="/2015/10/17/观察者/"></div>
+<div class="ds-thread" data-thread-key="/2016/07/28/reactive-cocoa学习笔记/"></div>
 <!-- Duoshuo Comment END -->
   
 </section>
