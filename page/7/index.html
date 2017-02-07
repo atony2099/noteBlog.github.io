@@ -241,151 +241,6 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-  <link itemprop="mainEntityOfPage" href="atony2099.github.io/2015/10/12/UI再认识/事件响应链/">
-
-  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
-    <meta itemprop="name" content="tony2009">
-    <meta itemprop="description" content="">
-    <meta itemprop="image" content="/images/avatar.gif">
-  </span>
-
-  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-    <meta itemprop="name" content="托尼的开发笔记">
-    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
-      <img style="display:none;" itemprop="url image" alt="托尼的开发笔记" src="">
-    </span>
-  </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2015/10/12/UI再认识/事件响应链/" itemprop="url">
-                  事件响应链
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2015-10-12T22:27:40+08:00">
-                2015-10
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h4 id="RUNLoop"><a href="#RUNLoop" class="headerlink" title="RUNLoop"></a>RUNLoop</h4><p><img src="http://ohbzayk4i.bkt.clouddn.com/17-1-19/23126752-file_1484839778038_1059c.png" alt=""></p>
-<p>Runloop注册一个source1接受系统事件，</p>
-<ol>
-<li>当系统产生事件，通过mach port 转发给当前的app进程，</li>
-<li>事件被包装成UIEvent.,加入ApplicationHandleEventQueue(待处理队列) </li>
-<li>由Application 从队列里面取出事件分发给UIWindow, </li>
-<li>UIWindow调用[hitTest:withEvent:]递归找出hit-test view。</li>
-<li>UIWindow将事件发送给hit-test view</li>
-</ol>
-<h4 id="Hit-Testing"><a href="#Hit-Testing" class="headerlink" title="Hit-Testing"></a>Hit-Testing</h4><blockquote>
-<p> iOS uses hit-testing to find the view that is under a touch. Hit-testing involves checking whether a touch is within the bounds of any relevant view objects. If it is, it recursively checks all of that view’s subviews. The lowest view in the view hierarchy that contains the touch point becomes the <em>hit-test view</em>. After iOS determines the hit-test view, it passes the touch event to that view for handling. </p>
-</blockquote>
-<p><img src="http://zhoon.github.io/img/artical/ios_event/iosevent_5.png" alt=""></p>
-<p>相关实现代码猜想:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">// 什么时候调用:只要事件一传递给一个控件，那么这个控件就会调用自己的这个方法</span><br><span class="line">// 作用:寻找并返回最合适的view</span><br><span class="line">// UIApplication -&gt; [UIWindow hitTest:withEvent:]寻找最合适的view告诉系统</span><br><span class="line">// point:当前手指触摸的点</span><br><span class="line">// point:是方法调用者坐标系上的点</span><br><span class="line">- (UIView *)hitTest:(CGPoint)point withEvent:(UIEvent *)event&#123;</span><br><span class="line">      // 1.判断下窗口能否接收事件</span><br><span class="line">       if (self.userInteractionEnabled == NO || self.hidden == YES ||  self.alpha &lt;= 0.01) return nil; </span><br><span class="line">      // 2.判断下点在不在窗口上 </span><br><span class="line">      // 不在窗口上 </span><br><span class="line">      if ([self pointInside:point withEvent:event] == NO) return nil; </span><br><span class="line">      // 3.从后往前遍历子控件数组 </span><br><span class="line">      int count = (int)self.subviews.count; </span><br><span class="line">      for (int i = count - 1; i &gt;= 0; i--)     &#123; </span><br><span class="line">      // 获取子控件</span><br><span class="line">      UIView *childView = self.subviews[i]; </span><br><span class="line">      // 坐标系的转换,把窗口上的点转换为子控件上的点 </span><br><span class="line">      // 把自己控件上的点转换成子控件上的点 </span><br><span class="line">      CGPoint childP = [self convertPoint:point toView:childView]; </span><br><span class="line">      UIView *fitView = [childView hitTest:childP withEvent:event]; </span><br><span class="line">      if (fitView) &#123;</span><br><span class="line">      // 如果能找到最合适的view </span><br><span class="line">     	 return fitView; </span><br><span class="line">      &#125;</span><br><span class="line">    &#125; </span><br><span class="line">    // 4.没有找到更合适的view，也就是没有比自己更合适的view </span><br><span class="line">    return self;</span><br><span class="line">    &#125;</span><br><span class="line">    @end</span><br></pre></td></tr></table></figure>
-<h4 id="响应事件"><a href="#响应事件" class="headerlink" title="响应事件"></a>响应事件</h4><h5 id="The-Responder-Chain-响应链"><a href="#The-Responder-Chain-响应链" class="headerlink" title="The Responder Chain  响应链"></a>The Responder Chain  响应链</h5><p><strong>the  Responder Chain  is made up of responder object;</strong></p>
-<blockquote>
-<p>If the initial object—either the hit-test view or the first responder—doesn’t handle an event, UIKit passes the event to the next responder in the chain. Each responder decides whether it wants to handle the event or pass it along to its own next responder by calling the <code>nextResponder</code> method.This process continues until a responder object either handles the event or there are no more responders.</p>
-<p>关于 doesn’t handle an event的理解</p>
-<p>UIResponder里面touch四个阶段的方法里面，如果当前view没有重写并做相关处理，默认就向上转发给父view</p>
-</blockquote>
-<p><img src="https://developer.apple.com/library/content/documentation/EventHandling/Conceptual/EventHandlingiPhoneOS/Art/iOS_responder_chain_2x.png" alt=""></p>
-<p><img src="http://ohbzayk4i.bkt.clouddn.com/17-1-20/79432745-file_1484845234056_102d5.jpg" alt=""></p>
-<p>UIApplication中有个sendEvent:的方法，在UIWindow中同样也可以发现一个同样的方法。UIApplication是通过这个方法把事件发送给UIWindow，然后UIWindow通过同样的接口，把事件发送给hit-testview</p>
-<h4 id="应用–扩大按钮的点击区域"><a href="#应用–扩大按钮的点击区域" class="headerlink" title="应用–扩大按钮的点击区域"></a>应用–扩大按钮的点击区域</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">- (BOOL)pointInside:(CGPoint)point withEvent:(UIEvent*)event&#123;</span><br><span class="line">    CGRect bounds = self.bounds;</span><br><span class="line">    //若原热区小于44x44，则放大热区，否则保持原大小不变</span><br><span class="line">    CGFloat widthDelta = MAX(44.0 - bounds.size.width, 0);</span><br><span class="line">    CGFloat heightDelta = MAX(44.0 - bounds.size.height, 0);</span><br><span class="line">    bounds = CGRectInset(bounds, -0.5 * widthDelta, -0.5 * heightDelta);</span><br><span class="line">    return CGRectContainsPoint(bounds, point);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p><a href="https://developer.apple.com/library/content/documentation/EventHandling/Conceptual/EventHandlingiPhoneOS/event_delivery_responder_chain/event_delivery_responder_chain.html" target="_blank" rel="external">Event Delivery: The Responder Chain</a></p>
-<p><a href="深入浅出iOS事件机制">http://zhoon.github.io/ios/2015/04/12/ios-event.html</a></p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
   <link itemprop="mainEntityOfPage" href="atony2099.github.io/2015/09/19/函数式编程/">
 
   <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1740,6 +1595,144 @@
 
 
     
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="atony2099.github.io/2015/02/12/其他-iOS基础/cocoa框架/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="tony2009">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="/images/avatar.gif">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="托尼的开发笔记">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="托尼的开发笔记" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2015/02/12/其他-iOS基础/cocoa框架/" itemprop="url">
+                  cocoa框架
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2015-02-12T22:27:40+08:00">
+                2015-02
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>参考文章:<a href="http://www.cnblogs.com/kenshincui/p/3885689.html" target="_blank" rel="external">iOS开发系列—Objective-C之Foundation框架</a></p>
+<h4 id="总览"><a href="#总览" class="headerlink" title="总览"></a>总览</h4><p>Cocoa本身是一个框架的集合，它包含了众多子框架，其中最重要的要数“Foundation”和“UIKit”。前者是框架的基础，和界面无关，其中包含了大量常用的API；后者是基础的UI类库，以后我们在IOS开发中会经常用到。这两个框架在系统中的位置如下图：</p>
+<p><img src="http://ohbzayk4i.bkt.clouddn.com/17-1-19/47260818-file_1484828331637_181af.jpg" alt=""></p>
+<h4 id="Foundation"><a href="#Foundation" class="headerlink" title="Foundation"></a>Foundation</h4><p>一般划分为以下几类:</p>
+<blockquote>
+<ol>
+<li>值对象</li>
+<li>集合</li>
+<li>操作系统服务：文件系统、URL、进程通讯</li>
+<li>通知</li>
+<li>归档和序列化</li>
+<li>表达式和条件判断</li>
+<li>Objective-C语言服务</li>
+</ol>
+</blockquote>
+<p><img src="http://ohbzayk4i.bkt.clouddn.com/17-1-19/61033896-file_1484828575904_c770.jpg" alt=""></p>
+<p><img src="http://ohbzayk4i.bkt.clouddn.com/17-1-19/23090885-file_1484828576024_562e.jpg" alt=""></p>
+<p><img src="http://ohbzayk4i.bkt.clouddn.com/17-1-19/30665873-file_1484828576143_b28b.jpg" alt=""></p>
+<h4 id="UIKIT框架"><a href="#UIKIT框架" class="headerlink" title="UIKIT框架"></a>UIKIT框架</h4><p>UIKit主要用于界面构架</p>
+<p><img src="http://ohbzayk4i.bkt.clouddn.com/17-1-19/40990648-file_1484828728019_8c6d.jpg" alt=""></p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
   </section>
 
   
@@ -1787,7 +1780,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives">
-                <span class="site-state-item-count">73</span>
+                <span class="site-state-item-count">72</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
