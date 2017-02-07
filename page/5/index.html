@@ -241,7 +241,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-  <link itemprop="mainEntityOfPage" href="atony2099.github.io/2016/06/12/OC语法/property/">
+  <link itemprop="mainEntityOfPage" href="atony2099.github.io/2016/05/01/1swift-tips/as/">
 
   <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
     <meta itemprop="name" content="tony2009">
@@ -266,774 +266,7 @@
             
               
                 
-                <a class="post-title-link" href="/2016/06/12/OC语法/property/" itemprop="url">
-                  property
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2016-06-12T22:27:40+08:00">
-                2016-06
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h4 id="是什么"><a href="#是什么" class="headerlink" title="是什么"></a>是什么</h4><p>封装实例变量，生成存取方法,由编译器自动合成</p>
-<p>property = var+ setter + getter</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">@interface Person : NSObject</span><br><span class="line">@property NSString *name;</span><br><span class="line">@property NSString *lastName;</span><br><span class="line">@end</span><br><span class="line">//----等价于</span><br><span class="line">@interface Person : NSObject</span><br><span class="line">- (NSString *)name;</span><br><span class="line">- (void)setName:(NSString *)name;</span><br><span class="line">@end</span><br></pre></td></tr></table></figure>
-<h4 id="生成关键字种类"><a href="#生成关键字种类" class="headerlink" title="生成关键字种类"></a>生成关键字种类</h4><ul>
-<li><p>内存管理</p>
-<p>assign, weak,strong,copy</p>
-<p>​</p>
-</li>
-</ul>
-<ul>
-<li><p>线程安全</p>
-<blockquote>
-<p>atomic: 加锁， 多线程安全(安全), nonatomic:不加锁</p>
-<p>相关伪代码</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&gt; - (void)setProp:(NSString *)newValue &#123;</span><br><span class="line">&gt;     [_prop lock];</span><br><span class="line">&gt;     _prop = newValue;</span><br><span class="line">&gt;     [_prop unlock];</span><br><span class="line">&gt; &#125;</span><br><span class="line">&gt;</span><br></pre></td></tr></table></figure>
-</blockquote>
-<p>&gt;</p>
-<blockquote>
-<p>atomic 只能保证读写操作的完整性，但是并不能保证线程安全</p>
-<p>试想一下这个例子</p>
-<p>线程A 和线程B同时对X进行写入操作。</p>
-<p>当线程A进行写操作，这时其他线程的读或者写操作会因为该操作而等待。当A线程的写操作结束后，B线程进行写操作，然后当A线程需要读操作时，却获得了在B线程中的值，这就破坏了线程安全。</p>
-<p>Thread A:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&gt; p.firstName = @&quot;Rob&quot;;</span><br><span class="line">&gt;</span><br></pre></td></tr></table></figure>
-</blockquote>
-<p>&gt;</p>
-<blockquote>
-<p>Thread B:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&gt; p.firstName = @&quot;Robert&quot;;</span><br><span class="line">&gt;</span><br></pre></td></tr></table></figure>
-</blockquote>
-<p>&gt;</p>
-<blockquote>
-<p>Thread A:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&gt; label.string = p.firstName;   // &lt;&lt; uh, oh -- will be Robert</span><br><span class="line">&gt;</span><br></pre></td></tr></table></figure>
-</blockquote>
-<p>​</p>
-</li>
-<li><p>读写</p>
-<p>readwrite, readonly</p>
-<blockquote>
-<p>readonly 不合成setter方法</p>
-</blockquote>
-</li>
-<li><p>命名</p>
-<p>for: </p>
-<p><code>@property (nonatomic, assign, getter = isOpen) BOOL open;</code></p>
-<p>setter的修改方式类似，只是不太常用</p>
-</li>
-</ul>
-<p>参考:</p>
-<p><a href="http://stackoverflow.com/questions/12347236/which-is-threadsafe-atomic-or-non-atomic" target="_blank" rel="external">Which is threadsafe atomic or non atomic?</a></p>
-<p><a href="http://blog.talisk.cn/blog/2016/03/05/iOS-@property/" target="_blank" rel="external">@property的前世今生</a></p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-  <link itemprop="mainEntityOfPage" href="atony2099.github.io/2016/05/21/RAC大法好/MVVM/">
-
-  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
-    <meta itemprop="name" content="tony2009">
-    <meta itemprop="description" content="">
-    <meta itemprop="image" content="/images/avatar.gif">
-  </span>
-
-  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-    <meta itemprop="name" content="托尼的开发笔记">
-    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
-      <img style="display:none;" itemprop="url image" alt="托尼的开发笔记" src="">
-    </span>
-  </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2016/05/21/RAC大法好/MVVM/" itemprop="url">
-                  幸存者偏差
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2016-05-21T14:18:27+08:00">
-                2016-05
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h4 id="幸存者偏差"><a href="#幸存者偏差" class="headerlink" title="幸存者偏差"></a>幸存者偏差</h4><blockquote>
-<p>幸存者偏差，<strong>只能看到某种筛选的结果而没有意识到筛选的过程，从而忽略了被筛选掉的关键信息</strong></p>
-<ol>
-<li>一名记者来到火车站台上，随机询问：“请问你买到火车票了吗？” </li>
-</ol>
-<p>一位大妈微微一愣，回答：“买到了” </p>
-<p>记者又转向一位精瘦精瘦的年轻人，问：“请问你买到火车票了吗？”<br>年轻人回答：“买到了” </p>
-<p>随后记者又问了5个人，大家都回答：“买到了” </p>
-<p>最后记者对着镜头说：“今年虽然火车票难买，但是通过采访我们发现，大家都买到了火车票，现在正满怀希望地赶回家乡，过个团圆年！</p>
-<ol>
-<li>创业。新闻媒体只会报道活下来的企业，你一看全世界都是创业成功的企业，于是被坑进去了.</li>
-</ol>
-</blockquote>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-  <link itemprop="mainEntityOfPage" href="atony2099.github.io/2016/05/11/性能优化/离屏渲染/">
-
-  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
-    <meta itemprop="name" content="tony2009">
-    <meta itemprop="description" content="">
-    <meta itemprop="image" content="/images/avatar.gif">
-  </span>
-
-  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-    <meta itemprop="name" content="托尼的开发笔记">
-    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
-      <img style="display:none;" itemprop="url image" alt="托尼的开发笔记" src="">
-    </span>
-  </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2016/05/11/性能优化/离屏渲染/" itemprop="url">
-                  离屏渲染
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2016-05-11T23:38:06+08:00">
-                2016-05
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h4 id="什么是离屏渲染"><a href="#什么是离屏渲染" class="headerlink" title="什么是离屏渲染"></a>什么是离屏渲染</h4><blockquote>
-<p>off-Screen Rendering,在当前屏幕缓冲区新开一个缓冲区进行操作</p>
-</blockquote>
-<p><img src="http://ohbzayk4i.bkt.clouddn.com/17-1-20/65044499-file_1484920235247_94fc.png" alt=""></p>
-<p><img src="http://ohbzayk4i.bkt.clouddn.com/17-1-20/49773130-file_1484920235096_dcca.png" alt=""></p>
-<p> 正常情况下，GPU在当前屏幕的缓冲区进行渲染就可以了</p>
-<p>对于比较复杂图形，要开辟新的缓冲区，分通道进行渲染，最后才合并</p>
-<p>具体包括以下情况</p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-  <link itemprop="mainEntityOfPage" href="atony2099.github.io/2016/05/01/RAC大法好/reactive-cocoa学习笔记/">
-
-  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
-    <meta itemprop="name" content="tony2009">
-    <meta itemprop="description" content="">
-    <meta itemprop="image" content="/images/avatar.gif">
-  </span>
-
-  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-    <meta itemprop="name" content="托尼的开发笔记">
-    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
-      <img style="display:none;" itemprop="url image" alt="托尼的开发笔记" src="">
-    </span>
-  </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2016/05/01/RAC大法好/reactive-cocoa学习笔记/" itemprop="url">
-                  reactive cocoa学习笔记
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2016-05-01T08:00:00+08:00">
-                2016-05
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p><a href="http://mrpeak.cn/blog/functional/" target="_blank" rel="external">iOS与函数式编程</a></p>
-<p><a href="https://gold.xitu.io/post/583907a961ff4b006cafce82" target="_blank" rel="external">ReactiveCocoa 中 RACSignal 所有变换操作底层实现分析(上)</a></p>
-<p><a href="http://mcxiaoke.gitbooks.io/rxdocs/content/" target="_blank" rel="external">ReactiveX/RxJava文档中文版</a></p>
-<p><a href="http://tech.meituan.com/RACSignalSubscription.html" target="_blank" rel="external">RACSignal的Subscription深入分析</a></p>
-<h4 id="基础概念"><a href="#基础概念" class="headerlink" title="基础概念"></a>基础概念</h4><h5 id="side-effects-副作用"><a href="#side-effects-副作用" class="headerlink" title="side effects(副作用)"></a>side effects(副作用)</h5><blockquote>
-<p> In <a href="https://en.wikipedia.org/wiki/Computer_science" target="_blank" rel="external">computer science</a>, a <a href="https://en.wikipedia.org/wiki/Subroutine" target="_blank" rel="external">function</a> or <a href="https://en.wikipedia.org/wiki/Expression_(programming" target="_blank" rel="external">expression</a>) is said to have a <strong>side effect</strong> if it modifies some <a href="https://en.wikipedia.org/wiki/State_(computer_science" target="_blank" rel="external">state</a>) outside its scope or has an <em>observable</em> interaction with its calling functions or the outside world</p>
-<p> For example, a particular function might modify a <a href="https://en.wikipedia.org/wiki/Global_variable" target="_blank" rel="external">global variable</a> or <a href="https://en.wikipedia.org/wiki/Static_variable" target="_blank" rel="external">static variable</a>, modify one of its arguments, raise an exception, write data to a display or file, read data, or call other side-effecting functions.</p>
-<p> 简单理解: 一个函数的影响应控制在它的作用域内，它在执行过程中不应该依赖外部或者对外部产生影响</p>
-<p> 常见的副作用</p>
-<ol>
-<li>影响了外部变量，比如全局变量</li>
-<li>函数执行过程中依赖外部变量</li>
-<li>其他外部影响:函数执行中，log出信息，写入了文件，触发了网络请求，更新了屏幕</li>
-</ol>
-</blockquote>
-<h5 id="referential-transparency-引用透明"><a href="#referential-transparency-引用透明" class="headerlink" title="referential transparency(引用透明)"></a>referential transparency(引用透明)</h5><blockquote>
-<p><a href="http://stackoverflow.com/questions/210835/what-is-referential-transparency" target="_blank" rel="external">What is referential transparency?</a></p>
-<p>Referential transparency, a term commonly used in functional programming, means that given a function and an input value, you will always receive the same output. That is to say there is no external state used in the function.</p>
-<p>Here is an example of a referential transparent function:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&gt; int plusOne(int x)</span><br><span class="line">&gt; &#123;</span><br><span class="line">&gt;   return x+1;</span><br><span class="line">&gt; &#125;</span><br><span class="line">&gt;</span><br></pre></td></tr></table></figure>
-</blockquote>
-<p>&gt;</p>
-<blockquote>
-<p>With a referential transparent function, given an input and a function, you could replace it with a value instead of calling the function. So instead of calling plusOne with a paremter of 5, we could just replace that with 6.</p>
-<p>Another good example is mathematics in general. In mathematics given a function and an input value, it will always map to the same output value. f(x) = x + 1. Therefore functions in mathematics are referentially transparent.</p>
-<ul>
-<li><p>简单理解: 引用透明，函数输入相同参数总是得到相同的结果.</p>
-<p>func(A) = 5, func(A)可以用5来代替</p>
-</li>
-</ul>
-</blockquote>
-<h5 id="pure-function"><a href="#pure-function" class="headerlink" title="pure function"></a>pure function</h5><blockquote>
-<p> <strong>a pure function is referentially transparent and has no side effects</strong></p>
-<p>纯函数是具备引用透明 和没有副作用的函数</p>
-</blockquote>
-<h5 id="First-Class"><a href="#First-Class" class="headerlink" title="First Class"></a>First Class</h5><blockquote>
-<p>函数: 普通公民 </p>
-<p>变量:一等公民</p>
-<p>函数编程的一等公民: 函数可以像变量那样自由传递(当做参数或者返回值)</p>
-<p>RACStream //抽象类</p>
-<ul>
-<li>RACSignal  </li>
-<li>RACSubject // A subject can be thought of as a signal that you can manually control by sending next, completed, and error.</li>
-</ul>
-</blockquote>
-<h4 id="信号的理解"><a href="#信号的理解" class="headerlink" title="信号的理解"></a>信号的理解</h4><p>reactive cocoa 主要操作的是信号。</p>
-<blockquote>
-<p> <strong>信号</strong>:可以把信号想象成水龙头，只不过里面不是水，而是玻璃球(value)，直径跟水管的内径一样，这样就能保证玻璃球是依次排列，不会出现并排的情况(数据都是线性处理的，不会出现并发情况)。水龙头的开关默认是关的，除非有了接收方(subscriber)，才会打开。这样只要有新的玻璃球进来，就会自动传送给接收方。可以在水龙头上加一个过滤嘴(filter)，不符合的不让通过，也可以加一个改动装置，把球改变成符合自己的需求(map)。也可以把多个水龙头合并成一个新的水龙头(combineLatest:reduce:)，这样只要其中的一个水龙头有玻璃球出来，这个新合并的水龙头就会得到这个球。</p>
-</blockquote>
-<h4 id="信号的基本操作"><a href="#信号的基本操作" class="headerlink" title="信号的基本操作"></a>信号的基本操作</h4><h5 id="过滤操作"><a href="#过滤操作" class="headerlink" title="过滤操作"></a>过滤操作</h5><h6 id="Map"><a href="#Map" class="headerlink" title="Map"></a>Map</h6><p>Maps <code>block</code> across the values in the receiver.</p>
-<h6 id="Filter"><a href="#Filter" class="headerlink" title="Filter"></a>Filter</h6><p>Filters out values in the receiver that don’t pass the given test.</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">   RACSignal *signalP= [RACSignal createSignal:^RACDisposable *(id&lt;RACSubscriber&gt; subscriber) &#123;</span><br><span class="line">       </span><br><span class="line">       [subscriber sendNext:@1];</span><br><span class="line">       [subscriber sendNext:@2];</span><br><span class="line">       [subscriber sendCompleted];</span><br><span class="line">       </span><br><span class="line">       return [RACDisposable disposableWithBlock:^&#123;</span><br><span class="line">           NSLog(@&quot;dispose&quot;);</span><br><span class="line">       &#125;];</span><br><span class="line">   &#125;];</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">   RACSignal *signalN = [signalP map:^id(NSNumber *value) &#123;</span><br><span class="line">       return @([value intValue] +1);</span><br><span class="line">   &#125;];</span><br><span class="line"></span><br><span class="line">RACSignal *signalG = [signalP filter:^BOOL(NSNumber *value) &#123;</span><br><span class="line">      </span><br><span class="line">       return [value intValue] &gt; 1;</span><br><span class="line">   &#125;];</span><br><span class="line">   // output: 2,3</span><br><span class="line">   [signalN subscribeNext:^(id x) &#123;</span><br><span class="line">       NSLog(@&quot;%@&quot;,x);</span><br><span class="line">   &#125;];</span><br><span class="line">// output:2</span><br><span class="line">   [signalG subscribeNext:^(id x) &#123;</span><br><span class="line">       NSLog(@&quot;%@&quot;,x);</span><br><span class="line">   &#125;];</span><br></pre></td></tr></table></figure>
-<h6 id="throttle"><a href="#throttle" class="headerlink" title="throttle"></a>throttle</h6><p>指定时间内，产生A信号，紧接着产生B信号，这时候A信号就会被抛弃，</p>
-<p>如果在指定时间内，再也没有产生新信号，则B信号会一直保留知道指定时间到达</p>
-<p><img src="http://ohbzayk4i.bkt.clouddn.com/17-1-23/23396068-file_1485141818101_8d8f.png" alt=""></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">[[[RACSignal createSignal:^RACDisposable *(id&lt;RACSubscriber&gt; subscriber)&#123;</span><br><span class="line">    [subscriber sendNext:@&quot;🐹1&quot;];</span><br><span class="line">    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^&#123;</span><br><span class="line">        [subscriber sendNext:@&quot;🐹2&quot;];</span><br><span class="line">    &#125;);</span><br><span class="line">    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^&#123;</span><br><span class="line">        [subscriber sendNext:@&quot;🐹3&quot;];</span><br><span class="line">        [subscriber sendNext:@&quot;🐹4&quot;];</span><br><span class="line">        [subscriber sendNext:@&quot;🐹5&quot;];</span><br><span class="line">    &#125;);</span><br><span class="line">    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^&#123;</span><br><span class="line">        [subscriber sendNext:@&quot;🐹6&quot;];</span><br><span class="line">    &#125;);</span><br><span class="line">    return nil;</span><br><span class="line">&#125;] throttle:10] subscribeNext:^(id x) &#123;</span><br><span class="line">    NSLog(@&quot;%@通过了&quot;,x);</span><br><span class="line">&#125;];</span><br></pre></td></tr></table></figure>
-<h5 id="distinctUntilChanged"><a href="#distinctUntilChanged" class="headerlink" title="distinctUntilChanged"></a>distinctUntilChanged</h5><p><img src="https://mcxiaoke.gitbooks.io/rxdocs/content/im&gt; ages/operators/distinctUntilChanged.png" alt=""></p>
-<p>与前驱值不同过滤掉</p>
-<h6 id="skip"><a href="#skip" class="headerlink" title="skip"></a>skip</h6><h6 id="take"><a href="#take" class="headerlink" title="take"></a>take</h6><h4 id="多个信号的组合操作"><a href="#多个信号的组合操作" class="headerlink" title="多个信号的组合操作"></a>多个信号的组合操作</h4><p>关注的问题: </p>
-<ul>
-<li>受那个信号终止而终止</li>
-<li>错误传递</li>
-<li>各个信号何时开始订阅</li>
-</ul>
-<h5 id="concat"><a href="#concat" class="headerlink" title="concat"></a>concat</h5><p><img src="http://ohbzayk4i.bkt.clouddn.com/Jietu20170122-191924.jpg" alt=""></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">  RACSignal *singalA = [RACSignal createSignal:^RACDisposable *(id&lt;RACSubscriber&gt; subscriber) &#123;</span><br><span class="line">      [subscriber sendNext:@1];</span><br><span class="line">       [subscriber sendCompleted];</span><br><span class="line">      return nil;</span><br><span class="line">   &#125;];</span><br><span class="line">   RACSignal *singalB= [RACSignal createSignal:^RACDisposable *(id&lt;RACSubscriber&gt; subscriber) &#123;</span><br><span class="line">       [subscriber sendNext:@2];</span><br><span class="line">       [subscriber sendCompleted];</span><br><span class="line">       return nil;</span><br><span class="line">   &#125;];</span><br><span class="line">   </span><br><span class="line">   RACSignal *singalC = [singalA concat:singalB];</span><br><span class="line"></span><br><span class="line">// OUTPUT : 1,2,</span><br><span class="line">   [singalC subscribeNext:^(id x) &#123;</span><br><span class="line">       NSLog(@&quot;%@&quot;,x);</span><br><span class="line">   &#125;];</span><br></pre></td></tr></table></figure>
-<p>关键点: 必须等待第一个信号结束。</p>
-<h5 id="merge"><a href="#merge" class="headerlink" title="merge"></a>merge</h5><p><img src="http://ohbzayk4i.bkt.clouddn.com/Jietu20170123-025345.jpg" alt=""></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">RACSubject *subject1 = [RACSubject subject];</span><br><span class="line">RACSubject *subject2 = [RACSubject subject];</span><br><span class="line">RACSignal *signal =  [RACSignal merge:@[subject1, subject2]];</span><br><span class="line">// OUTPUT : 1,2,3,4</span><br><span class="line">[signal subscribeNext:^(id x) &#123;</span><br><span class="line">    NSLog(@&quot;%@&quot;,x);</span><br><span class="line">&#125;];</span><br><span class="line">[subject1 sendNext:@1];</span><br><span class="line">[subject2 sendNext:@2];</span><br><span class="line">[subject1 sendNext:@3];</span><br><span class="line">[subject2 sendNext:@4];</span><br></pre></td></tr></table></figure>
-<p>关键点:哪个先到输出哪个</p>
-<h4 id="zip"><a href="#zip" class="headerlink" title="zip"></a>zip</h4><blockquote>
-<p>The first value of each stream will be combined, then the second value, and so forth, until at least one of the streams is exhausted. <strong>它按照严格的顺序组合信号，只有当原始的Observable中的每一个都发射了一条数据时<code>zip</code>才发射数据,想象成拉链，一环扣一环</strong></p>
-</blockquote>
-<p><img src="http://ohbzayk4i.bkt.clouddn.com/Jietu20170123-040639.jpg" alt=""></p>
-<h4 id="combineLatest"><a href="#combineLatest" class="headerlink" title="combineLatest"></a>combineLatest</h4><p>组合的数值总是保持最新的</p>
-<blockquote>
-<p>当原始Observables的任何一个发射了一条数据时，<code>CombineLatest</code>使用一个函数结合它们最近发射的数据，然后发射这个函数的返回值</p>
-</blockquote>
-<p><img src="http://ohbzayk4i.bkt.clouddn.com/Snip20170123_1.png" alt=""></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">   </span><br><span class="line">RACSubject *subject1 = [RACSubject subject];</span><br><span class="line">RACSubject *subject2 = [RACSubject subject];</span><br><span class="line">RACSignal *signal =  [RACSignal combineLatest:@[subject1, subject2]];</span><br><span class="line"></span><br><span class="line">// output: ractuple(1,11), ractuple(1,2),ractuple(3,11), ractuple3,4),</span><br><span class="line">[signal subscribeNext:^(id x) &#123;</span><br><span class="line">    NSLog(@&quot;%@&quot;,x);</span><br><span class="line">&#125;];</span><br><span class="line"></span><br><span class="line">[subject1 sendNext:@1];</span><br><span class="line">[subject2 sendNext:@11];</span><br><span class="line">[subject2 sendNext:@2];</span><br><span class="line">[subject1 sendNext:@3];</span><br><span class="line">[subject2 sendNext:@4];</span><br></pre></td></tr></table></figure>
-<h4 id="高阶信号的操作"><a href="#高阶信号的操作" class="headerlink" title="高阶信号的操作"></a>高阶信号的操作</h4><p><img src="http://ohbzayk4i.bkt.clouddn.com/17-1-23/55592449-file_1485132732496_ef3a.png" alt=""></p>
-<p>[1,2,3,[3,4],5] </p>
-<p>数组的数组: 数组里面是数组</p>
-<p>高阶信号: 信号流里面还是信号。</p>
-<h5 id="降阶操作"><a href="#降阶操作" class="headerlink" title="降阶操作"></a>降阶操作</h5><h6 id="Switchtolasts"><a href="#Switchtolasts" class="headerlink" title="Switchtolasts"></a>Switchtolasts</h6><blockquote>
-<p>关键点:新的信号开始被订阅时候，前一个信号会被取消订阅。</p>
-</blockquote>
-<p><img src="http://ohbzayk4i.bkt.clouddn.com/17-1-23/77510402-file_1485133672444_3a17.png" alt=""></p>
-<h6 id="Flatten"><a href="#Flatten" class="headerlink" title="Flatten"></a>Flatten</h6><blockquote>
-<p>关键点: 各个信号都会被降解，不会被取消</p>
-</blockquote>
-<p><img src="http://ohbzayk4i.bkt.clouddn.com/17-1-24/53245742-file_1485258981093_15afe.png" alt=""></p>
-<h4 id="订阅过程简析"><a href="#订阅过程简析" class="headerlink" title="订阅过程简析"></a>订阅过程简析</h4><h6 id="步骤一：-RACSignal-createSignal-来获得signal"><a href="#步骤一：-RACSignal-createSignal-来获得signal" class="headerlink" title="步骤一：[RACSignal createSignal]来获得signal"></a>步骤一：[RACSignal createSignal]来获得signal</h6><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">RACSignal.m中：</span><br><span class="line">+ ( RACSignal *)createSignal:( RACDisposable * (^)( id &lt; RACSubscriber &gt; subscriber))didSubscribe &#123;</span><br><span class="line">  return [ RACDynamicSignal   createSignal :didSubscribe];</span><br><span class="line">&#125;</span><br><span class="line">RACDynamicSignal.m中</span><br><span class="line">+ ( RACSignal *)createSignal:( RACDisposable * (^)( id &lt; RACSubscriber &gt; subscriber))didSubscribe &#123;</span><br><span class="line">  RACDynamicSignal *signal = [[ self   alloc ] init ];</span><br><span class="line"> signal-&gt; _didSubscribe = [didSubscribe copy ];</span><br><span class="line">  return [signal setNameWithFormat : @&quot;+createSignal:&quot; ];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>[RACSignal createSignal]会调用子类RACDynamicSignal的createSignal来返回一个signal，</p>
-<p>并在signal中保存后面的 didSubscribe这个block</p>
-<h6 id="步骤二：-signal-subscribeNext-来获得subscriber，然后进行subscription"><a href="#步骤二：-signal-subscribeNext-来获得subscriber，然后进行subscription" class="headerlink" title="步骤二：[signal subscribeNext:]来获得subscriber，然后进行subscription"></a>步骤二：[signal subscribeNext:]来获得subscriber，然后进行subscription</h6><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">RACSignal.m中：</span><br><span class="line">- ( RACDisposable *)subscribeNext:( void (^)( id x))nextBlock &#123;</span><br><span class="line">  RACSubscriber *o = [ RACSubscriber   subscriberWithNext :nextBlock error : NULL   completed : NULL ];</span><br><span class="line">  return [ self  subscribe :o];</span><br><span class="line">&#125;</span><br><span class="line">RACSubscriber.m中：</span><br><span class="line"></span><br><span class="line">+ ( instancetype )subscriberWithNext:( void (^)( id x))next error:( void (^)( NSError *error))error completed:( void (^)( void ))completed &#123;</span><br><span class="line">  RACSubscriber *subscriber = [[ self   alloc ] init ];</span><br><span class="line"> subscriber-&gt; _next = [next copy ];</span><br><span class="line"> subscriber-&gt; _error = [error copy ];</span><br><span class="line"> subscriber-&gt; _completed = [completed copy ];</span><br><span class="line">  return subscriber;</span><br><span class="line">&#125;</span><br><span class="line">RACDynamicSignal.m中：</span><br><span class="line">- (RACDisposable *)subscribe:(id&lt;RACSubscriber&gt;)subscriber &#123;</span><br><span class="line">    RACCompoundDisposable *disposable = [RACCompoundDisposable compoundDisposable];</span><br><span class="line">    subscriber = [[RACPassthroughSubscriber alloc] initWithSubscriber:subscriber signal:self disposable:disposable];</span><br><span class="line">    if (self.didSubscribe != NULL) &#123;</span><br><span class="line">        RACDisposable *schedulingDisposable = [RACScheduler.subscriptionScheduler schedule:^&#123;</span><br><span class="line">          	// 入参</span><br><span class="line">            RACDisposable *innerDisposable = self.didSubscribe(subscriber);</span><br><span class="line">            [disposable addDisposable:innerDisposable];</span><br><span class="line">        &#125;];</span><br><span class="line">        [disposable addDisposable:schedulingDisposable];</span><br><span class="line">    &#125;</span><br><span class="line">    return disposable;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<ol>
-<li>[signal subscribeNext]先会获得一个subscriber，这个subscriber中保存了nextBlock、errorBlock、completedBlock</li>
-<li>由于signal其实是RACDynamicSignal类型的，这个[self subscribe]方法会调用步骤一中保存的didSubscribe，didSubscribe的参数就是1中的subscriber</li>
-</ol>
-<h6 id="步骤三：进入didSubscribe，通过-subscriber-sendNext-来执行next-block"><a href="#步骤三：进入didSubscribe，通过-subscriber-sendNext-来执行next-block" class="headerlink" title="步骤三：进入didSubscribe，通过[subscriber sendNext:]来执行next block"></a>步骤三：进入didSubscribe，通过[subscriber sendNext:]来执行next block</h6><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">RACSubscriber.m中：</span><br><span class="line">- (void)sendNext:(id)value &#123;</span><br><span class="line">    @synchronized (self) &#123;</span><br><span class="line">        void (^nextBlock)(id) = [self.next copy];</span><br><span class="line">        if (nextBlock == nil) return;</span><br><span class="line">        nextBlock(value);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<blockquote>
-<p>didsubiscribeblock的[subscriber send:@1] 的实际执行者就是上一步的那个subscriber</p>
-</blockquote>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-  <link itemprop="mainEntityOfPage" href="atony2099.github.io/2016/05/01/swift-protocol/">
-
-  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
-    <meta itemprop="name" content="tony2009">
-    <meta itemprop="description" content="">
-    <meta itemprop="image" content="/images/avatar.gif">
-  </span>
-
-  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-    <meta itemprop="name" content="托尼的开发笔记">
-    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
-      <img style="display:none;" itemprop="url image" alt="托尼的开发笔记" src="">
-    </span>
-  </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2016/05/01/swift-protocol/" itemprop="url">
-                  swift protocol
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2016-05-01T00:22:12+08:00">
-                2016-05
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-  <link itemprop="mainEntityOfPage" href="atony2099.github.io/2016/05/01/swift-tips/as/">
-
-  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
-    <meta itemprop="name" content="tony2009">
-    <meta itemprop="description" content="">
-    <meta itemprop="image" content="/images/avatar.gif">
-  </span>
-
-  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-    <meta itemprop="name" content="托尼的开发笔记">
-    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
-      <img style="display:none;" itemprop="url image" alt="托尼的开发笔记" src="">
-    </span>
-  </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2016/05/01/swift-tips/as/" itemprop="url">
+                <a class="post-title-link" href="/2016/05/01/1swift-tips/as/" itemprop="url">
                   swift protocol
                 </a>
               
@@ -1133,7 +366,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-  <link itemprop="mainEntityOfPage" href="atony2099.github.io/2016/05/01/swift-tips/访问权限控制/">
+  <link itemprop="mainEntityOfPage" href="atony2099.github.io/2016/05/01/1swift-tips/escaping/">
 
   <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
     <meta itemprop="name" content="tony2009">
@@ -1158,152 +391,7 @@
             
               
                 
-                <a class="post-title-link" href="/2016/05/01/swift-tips/访问权限控制/" itemprop="url">
-                  访问级别控制
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2016-05-01T00:22:12+08:00">
-                2016-05
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h4 id="原有访问级别"><a href="#原有访问级别" class="headerlink" title="原有访问级别"></a>原有访问级别</h4><ol>
-<li>公开(public)</li>
-<li>内部(internal)</li>
-<li>私有(private)</li>
-</ol>
-<blockquote>
-<p>默认的访问级别是 <code>internal</code>，这意味着此成员只能在模组 (module) 内可见。如果要让其能够被模组外的成员访问到的话，那么就要将其设置为 <code>public</code>。</p>
-</blockquote>
-<h4 id="private-到-fileprivate"><a href="#private-到-fileprivate" class="headerlink" title="private 到 fileprivate"></a>private 到 fileprivate</h4><p>fileprivate:同一个文件内可见</p>
-<p>private:只能在对应作用域内访问</p>
-<blockquote>
-<p>举个例子，在这个文件当中我创建了一个类。在这个类当中我添加了一个 <code>private</code> 的属性和一个 <code>private</code> 的方法。这两个成员只能够在这个类当中可见，就算位于相同文件内，其他类也是无法访问这两个成员的。因此，也就是说，在过去，这两个成员在整个文件当中都可以访问得到；而到了现在，<code>private</code> 方法只能够在相同类当中可见了。也就是说，昔日的 <code>private</code> 变成了今日的 <code>fileprivate</code>，而新的访问级别让我们有了更私有的访问权限。</p>
-</blockquote>
-<h4 id="public-到-open"><a href="#public-到-open" class="headerlink" title="public 到 open"></a>public 到 open</h4><p>open:一个元素在其他module中是可以被访问并且可以被override</p>
-<p>public: 一个元素在其他module只能被访问无法被继承</p>
-<blockquote>
-<p>open解决问题: 继承是一件危险的事情。尤其对于一个framework或者module的设计者而言。在自身的module内，类或者属性对于作者而言是清晰的，能否被继承或者override都是可控的。但是对于使用它的人，作者有时会希望传达出这个类或者属性不应该被继承或者修改。</p>
-</blockquote>
-<h4 id="新的访问级别"><a href="#新的访问级别" class="headerlink" title="新的访问级别"></a>新的访问级别</h4><ol>
-<li>完全公开(open)</li>
-<li>公开（public）</li>
-<li>内部(internal)</li>
-<li>文件外私有(fileprivate)</li>
-<li>私有(private)</li>
-</ol>
-<p><a href="http://www.jianshu.com/p/604305a61e57" target="_blank" rel="external">Swift 3必看：新的访问控制fileprivate和open</a></p>
-<p><a href="https://realm.io/cn/news/appbuilders-daniel-steinberg-whats-new-swift-3/" target="_blank" rel="external">Swift 3 新特性一览</a></p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-  <link itemprop="mainEntityOfPage" href="atony2099.github.io/2016/05/01/swift-tips/escaping/">
-
-  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
-    <meta itemprop="name" content="tony2009">
-    <meta itemprop="description" content="">
-    <meta itemprop="image" content="/images/avatar.gif">
-  </span>
-
-  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-    <meta itemprop="name" content="托尼的开发笔记">
-    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
-      <img style="display:none;" itemprop="url image" alt="托尼的开发笔记" src="">
-    </span>
-  </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2016/05/01/swift-tips/escaping/" itemprop="url">
+                <a class="post-title-link" href="/2016/05/01/1swift-tips/escaping/" itemprop="url">
                   访问级别控制
                 </a>
               
@@ -1413,7 +501,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-  <link itemprop="mainEntityOfPage" href="atony2099.github.io/2016/05/01/swift-tips/anyobject/">
+  <link itemprop="mainEntityOfPage" href="atony2099.github.io/2016/04/12/1runloop/runloop学习/">
 
   <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
     <meta itemprop="name" content="tony2009">
@@ -1438,8 +526,8 @@
             
               
                 
-                <a class="post-title-link" href="/2016/05/01/swift-tips/anyobject/" itemprop="url">
-                  swift protocol
+                <a class="post-title-link" href="/2016/04/12/1runloop/runloop学习/" itemprop="url">
+                  runloop
                 </a>
               
             
@@ -1455,8 +543,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2016-05-01T00:22:12+08:00">
-                2016-05
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2016-04-12T21:32:39+08:00">
+                2016-04
               </time>
             
 
@@ -1493,16 +581,114 @@
       
         
           
-            <h4 id="对比"><a href="#对比" class="headerlink" title="对比"></a>对比</h4><p>anyObject:Any 可以代表 struct、class、func 等等几乎所有类型</p>
-<p>any : class实例</p>
+            <p>文章来源: </p>
+<p><a href="http://chun.tips/blog/2014/10/20/zou-jin-run-loopde-shi-jie-%5B%3F%5D-:shi-yao-shi-run-loop%3F/" target="_blank" rel="external">走进Run Loop的世界 (一)：什么是Run Loop？</a></p>
+<p><a href="https://developer.apple.com/library/ios/documentation/Cocoa/Conceptual/Multithreading/RunLoopManagement/RunLoopManagement.html" target="_blank" rel="external">Threading Programming Guide</a></p>
+<p><a href="http://www.cocoachina.com/ios/20150601/11970.html" target="_blank" rel="external">深入理解RunLoop</a></p>
+<h3 id="基础概念"><a href="#基础概念" class="headerlink" title="基础概念"></a>基础概念</h3><p>一般来讲，一个线程执行完一次就退出了。我们需要一种循环机制，让线程处于”work –sleep – work– sleep”的状态，runloop正是这种机制的实现。</p>
+<p><img src="http://www.2cto.com/uploadfile/Collfiles/20160330/2016033009122244.jpg" alt=""></p>
 <blockquote>
-<p><code>AnyObject</code>是<code>Any</code>的子集</p>
+<p>A run loop is an event processing loop that you use to schedule work and coordinate the receipt of incoming events.The purpose of a run loop is to keep your thread busy when there is work to do and put your thread to sleep when there is none.</p>
 </blockquote>
-<p>swift 2</p>
+<p>相关的伪代码如下: </p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">while</span> (AppIsRunning)&#123;</span><br><span class="line">	var message = get_next_message(); </span><br><span class="line">	process(message)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="runloop相关细节"><a href="#runloop相关细节" class="headerlink" title="runloop相关细节"></a>runloop相关细节</h3><h4 id="runloop与线程关系"><a href="#runloop与线程关系" class="headerlink" title="runloop与线程关系"></a>runloop与线程关系</h4><p>先上代码: </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line">1</span><br><span class="line">/// 全局的Dictionary，key 是 pthread_t， value 是 CFRunLoopRef</span><br><span class="line">static CFMutableDictionaryRef loopsDic;</span><br><span class="line">/// 访问 loopsDic 时的锁</span><br><span class="line">static CFSpinLock_t loopsLock;</span><br><span class="line">  </span><br><span class="line">/// 获取一个 pthread 对应的 RunLoop。</span><br><span class="line">CFRunLoopRef _CFRunLoopGet(pthread_t thread) &#123;</span><br><span class="line">    OSSpinLockLock(&amp;loopsLock);</span><br><span class="line">    if (!loopsDic) &#123;</span><br><span class="line">        // 第一次进入时，初始化全局Dic，并先为主线程创建一个 RunLoop。</span><br><span class="line">        loopsDic = CFDictionaryCreateMutable();</span><br><span class="line">        CFRunLoopRef mainLoop = _CFRunLoopCreate();</span><br><span class="line">        CFDictionarySetValue(loopsDic, pthread_main_thread_np(), mainLoop);</span><br><span class="line">    &#125;</span><br><span class="line">     </span><br><span class="line">    /// 直接从 Dictionary 里获取。</span><br><span class="line">    CFRunLoopRef loop = CFDictionaryGetValue(loopsDic, thread));</span><br><span class="line">     </span><br><span class="line">    if (!loop) &#123;</span><br><span class="line">        /// 取不到时，创建一个</span><br><span class="line">        loop = _CFRunLoopCreate();</span><br><span class="line">        CFDictionarySetValue(loopsDic, thread, loop);</span><br><span class="line">        /// 注册一个回调，当线程销毁时，顺便也销毁其对应的 RunLoop。</span><br><span class="line">        _CFSetTSD(..., thread, loop, __CFFinalizeRunLoop);</span><br><span class="line">    &#125;</span><br><span class="line">     </span><br><span class="line">    OSSpinLockUnLock(&amp;loopsLock);</span><br><span class="line">    return loop;</span><br><span class="line">&#125;</span><br><span class="line">  </span><br><span class="line">CFRunLoopRef CFRunLoopGetMain() &#123;</span><br><span class="line">    return _CFRunLoopGet(pthread_main_thread_np());</span><br><span class="line">&#125;</span><br><span class="line">  </span><br><span class="line">CFRunLoopRef CFRunLoopGetCurrent() &#123;</span><br><span class="line">    return _CFRunLoopGet(pthread_self());</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>其中pthread_t是一个与线程相关对象，可以看到runloop存在一个全局的字典里面，线程和runloop是一一对应关系。</p>
+<p>程序启动会自动调用<code>CFRunLoopGetMain</code> 创建主线程的runloop，其他线程如果不调用<code>CFRunLoopGetCurrent</code>并不会主动去创建。</p>
+<h4 id="Runloop-mode"><a href="#Runloop-mode" class="headerlink" title="Runloop mode"></a>Runloop mode</h4><blockquote>
+<p>A <em>run loop mode</em> is a collection of input sources and timers to be monitored and a collection of run loop observers to be notified</p>
+<p>runloop  mode 是一个关于 输入源,定时源 和观察者的集合。</p>
+</blockquote>
+<p><img src="http://blog.ibireme.com/wp-content/uploads/2015/05/RunLoop_0.png" alt=""></p>
+<p>一个runloop包含若干个mode,每个 Mode 又包含若干个 Source/Timer/Observer</p>
+<p><strong>CFRunLoopSourceRef</strong></p>
+<p> 转发异步事件，有两种版本的source : </p>
+<ul>
+<li><p>source0 : 只包含了一个回调 (函数指针),不能主动触发事件</p>
+</li>
+<li><p>source1: 基于mach_port()，能唤醒进程</p>
 <blockquote>
-<p>那为什么之前我们在 Swift 2  里可以用 [AnyObject] 声明数组，并且在里面放 Int、String 等 struct 类型呢？这是因为 Swift 2 中，会针对这些 Int、String 等 struct 进行一个 Implicit Bridging Conversions，在 Array 里插入他们时，编译器会自动将其 bridge 到 Objective-C 的 NSNumber、NSString 等类型，这就是为什么我们声明的 [AnyObject] 里可以放 struct 的原因。</p>
+<p>Mach port 是一个轻量级的进程间通讯方式，可以理解为一个通讯通道，假如同时有几个进程都挂在这个通道上，那么其他进程向这个通道发送消息时，其他进程都能收到。</p>
 </blockquote>
-<p><a href="https://zhuanlan.zhihu.com/p/22584349" target="_blank" rel="external">适配 Swift 3 的一点小经验和坑</a></p>
+</li>
+</ul>
+<p><strong>CFRunLoopTimerRef</strong></p>
+<p>转发同步事件，包含一个时间长度和一个回调，加入runloop的时候，runloop会注册对应的时间点，当时间点到达的时候,runloop就被唤醒并执行那个回调</p>
+<p><strong>CFRunLoopObserverRef</strong></p>
+<p>观察者，每个观察者都包含了一个回调，当runloop状态发生变化时候，观察者就能通过会回调感受到这个变化</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">typedef CF_OPTIONS(CFOptionFlags, CFRunLoopActivity) &#123;</span><br><span class="line">    kCFRunLoopEntry         = (1UL &lt;&lt; 0), // 即将进入Loop</span><br><span class="line">    kCFRunLoopBeforeTimers  = (1UL &lt;&lt; 1), // 即将处理 Timer</span><br><span class="line">    kCFRunLoopBeforeSources = (1UL &lt;&lt; 2), // 即将处理 Source</span><br><span class="line">    kCFRunLoopBeforeWaiting = (1UL &lt;&lt; 5), // 即将进入休眠</span><br><span class="line">    kCFRunLoopAfterWaiting  = (1UL &lt;&lt; 6), // 刚从休眠中唤醒</span><br><span class="line">    kCFRunLoopExit          = (1UL &lt;&lt; 7), // 即将退出Loop</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>autoreleasepool的创建和销毁?</p>
+<p>苹果在主线程runloop注册了连个observer</p>
+<p>第一个observer监听事件是<strong><em>entry</em></strong>，回调调用_objc_autoreleasePoolPush() 创建自动释放池</p>
+<p>第二个observer监听两个事件<strong><em>BeforeWaiting(准备进入休眠)</em></strong> 时调用_objc_autoreleasePoolPop() 和 _objc_autoreleasePoolPush() 释放旧的池并创建新池；Exit(即将退出Loop) 时调用 _objc_autoreleasePoolPop() 来释放自动释放池</p>
+</blockquote>
+<p>常见的runloop mode模式</p>
+<table>
+<thead>
+<tr>
+<th>mode名称</th>
+<th>运行机制</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>NSDefaultRunLoopMode</td>
+<td>App的默认 Mode，通常主线程是在这个 Mode 下运行的。</td>
+</tr>
+<tr>
+<td>UITrackingRunLoopMode</td>
+<td>界面跟踪 Mode，用于 ScrollView 追踪触摸滑动，</td>
+</tr>
+<tr>
+<td>UIInitializationRunLoopMode</td>
+<td>刚启动 App 时第进入的第一个 Mode，启动完成后就不再使用。</td>
+</tr>
+<tr>
+<td>NSRunLoopCommonModes</td>
+<td>默认包含了NSDefaultRunLoopMode 和UITrackingRunLoopMode</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>问题： 为什么[NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(doTimer1) userInfo:nil repeats:YES];在滑动的时候定时器不走了呢</p>
+<ol>
+<li><p>schedule类方法默认是将timer添加到defaultMode下面 </p>
+</li>
+<li><p>根据官方文档： Each time you run your run loop, you specify (either explicitly or implicitly) a particular “mode” in which to run. During that pass of the run loop, only sources associated with that mode are monitored and allowed to deliver their events. (Similarly, only observers associated with that mode are notified of the run loop’s progress.) Sources associated with other modes hold on to any new events until subsequent passes through the loop in the appropriate mode.</p>
+<p>也就是说runloop每次只能运行在一个mode下，该mode下面的timer才能被监听</p>
+<p>而APP滑动的时候切换到UITrackingRunLoopMode,所以timer事件无法被监听到。</p>
+</li>
+<li><p>解决方法</p>
+<p>将timer 添加到commonmodes上面去，commonmodes是关于mode的集合，添加到上面的timer就自动添加到defaultmode和trackingMode。</p>
+<p>​</p>
+</li>
+</ol>
+</blockquote>
+<h4 id="runloop完整的一个周期"><a href="#runloop完整的一个周期" class="headerlink" title="runloop完整的一个周期"></a>runloop完整的一个周期</h4><p><img src="http://blog.ibireme.com/wp-content/uploads/2015/05/RunLoop_1.png" alt=""></p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 用DefaultMode启动</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">CFRunLoopRun</span><span class="params">(<span class="keyword">void</span>)</span> </span>&#123;</span><br><span class="line">    CFRunLoopRunSpecific(CFRunLoopGetCurrent(), kCFRunLoopDefaultMode, <span class="number">1.0e10</span>, <span class="literal">false</span>);</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line"><span class="comment">/// 用指定的Mode启动，允许设置RunLoop超时时间</span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">CFRunLoopRunInMode</span><span class="params">(CFStringRef modeName, CFTimeInterval seconds, Boolean stopAfterHandle)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> CFRunLoopRunSpecific(CFRunLoopGetCurrent(), modeName, seconds, returnAfterSourceHandled);</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line"><span class="comment">/// RunLoop的实现</span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">CFRunLoopRunSpecific</span><span class="params">(runloop, modeName, seconds, stopAfterHandle)</span> </span>&#123;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">/// 首先根据modeName找到对应mode</span></span><br><span class="line">    CFRunLoopModeRef currentMode = __CFRunLoopFindMode(runloop, modeName, <span class="literal">false</span>);</span><br><span class="line">    <span class="comment">/// 如果mode里没有source/timer/observer, 直接返回。</span></span><br><span class="line">    <span class="keyword">if</span> (__CFRunLoopModeIsEmpty(currentMode)) <span class="keyword">return</span>;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">/// 1. 通知 Observers: RunLoop 即将进入 loop。</span></span><br><span class="line">    __CFRunLoopDoObservers(runloop, currentMode, kCFRunLoopEntry);</span><br><span class="line">    </span><br><span class="line">    <span class="comment">/// 内部函数，进入loop</span></span><br><span class="line">    __CFRunLoopRun(runloop, currentMode, seconds, returnAfterSourceHandled) &#123;</span><br><span class="line">        </span><br><span class="line">        Boolean sourceHandledThisLoop = NO;</span><br><span class="line">        <span class="keyword">int</span> retVal = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">do</span> &#123;</span><br><span class="line"> </span><br><span class="line">            <span class="comment">/// 2. 通知 Observers: RunLoop 即将触发 Timer 回调。</span></span><br><span class="line">            __CFRunLoopDoObservers(runloop, currentMode, kCFRunLoopBeforeTimers);</span><br><span class="line">            <span class="comment">/// 3. 通知 Observers: RunLoop 即将触发 Source0 (非port) 回调。</span></span><br><span class="line">            __CFRunLoopDoObservers(runloop, currentMode, kCFRunLoopBeforeSources);</span><br><span class="line">            <span class="comment">/// 执行被加入的block</span></span><br><span class="line">            __CFRunLoopDoBlocks(runloop, currentMode);</span><br><span class="line">            </span><br><span class="line">            <span class="comment">/// 4. RunLoop 触发 Source0 (非port) 回调。</span></span><br><span class="line">            sourceHandledThisLoop = __CFRunLoopDoSources0(runloop, currentMode, stopAfterHandle);</span><br><span class="line">            <span class="comment">/// 执行被加入的block</span></span><br><span class="line">            __CFRunLoopDoBlocks(runloop, currentMode);</span><br><span class="line"> </span><br><span class="line">            <span class="comment">/// 5. 如果有 Source1 (基于port) 处于 ready 状态，直接处理这个 Source1 然后跳转去处理消息。</span></span><br><span class="line">            <span class="keyword">if</span> (__Source0DidDispatchPortLastTime) &#123;</span><br><span class="line">                Boolean hasMsg = __CFRunLoopServiceMachPort(dispatchPort, &amp;msg)</span><br><span class="line">                <span class="keyword">if</span> (hasMsg) <span class="keyword">goto</span> handle_msg;</span><br><span class="line">            &#125;</span><br><span class="line">            </span><br><span class="line">            <span class="comment">/// 通知 Observers: RunLoop 的线程即将进入休眠(sleep)。</span></span><br><span class="line">            <span class="keyword">if</span> (!sourceHandledThisLoop) &#123;</span><br><span class="line">                __CFRunLoopDoObservers(runloop, currentMode, kCFRunLoopBeforeWaiting);</span><br><span class="line">            &#125;</span><br><span class="line">            </span><br><span class="line">            <span class="comment">/// 7. 调用 mach_msg 等待接受 mach_port 的消息。线程将进入休眠, 直到被下面某一个事件唤醒。</span></span><br><span class="line">            <span class="comment">/// • 一个基于 port 的Source 的事件。</span></span><br><span class="line">            <span class="comment">/// • 一个 Timer 到时间了</span></span><br><span class="line">            <span class="comment">/// • RunLoop 自身的超时时间到了</span></span><br><span class="line">            <span class="comment">/// • 被其他什么调用者手动唤醒</span></span><br><span class="line">            __CFRunLoopServiceMachPort(waitSet, &amp;msg, <span class="keyword">sizeof</span>(msg_buffer), &amp;livePort) &#123;</span><br><span class="line">                mach_msg(msg, MACH_RCV_MSG, port); <span class="comment">// thread wait for receive msg</span></span><br><span class="line">            &#125;</span><br><span class="line"> </span><br><span class="line">            <span class="comment">/// 8. 通知 Observers: RunLoop 的线程刚刚被唤醒了。</span></span><br><span class="line">            __CFRunLoopDoObservers(runloop, currentMode, kCFRunLoopAfterWaiting);</span><br><span class="line">            </span><br><span class="line">            <span class="comment">/// 收到消息，处理消息。</span></span><br><span class="line">            handle_msg:</span><br><span class="line"> </span><br><span class="line">            <span class="comment">/// 9.1 如果一个 Timer 到时间了，触发这个Timer的回调。</span></span><br><span class="line">            <span class="keyword">if</span> (msg_is_timer) &#123;</span><br><span class="line">                __CFRunLoopDoTimers(runloop, currentMode, mach_absolute_time())</span><br><span class="line">            &#125; </span><br><span class="line"> </span><br><span class="line">            <span class="comment">/// 9.2 如果有dispatch到main_queue的block，执行block。</span></span><br><span class="line">            <span class="keyword">else</span> <span class="keyword">if</span> (msg_is_dispatch) &#123;</span><br><span class="line">                __CFRUNLOOP_IS_SERVICING_THE_MAIN_DISPATCH_QUEUE__(msg);</span><br><span class="line">            &#125; </span><br><span class="line"> </span><br><span class="line">            <span class="comment">/// 9.3 如果一个 Source1 (基于port) 发出事件了，处理这个事件</span></span><br><span class="line">            <span class="keyword">else</span> &#123;</span><br><span class="line">                CFRunLoopSourceRef source1 = __CFRunLoopModeFindSourceForMachPort(runloop, currentMode, livePort);</span><br><span class="line">                sourceHandledThisLoop = __CFRunLoopDoSource1(runloop, currentMode, source1, msg);</span><br><span class="line">                <span class="keyword">if</span> (sourceHandledThisLoop) &#123;</span><br><span class="line">                    mach_msg(reply, MACH_SEND_MSG, reply);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            </span><br><span class="line">            <span class="comment">/// 执行加入到Loop的block</span></span><br><span class="line">            __CFRunLoopDoBlocks(runloop, currentMode);</span><br><span class="line">            </span><br><span class="line"> </span><br><span class="line">            <span class="keyword">if</span> (sourceHandledThisLoop &amp;&amp; stopAfterHandle) &#123;</span><br><span class="line">                <span class="comment">/// 进入loop时参数说处理完事件就返回。</span></span><br><span class="line">                retVal = kCFRunLoopRunHandledSource;</span><br><span class="line">            &#125; <span class="keyword">else</span> <span class="keyword">if</span> (timeout) &#123;</span><br><span class="line">                <span class="comment">/// 超出传入参数标记的超时时间了</span></span><br><span class="line">                retVal = kCFRunLoopRunTimedOut;</span><br><span class="line">            &#125; <span class="keyword">else</span> <span class="keyword">if</span> (__CFRunLoopIsStopped(runloop)) &#123;</span><br><span class="line">                <span class="comment">/// 被外部调用者强制停止了</span></span><br><span class="line">                retVal = kCFRunLoopRunStopped;</span><br><span class="line">            &#125; <span class="keyword">else</span> <span class="keyword">if</span> (__CFRunLoopModeIsEmpty(runloop, currentMode)) &#123;</span><br><span class="line">                <span class="comment">/// source/timer/observer一个都没有了</span></span><br><span class="line">                retVal = kCFRunLoopRunFinished;</span><br><span class="line">            &#125;</span><br><span class="line">            </span><br><span class="line">            <span class="comment">/// 如果没超时，mode里没空，loop也没被停止，那继续loop。</span></span><br><span class="line">        &#125; <span class="keyword">while</span> (retVal == <span class="number">0</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">/// 10. 通知 Observers: RunLoop 即将退出。</span></span><br><span class="line">    __CFRunLoopDoObservers(rl, currentMode, kCFRunLoopExit);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>一些关键点梳理:</p>
+<p>唤醒线程的事件: </p>
+<ol>
+<li>source1(基于mach_port)</li>
+<li>timer事件</li>
+</ol>
+</blockquote>
+<h4 id="runloop的应用"><a href="#runloop的应用" class="headerlink" title="runloop的应用"></a>runloop的应用</h4><ol>
+<li><p>界面显示和刷新： runloop注册对应source通过mach port监听信号信号通知，刷新界面(1.frame，透明度等修改 并提交到一个中间态，2,coreanimaiton在RunLoop</p>
+<p>注册一个observer，这个回调在BeforeWaiting 前，会把所有中间态调教到GPU显示)</p>
+</li>
+</ol>
+<blockquote>
+<p>VSync 信号由硬件时钟生成,完成一帧显示，需要显示下一个帧，发出一个VSync，每秒钟发出 60 次, </p>
+</blockquote>
+<ol>
+<li><p>事件响应链</p>
+<p>​</p>
+</li>
+</ol>
 
           
         
@@ -1541,7 +727,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-  <link itemprop="mainEntityOfPage" href="atony2099.github.io/2016/05/01/swift-tips/swift-init/">
+  <link itemprop="mainEntityOfPage" href="atony2099.github.io/2016/04/02/1coreAnimation/coreAnimation学习/">
 
   <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
     <meta itemprop="name" content="tony2009">
@@ -1566,8 +752,8 @@
             
               
                 
-                <a class="post-title-link" href="/2016/05/01/swift-tips/swift-init/" itemprop="url">
-                  init方法
+                <a class="post-title-link" href="/2016/04/02/1coreAnimation/coreAnimation学习/" itemprop="url">
+                  CoreAnimation学习
                 </a>
               
             
@@ -1583,8 +769,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2016-05-01T00:22:12+08:00">
-                2016-05
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2016-04-02T20:52:18+08:00">
+                2016-04
               </time>
             
 
@@ -1621,48 +807,1119 @@
       
         
           
-            <p><a href="http://wiki.jikexueyuan.com/project/swift/chapter2/14_Initialization.html" target="_blank" rel="external">构造过程</a></p>
+            <p> <strong>相关学习资料 </strong>:</p>
 <ul>
-<li>init </li>
+<li>文档<br> <a href="http://blog.csdn.net/mad2man/article/details/16928891" target="_blank" rel="external">Core Animation编程指南2013中文</a><br><a href="http://www.cocoachina.com/bbs/read.php?tid=84461&amp;fpage=3" target="_blank" rel="external">Core Animation编程指南2011中文</a><br><a href="[Core Animation编程指南2011中文]">Core Animation编程指南英文</a><br><a href="https://www.gitbook.com/book/zsisme/ios-/details" target="_blank" rel="external">Core Animationg高级技巧</a></li>
+<li>相关博客<br><a href="http://objccn.io/issue-12-1/" target="_blank" rel="external">动画解 释</a><br><a href="http://geeklu.com/2012/09/animation-in-ios/" target="_blank" rel="external">谈谈iOS Animation</a><br><a href="http://objccn.io/issue-12-4/" target="_blank" rel="external">View-Layer 协作</a><br><a href="http://www.cocoachina.com/ios/20150828/13257.html" target="_blank" rel="external">你给我解析清楚，都有了CALayer了，为什么还要UIView</a><br><a href="http://o0o0o0o.iteye.com/blog/1728599" target="_blank" rel="external">UIView 和 CALayer的那点事</a></li>
 </ul>
-<p>构造过程: 使用类，结构体，的实例之前的准备过程，</p>
+<p><img src="http://cdn.cocimg.com/cms/uploads/allimg/140515/4196_140515121200_1.png" alt="UIKit"></p>
+<p>####CALayer</p>
 <ol>
-<li>设置实例变量的初始值。</li>
-<li>其他一些初始化工作</li>
-</ol>
-<p>规则: </p>
+<li><p>什么是图层(CALayer)</p>
 <ul>
-<li>指定构造器必须总是<em>向上</em>代理</li>
-<li>便利构造器必须总是<em>横向</em>代理指定构造器调用父亲指定构造器</li>
-</ul>
-<h4 id="两段式构造过程"><a href="#两段式构造过程" class="headerlink" title="两段式构造过程"></a>两段式构造过程</h4><ol>
-<li><p>每个存储属性指定一个初始值</p>
+<li>图层是一个模型对象(data object):<blockquote>
+<p>图层管理位图周围状态信息<br>-&gt; A layer merely manages the state information surrounding a bitmap. </p>
+</blockquote>
 </li>
-<li><p>进一步定制存储属性</p>
+</ul>
 <blockquote>
-<p>vs object-c: object-c帮我们指定了初始值(nil 或者 0)</p>
+<p>layers manage information about the geometry, content, and visual attributes of their surfaces.</p>
 </blockquote>
 </li>
 </ol>
-<h4 id="构造函数的重载-重写"><a href="#构造函数的重载-重写" class="headerlink" title="构造函数的重载,重写"></a>构造函数的重载,重写</h4><p>重载: overload: 参数列表: 不一样，返回列表： 无所谓</p>
-<blockquote>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&gt; 一旦重载构造函数  默认的构造函数就不能访问</span><br><span class="line">&gt;</span><br></pre></td></tr></table></figure>
-</blockquote>
-<p>重写 override :参数列表和返回类型一致</p>
-<h4 id="构造器的继承"><a href="#构造器的继承" class="headerlink" title="构造器的继承:"></a>构造器的继承:</h4><p>子类默认情况下不会继承父类的构造器</p>
-<p>1.如果子类没有定义任何指定构造器，它将自动继承父类的指定构造器</p>
 <ol>
-<li>如果子类提供了所有父类指定构造器的实现——无论是通过规则 1 继承过来的，还是提供了自定义实现——它将自动继承所有父类的便利构造器。</li>
+<li>how:  CALayer的渲染过程？<br><img src="https://developer.apple.com/library/ios/documentation/Cocoa/Conceptual/CoreAnimation_guide/Art/basics_layer_rendering_2x.png" alt=""><br>1.a layer captures the content your app provides and caches it in a bitmap,</li>
+<li>When you subsequently change a property of the layer, all you are doing is changing the state information associated with the layer object</li>
+<li><p>When a change triggers an animation, Core Animation passes the layer’s bitmap and state information to the graphics hardware, </p>
+</li>
+<li><p>coreAnimation和coreGraphics比较：</p>
+<blockquote>
+<p> But drawing in this way is expensive because <strong>it is done using the CPU on the main thread. </strong>Core Animation avoids this expense by whenever possible by manipulating the cached bitmap in hardware to achieve the same or similar effects.</p>
+</blockquote>
+</li>
 </ol>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">import UIKit</span><br><span class="line"></span><br><span class="line">class wheel: UIControl &#123;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>But this code doesn’t:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">class wheel: UIControl &#123;</span><br><span class="line">override init(frame: CGRect) &#123;</span><br><span class="line">    super.init(frame: frame)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>It shows error “<em>required initializer init must be provided in subclass of UIControl</em>“ when I override init(frame: CGRect) but not init(coder aDecoder: NSCoder)</p>
-<p>Look. According to <a href="https://developer.apple.com/library/ios/documentation/Swift/Conceptual/Swift_Programming_Language/Initialization.html" target="_blank" rel="external">Apple documentations</a> Swift subclasses do not inherit their superclass initializers by default. They are inherited only in certain circumstances, one of which is: If your subclass doesn’t define any designated initializers, it automatically inherits all of its superclass designated initializers. So if you’re not implementing <code>init(frame: CGRect)</code> all super initializers are inherited.</p>
-<p>Also UIView adopts NSCoding protocol, which requires an <code>init(coder:)</code> initializer. So if you’re implementing <code>init(frame: CGRect)</code>, your class is no longer inheriting super initializers. So you must implement that one too:</p>
-<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">required</span> <span class="keyword">init</span>?(coder decoder: <span class="type">NSCoder</span>) &#123;</span><br><span class="line">    <span class="keyword">super</span>.<span class="keyword">init</span>?(coder: decoder)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h4 id="可失败的构造器"><a href="#可失败的构造器" class="headerlink" title="可失败的构造器"></a>可失败的构造器</h4><p>如果一个类、结构体或枚举类型的对象，在构造过程中有可能失败，则为其定义一个可失败构造器。这里所指的“失败”是指，如给构造器传入无效的参数值，或缺少某种所需的外部资源，又或是不满足某种必要的条件等。</p>
-<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">Animal</span> </span>&#123;</span><br><span class="line">    <span class="keyword">let</span> species: <span class="type">String</span></span><br><span class="line">    <span class="keyword">init</span>?(species: <span class="type">String</span>) &#123;</span><br><span class="line">        <span class="keyword">if</span> species.isEmpty &#123; <span class="keyword">return</span> <span class="literal">nil</span> &#125;</span><br><span class="line">        <span class="keyword">self</span>.species = species</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ol>
+<li>CALayer三层模型<br><img src="https://zsisme.gitbooks.io/ios-/content/chapter7/7.4.jpeg" alt="图片"><br><strong>Layer也和View一样存在着一个层级树状结构,称之为图层树(Layer Tree)</strong></li>
+</ol>
+<p><strong>三个模型层对象</strong></p>
+<ul>
+<li><p>Model Tree。在这个树中的对象是模型对象，模型对象负责存储所有动画的结束值。无论何时改变图层的属性值，你使用的始终是某一个模型对象。</p>
+</li>
+<li><p>Presentation Tree。呈现树中的对象包含所有运行中的动画的瞬时值。图层树对象包含的是动画的目标值，而呈现树中的对象代表显示在屏幕上动画的当前值。你不应该更改这个树中的对象。相反，你使用这些对象来读取当前动画的值，可能用于创建开始于这些值的新的动画。<br>通过-presentationLayer方法来访问。这个呈现图层实际上是模型图层的复制，但是它的属性值代表了在任何指定时刻当前外观效果。换句话说，你可以通过呈现图层的值来获取当前屏幕上真正显示出来的值<br>大多数情况下，你不需要直接访问呈现图层<br><strong>如果想准确地知道在某一时刻图层显示在什么位置就会对正确摆放图层很有用了。</strong></p>
+</li>
+<li><p>Render Tree 在渲染树中的对象执行实际的动画，并且对Core Animation是不公开的。,渲染树是对呈现树的数据进行渲染,为了不阻塞主线程,渲染的过程是在单独的进程或线程中进行的,所以你会发现Animation的动画并不会阻塞主线程.</p>
+</li>
+</ul>
+<ol>
+<li>图层的赋值方式</li>
+</ol>
+<ul>
+<li>直接赋值一个UIImage对象给图层对象contents属性。（这个技术适用于图层内容从不或几乎不改变的情形。）</li>
+<li>赋值一个代理给图层，由代理负责绘制图层内容。（该技术适用于图层内容可能偶尔改变，且内容可由外部对象提供，比如视图。）</li>
+<li>定义一个CALayer的子类并覆盖类的绘图方法，有覆盖的方法返回图层的内容。（该技术适用于你需要创建自定义图层的子类，或者你想改变图层基本的绘图行为。）</li>
+</ul>
+<hr>
+<blockquote>
+<p> 图层并不知道当前设备的分辨率信息。<strong>图层只是简单的存储一个指向位图的指针</strong>，并用给定的有效像素以最佳的方式显示。如果你赋值一个图片给图层的contents属性，你必须给图层的contentsScale属性设置一个正确的值以告诉Core Animation关于图片的分辨率。默认的属性值为1.0，对于在标准分辨率的屏幕上显示图片是正确的。如果你的图片要在Retina屏幕上显示，该值需要设定为2.0。使用[[UIScreen mainScreen] scale]可获取正确的缩放率。</p>
+</blockquote>
+<hr>
+<blockquote>
+<p>核心动画不提供在一个窗口(window)实际显示图层的手段，它们必须通过视图来<br>托管。当视图和图层一起的时候，视图为图层提供了底层的事件处理，而图层为视图<br>提供了显示的内容。<br><strong>iOS 上面的视图系统直接建立在核心动画的图层上面。</strong></p>
+</blockquote>
+<hr>
+<hr>
+<blockquote>
+<p> 当你随后改变了一个图层的属性值，你做的所有工作只是改变了与图层对象相关联的状态信息。当你的更改触发了一个动画，Core Animation会将该图层对应的位图数据和图层的状态信息发送给图形处理硬件。图形处理器所做的工作是根据获得的信息对位图进行渲染<br> 对基于视图的绘图，对视图的改变经常会触发调用视图的drawRect：方法以重绘视图内容。但是此种方式的代价相对较高，因为它是CPU在主线程上的操作。Core Animation通过尽可能的使用图形硬件操纵缓存后的位图来避免了这种开销，从而完成相同或相似的效果。</p>
+<p>Core Animation让视图和可视对象的变化能以动画的形式呈现。大部分变化都与可视对象属性的更改相关。比如Core Animation能让视图的位置、尺寸或者透明度的变化以动画的形式呈现。当你更改了这些属性的值， Core Animation会在当前属性值和最新指定的属性值之间进行动画。</p>
+</blockquote>
+<p><strong>UIView &amp;&amp;CALAyer区别和联合</strong><br><strong>关系:</strong></p>
+<ul>
+<li>官方文档:<br>The view system in iOS is built directly on top of Core Animation layers.  Every instance of UIView automatically creates an instance of a<br>CALayer class .<br>UIView是对layer进一步封装，增加了响应用户时间能力(uiresponder)，包装了一层calyer<br>UIView依赖于calyer提供内容，UIVIEW的内容展示(frame.bounds)和动画都是通过calyer获得</li>
+</ul>
+<p><strong>为什么要 UIView 和 CALayer：</strong><br>职责分离，避免重复的代码<br>底层的布局动画是一样的，表层的用户交互事件差异很大，共享代码</p>
+<ul>
+<li>需要提供什么功能（机制）”和“怎样实现这些功能（策略）”。如果程序可以由独立的部分分别完成机制与策略的实现，那么开发软件就更加容易，也更加容易适应不同的需求。UIView可以看做是策略，变动很多。越是底层，越是机制，越是机制就越是稳定。</li>
+</ul>
+<p><em>CALayer 的 position 属性与 anchorPoint 属性间的关系</em><br>position是layer中的anchorPoint点在superLayer中的位置坐标。<br>因此可以说,<br><strong>position点是相对suerLayer的，anchorPoint点是相对layer的，</strong>两者是相对不同的坐标空间的一个重合点。</p>
+<ul>
+<li>1.position是layer中的anchorPoint在superLayer中的位置坐标。</li>
+<li>2.互不影响原则：单独修改position与anchorPoint中任何一个属性都不影响另一个属性。</li>
+</ul>
+<p>它主要的作用就是用来作为变换的支点，</p>
+<p>####CoreAnimation<br><img src="http://img.objccn.io/issue-3/pixels-software-stack.png" alt="图片1"></p>
+<p>1.它是什么: </p>
+<ul>
+<li>It is an infrastructure for compositing and manipulating your app’s content in hardware.</li>
+<li>操作的对象是图层</li>
+</ul>
+<blockquote>
+<p> Core Animation是一个复合引擎，它的职责就是尽可能快地组合屏幕上不同的可视内容，这个内容是被分解成独立的图层，存储在一个叫做图层树的体系之</p>
+<p>Core Animation自身并不是一个绘图系统。它只是一个负责在硬件上合成和操纵应用内容的基础构件。（Core Animation is not a drawing system itself. It is an infrastructure for compositing and manipulating your app’s content in hardware.）Core Animation的核心是图层对象，图层对象用于管理和操控你的应用内容。图层将捕获的内容放到一副位图中，<strong>图形硬件能够非常容易的操控你的位图。</strong>（A layer captures your content into a bitmap that can be manipulated easily by the graphics hardware.）在大部分应用中，图层被作为一种管理视图内容的方式，但是你也可以创建标准的图层，</p>
+</blockquote>
+<p><strong>什么是Animation(动画),简单点说就是在一段时间内,显示的内容发生了变化.对CALayer来说就是在一段时间内,其Animatable Property发生了变化.</strong></p>
+<p>###隐式动画</p>
+<p><em>之所以叫隐式是因为我们并没有指定任何动画的类型。我们仅仅改变了一个属性，然后Core Animation来决定如何并且何时去做动画</em></p>
+<blockquote>
+<p>核心动画的隐式动画模型假定所有动画图层属性的变化应该是渐进的和异步的。<br>动态的动画场景可以在没有显式的动画图层时候实现。改变可动画显示的图层的属性<br>将会导致图层隐式把图层从旧的值动画显示为新的值。虽然动画是持续的，但是设置<br>新的目标值时会导致图层从当前状态动画过渡到新的目标值。 </p>
+<p>不同于隐式动画，隐式动画会更新图层对象的值。<strong>而显示动画不会更改图层树中的数据。显示动画仅是创建了一个动画。在动画结束之后，Core Animation从图层中移除该动画对象并使用当前的数据值重绘图层。</strong>如果你想让显示动画的改变成为永久性的，如你在之前的例子中看到的，你必须更新图层属性。</p>
+</blockquote>
+<p>###事务</p>
+<blockquote>
+<p>事务实际上是Core Animation用来包含一系列属性动画集合的机制，任何用指定事务去改变可以做动画的图层属性都不会立刻发生变化，而是当事务一旦提交的时候开始用一个动画过渡到新值。</p>
+</blockquote>
+<hr>
+<blockquote>
+<p><strong> 图层的每个改变都是事务的一部分</strong>。CATransaction 是核心动画类，它负责成批的把多个图层树的修改作为一个原子更新到渲染树。<br>可以通过给 CATransaction 类发送一个 begin 消息来创建一<br>个显式事务，修改完成之后发送 comit 消息。<br><strong>Core Animation在每个run loop周期中自动开始一次新的事务（run loop是iOS负责收集用户输入，处理定时器或者网络事件并且重新绘制屏幕的东西），即使你不显式的用[CATransaction begin]开始一次事务，任何在一次run loop循环中属性的改变都会被集中起来，然后做一次0.25秒的动画。</strong></p>
+<p>UIView+animateWithDuration:animations:。这样写对做一堆的属性动画在语法上会更加简单，但实质上它们都是在做同样的事情。  CATransaction的+begin和+commit方法在+animateWithDuration:animations:内部自动调用，这样block中所有属性的改变都会被事务所包含。这样也可以避免开发者由于对+begin和+commit匹配的失误造成的风险。<br>使用场景：</p>
+<ul>
+<li>显式事务在同时设置多个图层的属性的<br>时候（例如当布局多个图层的时候），</li>
+<li>暂时的禁用图层的行为</li>
+<li>或者暂时修改动画的时间的时候</li>
+</ul>
+</blockquote>
+<h4 id="CALayer"><a href="#CALayer" class="headerlink" title="CALayer"></a>CALayer</h4><p>#####CAShapeLayer </p>
+<blockquote>
+<p>CAShapeLayer是一个通过矢量图形而不是bitmap来绘制的图层子类。你指定诸如颜色和线宽等属性，用CGPath来定义想要绘制的图形，最后CAShapeLayer就自动渲染出来<br>优点：</p>
+<ul>
+<li>渲染快速。CAShapeLayer使用了硬件加速，绘制同一图形会比用Core Graphics快很多。</li>
+<li>高效使用内存。一个CAShapeLayer不需要像普通CALayer一样创建一个寄宿图形，所以无论有多大，都不会占用太多的内存。</li>
+<li>不会被图层边界剪裁掉。一个CAShapeLayer可以在边界之外绘制。你的图层路径不会像在使用Core Graphics的普通CALayer一样被剪裁掉（如我们在第二章所见）。</li>
+<li>不会出现像素化。当你给CAShapeLayer做3D变换时，它不像一个有寄宿图的普通图层一样变得像素化。</li>
+</ul>
+</blockquote>
+<h4 id="mask"><a href="#mask" class="headerlink" title="mask"></a>mask</h4><p>CALayer拥有mask属性，Apple的官方解释如下：</p>
+<blockquote>
+<p>An optional layer whose alpha channel is used to mask the layer’s content. The layer’s alpha channel determines how much of the layer’s content and background shows through. Fully or partially opaque pixels allow the underlying content to show through but fully transparent pixels block that content.</p>
+</blockquote>
+<p>mask同样也是一个CALayer。假设将CALayer本身称为ContentLayer，将mask称为MaskLayer，蒙版（Masking）的工作原理是通过MaskLayer的alpha值定义ContentLayer的显示区域：对于ContentLayer上每一个Point，计算公式为ResultLayer = ContentLayer * MaskLayer_Alpha。所以当alpha为1时Content显示，alpha为0时Content不显示，其他处于0与1之间的值导致Content半透明。</p>
+<p>需要注意的是：</p>
+<ul>
+<li>MaskLayer的color不重要，主要使用opacity（CALayer中的alpha），但是注意[UIColor clearColor]其实就是alpha为0的color。<br>ContentLayer超出MaskLayer以外的部分不会被显示出来。</li>
+<li>MaskLayer必须是个“单身汉”，不能有sublayers，否则蒙版（Masking）的结果就是未知（Undefined）。</li>
+</ul>
+<p>####粒子动画</p>
+<blockquote>
+<p>通常粒子系统在三维空间中的位置与运动是由发射器控制的。发射器主要由一组粒子行为参数以及在三维空间中的位置所表示。<strong>粒子行为参数可以包括粒子生成速度（即单位时间粒子生成的数目）、粒子初始速度向量（例如什么时候向什么方向运动）、粒子寿命（经过多长时间粒子湮灭）、粒子颜色、在粒子生命周期中的变化以及其它参数等等。使用大概值而不是绝对值的模糊参数占据全部或者绝大部分是很正常的，一些参数定义了中心值以及允许的变化</strong>。</p>
+</blockquote>
+<p>####备注：<br>bitMap:由像素点构成，每个像素点由自己的颜色和位置属性</p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="atony2099.github.io/2016/03/02/js-oc交互/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="tony2009">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="/images/avatar.gif">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="托尼的开发笔记">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="托尼的开发笔记" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2016/03/02/js-oc交互/" itemprop="url">
+                  js&&oc交互
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2016-03-02T15:33:17+08:00">
+                2016-03
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h4 id="相关概念"><a href="#相关概念" class="headerlink" title="相关概念"></a>相关概念</h4><blockquote>
+<p> JavaScriptCore是iOS7引入的新功能，JavaScriptCore可以理解为一个浏览器的运行内核，使用JavaScriptCore可以使用native代码（这里主要指objectiveC和swift）与js代码进行相互的调用</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">#import &quot;JSContext.h&quot;</span><br><span class="line">#import &quot;JSValue.h&quot;</span><br><span class="line">#import &quot;JSManagedValue.h&quot;</span><br><span class="line">#import &quot;JSVirtualMachine.h&quot;</span><br><span class="line">#import &quot;JSExport.h&quot;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>JSContext是JavaScript的运行上下文，他主要作用是执行js代码和注册native方法接口</li>
+<li>JSValue是JSContext执行后的返回结果，他可以是任何js类型（比如基本数据类型和函数类型，对象类型等），并且都有对象的方法转换为native对象。</li>
+<li>JSManagedValue是JSValue的封装，用它可以解决js和原声代码之间循环引用的问题</li>
+<li>JSVirtualMachine 管理JS运行时和管理js暴露的native对象的内存</li>
+<li>JSExport是一个协议，通过实现它可以完成把一个native对象暴漏给js</li>
+</ul>
+<h4 id="JS调用OC"><a href="#JS调用OC" class="headerlink" title="JS调用OC"></a>JS调用OC</h4><p>JS端实现</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">//iOSNative 是调用方法的对象，方法名要跟iOS端协商好</span><br><span class="line">//callHandler 这个是function name，方法名称 要和iOS商议确定</span><br><span class="line">//handlerName和info 这个是传过来给iOS的参数</span><br><span class="line">iOSNative.callHandler(info)</span><br></pre></td></tr></table></figure>
+<p>iOS端实现</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"> #import &lt;Foundation/Foundation.h&gt;  </span><br><span class="line">#import &lt;JavaScriptCore/JavaScriptCore.h&gt;  </span><br><span class="line">  </span><br><span class="line">//首先创建一个实现了JSExport协议的协议  </span><br><span class="line">@protocol JSObjectText &lt;JSExport&gt;  </span><br><span class="line"></span><br><span class="line">-(void)callHandler:(NSString *)string;  </span><br><span class="line"></span><br><span class="line">@end  </span><br><span class="line">  </span><br><span class="line">//让我们创建的类实现上边的协议  </span><br><span class="line">@interface JSObject : NSObject&lt;JSObjectText&gt;  </span><br><span class="line">@end</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"> #import &quot;JSObjectText.h&quot;  </span><br><span class="line">  </span><br><span class="line">@implementation JSObjectText  </span><br><span class="line">  </span><br><span class="line">-(void)callHandler:(NSString *)string;  </span><br><span class="line">&#123;  </span><br><span class="line">	NSLog(@&quot;%@&quot;,string) ;</span><br><span class="line">&#125;  </span><br><span class="line"></span><br><span class="line">@end</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">-(void)webViewDidFinishLoad:(UIWebView *)webView  </span><br><span class="line">&#123;  </span><br><span class="line">    //网页加载完成调用此方法  </span><br><span class="line">      </span><br><span class="line">    //首先创建JSContext 对象（此处通过当前webView的键获取到jscontext）  </span><br><span class="line">    JSContext *context=[webView valueForKeyPath:@&quot;documentView.webView.mainFrame.javaScriptContext&quot;];  </span><br><span class="line">      </span><br><span class="line">    //假设js是通过iOSNative对象调用</span><br><span class="line">    //首先创建我们新建类的对象，将他赋值给js的对象  </span><br><span class="line">    JSObjectText *iOSNative=[JSObjectText new];  </span><br><span class="line">    context[@&quot;iOSNative&quot;]=iOSNative;        </span><br><span class="line">&#125;</span><br><span class="line">	//异常信息的处理</span><br><span class="line">  context.exceptionHandler = ^(JSContext *context, JSValue *exceptionValue) &#123;</span><br><span class="line">        context.exception = exceptionValue;</span><br><span class="line">        NSLog(@&quot;异常信息：%@&quot;, exceptionValue);</span><br><span class="line">    &#125;;</span><br></pre></td></tr></table></figure>
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="atony2099.github.io/2016/02/19/1HTTP/HTTP缓存/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="tony2009">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="/images/avatar.gif">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="托尼的开发笔记">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="托尼的开发笔记" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2016/02/19/1HTTP/HTTP缓存/" itemprop="url">
+                  HTTP缓存
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2016-02-19T17:14:18+08:00">
+                2016-02
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>来源: </p>
+<http权威指南>
+
+<p><a href="http://www.codeceo.com/article/http-cache-backend-programmer.html" target="_blank" rel="external">写给后端程序员的http缓存介绍</a></p>
+<p><a href="http://www.alloyteam.com/2016/03/discussion-on-web-caching/#prettyPhoto" target="_blank" rel="external">浅谈web缓存</a></p>
+<p><a href="https://developers.google.cn/web/fundamentals/performance/optimizing-content-efficiency/http-caching?hl=zh-cn" target="_blank" rel="external">HTTP 缓存</a></p>
+<p><a href="http://www.zhangxinxu.com/wordpress/2013/05/caching-tutorial-for-web-authors-and-webmasters/#BROWSER" target="_blank" rel="external">web制作、开发人员需知的Web缓存知识</a></p>
+<h4 id="什么是http缓存"><a href="#什么是http缓存" class="headerlink" title="什么是http缓存"></a>什么是http缓存</h4><blockquote>
+<p>通常所说的Web缓存指的是可以自动保存常见http请求副本的http设备。对于前端开发者来说，浏览器充当了重要角色。除此外常见的还有各种各样的代理服务器也可以做缓存。当Web请求到达缓存时，缓存从<code>本地副本</code>中提取这个副本内容而不需要经过服务器。</p>
+</blockquote>
+<h4 id="为什么需要缓存"><a href="#为什么需要缓存" class="headerlink" title="为什么需要缓存"></a>为什么需要缓存</h4><blockquote>
+<ul>
+<li>缓存减少了冗余的数据传输，节省流量</li>
+</ul>
+<ul>
+<li>缓存缓解了带宽瓶颈问题。不需要更多的带宽就能更快加载页面</li>
+<li>缓存缓解了瞬间拥塞，降低了对原始服务器的要求。</li>
+<li>缓存降低了距离延时， 因为从较远的地方加载页面会更慢一些。</li>
+</ul>
+</blockquote>
+<p>   总之能更快的响应用户的请求，减少用户的等待时间</p>
+<h4 id="缓存的种类："><a href="#缓存的种类：" class="headerlink" title="缓存的种类："></a>缓存的种类：</h4><ul>
+<li>私有缓存</li>
+</ul>
+<blockquote>
+<p>针对专门的用户，web浏览器有内建的私有缓存——大多数浏览器都会将常用资源缓存在你的个人电脑的磁盘和内存中。如Chrome浏览器的缓存存放位置就在：<code>Users\Your_Account\AppData\Local\Google\Chrome\User Data\Default</code>中的Cache文件夹和Media Cache文件夹。</p>
+</blockquote>
+<ul>
+<li><p>公有缓存</p>
+<blockquote>
+<p>公有缓存是特殊的共享代理服务器，被称为<code>缓存代理服务器</code>或<code>代理缓存</code>（反向代理的一种用途）。公有缓存会接受来自多个用户的访问，</p>
+</blockquote>
+</li>
+</ul>
+<p>其他分类:  </p>
+<blockquote>
+<p>数据库缓存,代理服务器缓存，CDN缓存，浏览器缓存</p>
+</blockquote>
+<h4 id="缓存的处理步骤"><a href="#缓存的处理步骤" class="headerlink" title="缓存的处理步骤:"></a>缓存的处理步骤:</h4><ol>
+<li><p><img src="http://ohbzayk4i.bkt.clouddn.com/16-12-23/45621673-file_1482505841490_b5db.jpg" alt=""></p>
+<p>​</p>
+<h4 id="cache-control-："><a href="#cache-control-：" class="headerlink" title="cache-control ："></a>cache-control ：</h4><p>定义了缓存的策略</p>
+<ul>
+<li>什么条件下可以缓存</li>
+<li>缓存的时效</li>
+</ul>
+<p>相关字段值:</p>
+<p><strong>max- age</strong>: 该指令指定从当前请求开始，允许获取的响应被重用的最长时间</p>
+<p><strong>public</strong>: 该响应可以再浏览器或者任何中继的Web代理中缓存，public是默认值，即Cache-Control:max-age=60等同于Cache-Control:public, max-age=60。</p>
+<p><strong>private</strong>：只有客户端能缓存private响应</p>
+<p><strong>no-cache</strong>:表示该响应可以缓存，在使用该缓存对象时，必须先做新鲜度验证。</p>
+<p><strong>no-store</strong>:表示该响应不能缓存，通常这些数据是一些敏感数据。</p>
+<p><em>cache-control的控制</em>: </p>
+<p><img src="http://ohbzayk4i.bkt.clouddn.com/16-12-23/57245387-file_1482506619851_1265.png" alt=""></p>
+<h4 id="缓存新鲜度检测相关字段"><a href="#缓存新鲜度检测相关字段" class="headerlink" title="缓存新鲜度检测相关字段"></a>缓存新鲜度检测相关字段</h4><p><strong>Etag</strong>:响应首部字段，为web资源定义唯一版本标识符，一旦该响应报文的数据发生改变，则Etag值也会发生改变。</p>
+<p><strong>Last-Modified</strong>：响应首部，用于通知缓存服务器或客户端其请求的资源最近一次的修改时间。该响应首部也可以用来判断请求的资源是否被更新过。</p>
+<p><strong>If-Modified-Since</strong>：条件式请求首部，如果在此请求首部指定的时间后其请求的web资源发生了更改，则服务器响应更改后的内容，否则，则响应304(not modified)。</p>
+<p><strong>If-None-Match</strong>：条件式请求首部，web服务器会为某web资源定义一个ETag首部，并将其返回给缓存服务器，缓存服务器会将该首部保存在本地。当下一次请求时，缓存服务器会携带该请求首部，原始服务器端收到后，对比该请求报文中的ETag和服务器端的本地资源的ETag是否一样，如果一样，表示缓存没有更新，则返回304(not modified)；否则，将返回服务器端最新的数据给原始服务器。</p>
+<p><em>缓存新鲜度检测流程</em>:</p>
+</li>
+</ol>
+<p>!(<a href="http://ohbzayk4i.bkt.clouddn.com/16-12-23/6877600-file_1482507439627_9d0a.png" target="_blank" rel="external">http://ohbzayk4i.bkt.clouddn.com/16-12-23/6877600-file_1482507439627_9d0a.png</a>)</p>
+<p><img src="http://www.plantuml.com/plantuml/svg/RL9DRzD05BpxLwp49JsOtcsfI4W88S49ReY3iTVOmlL6zYB1BK7GfZHfoeVIjB44eI54HRQX498sqFmPxzh-5zZUnevftcdtlT6RsPd5EZOW2F-y9sxtzgq7aJ-XFrw6Hw_ek1wETadlWjEWf42B0qcf5je46iPLONqT8Kr62hmkeqqEcWguXDbOiZ0dHDuyFl14Zjy0zDCPRNbqt8w-DiZXY7PziZ-apWxZZEQzgDyaZG7jk2Adgw3206HooW0trW3Me0agBw2zbgaGw76DZdTfvtjywf3pePXrJOGXiFGd6iwkQSMresY-BKko1daPcTX2HZuZxvhmULMte1rC1y7qXBW7r1ilTAI8z57fqknI28j-_oI3ZupyghQq-8VN7XlFu2D-8sy9jBqVNFJ2sI7nFjF69FpcY_cmK2w0ODgAdLeqh8T_tuOpXyLHG6sCgaoSOKDGCL71AWJJFUgqo9j-OlAbgrkj-AGP-VLLN7ahhV33w8xAtqEAhkfGuU_BkYd34YBnwwvaunmJkZkCv7-6acqBwt8bIHx1-TPgtz974FyiJvvsjcd_EFsBYwGP8-tzIZfBZ5UyoEoOBTcnDo7jZbXcShlazHV6L5AlgrnnAdOdgTuq9Fbf6klAvIL0UVloYErT-I7ITFy1" alt=""></p>
+</http权威指南>
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="atony2099.github.io/2016/02/11/1性能优化/UIView的绘制/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="tony2009">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="/images/avatar.gif">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="托尼的开发笔记">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="托尼的开发笔记" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2016/02/11/1性能优化/UIView的绘制/" itemprop="url">
+                  UIView的绘制
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2016-02-11T10:28:35+08:00">
+                2016-02
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h4 id="CPU流程"><a href="#CPU流程" class="headerlink" title="CPU流程"></a>CPU流程</h4><p><img src="http://ohbzayk4i.bkt.clouddn.com/17-1-21/11221206-file_1484987191790_9c88.png" alt=""></p>
+<ol>
+<li><p>每一个View都是一个Layer，每一个layer都有一个content，这个content指向一个缓存，叫做backingstore。</p>
+<p>Layer管理位图状态信息</p>
+<blockquote>
+<p>A layer merely manages the state information surrounding a bitmap. </p>
+</blockquote>
+</li>
+<li><p>当View绘制的时候，CPU执行drawRect，写入layer的backingstore</p>
+<p>​</p>
+<h4 id="例子"><a href="#例子" class="headerlink" title="例子"></a>例子</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">UILabel* label = [[UILabel alloc]initWithFrame:CGRectMake(10, 50, 300, 14)];</span><br><span class="line">label.backgroundColor = [UIColor whiteColor];</span><br><span class="line">label.font = [UIFont systemFontOfSize:14.0f];</span><br><span class="line">label.text = @&quot;test&quot;;</span><br><span class="line">[self.view addSubview:label];</span><br></pre></td></tr></table></figure>
+<ol>
+<li><p>dirty views</p>
+<blockquote>
+<p>当一个view改变布局或者属性,或者主动调用setneedlaytout/setneeddisplay，这个view就会被标记为dirty views,</p>
+</blockquote>
+<p><img src="http://my.csdn.net/uploads/201207/19/1342691059_7152.jpg" alt=""></p>
+<p>​</p>
+</li>
+</ol>
+<p><img src="http://ohbzayk4i.bkt.clouddn.com/17-1-21/54271723-file_1484987856789_1150d.png" alt=""></p>
+<ol>
+<li><p>在runloop周期开始的时候，</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">// coreanimaiton 注册了一个 Observer 监听 BeforeWaiting(即将进入休眠) 和 Exit (即将退出Loop) 事件</span><br><span class="line">//当mainThread即将休眠的时候调用</span><br><span class="line">[CATransaction commit] </span><br><span class="line">// 将dirty view提交到全局的一个容器里面</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>drawrect被调用，通过Core Graphic的的api绘制bitmap，写入layer的backingstore</p>
+</li>
+<li><p>清空dirty flag标记</p>
+</li>
+<li><p>当label的内容改变的时候，重新被标志位dirty。</p>
+</li>
+</ol>
+</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">_ZN2CA11Transaction17observer_callbackEP19__CFRunLoopObservermPv()</span><br><span class="line">   QuartzCore:CA::Transaction::observer_callback:</span><br><span class="line">       CA::Transaction::commit();</span><br><span class="line">           CA::Context::commit_transaction();</span><br><span class="line">               CA::Layer::layout_and_display_if_needed();</span><br><span class="line">                   CA::Layer::layout_if_needed();</span><br><span class="line">                         [CALayer layoutSublayers];</span><br><span class="line">                         [UIView layoutSubviews];</span><br><span class="line">                   CA::Layer::display_if_needed();</span><br><span class="line">                         [CALayer display];</span><br><span class="line">                         [UIView drawRect];</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p> 我们的要渲染的layer已经有了bitmap content的时候，这个content一般来说是一个CGImageRef，CoreAnimation会创建一个OpenGL的Texture并将CGImageRef（bitmap）和这个Texture绑定，通过TextureID来标识。</p>
+<p> 这个对应关系建立起来之后，剩下的任务就是GPU如何将Texture渲染到屏幕上了。</p>
+<p> <strong>简而言之，CoreAnimation会将bitmap先转换为gpu可处理的texture</strong></p>
+</blockquote>
+<h4 id="GPU"><a href="#GPU" class="headerlink" title="GPU"></a>GPU</h4><p><img src="http://vizlabxt.github.io/images/2013/11/QQ20131123-4.png" alt=""></p>
+<blockquote>
+<ol>
+<li>CPU将准备好的bitmap放到RAM里，GPU去搬这快内存到VRAM中处理。</li>
+<li>合成和渲染texture</li>
+</ol>
+</blockquote>
+<h5 id="Compositing："><a href="#Compositing：" class="headerlink" title="Compositing："></a>Compositing：</h5><p>Compositing是指将多个纹理拼到一起的过程，</p>
+<p>两个view叠加在一起，计算公式如下:</p>
+<blockquote>
+<p>R = S+D*(1-Sa)</p>
+</blockquote>
+<p>R = S+D*(1-Sa)`</p>
+<p><code>R</code>: 为最终的像素值</p>
+<p><code>S</code>: 代表 上面的Texture（Top Texture）</p>
+<p><code>D</code>: 代表下面的Texture(lower Texture)</p>
+<p>其中S,D都已经pre-multiplied各自的alpha值。</p>
+<p><code>Sa</code>代表Texture的alpha值。</p>
+<blockquote>
+<p>view层级越复杂，alpha = 1越多，计算越复杂。</p>
+</blockquote>
+<h4 id="UIView-和CAlayer区别"><a href="#UIView-和CAlayer区别" class="headerlink" title="UIView 和CAlayer区别"></a>UIView 和CAlayer区别</h4><ul>
+<li>封装: UIView是在Calayer 基础上进一步封装，每个UIView都有一个RootLayer，</li>
+</ul>
+<ol>
+<li>UIView一些基础几何属性来自于layer</li>
+</ol>
+<ol>
+<li><p>UIView继承了Responder，响应事件</p>
+<p>​</p>
+</li>
+</ol>
+<ul>
+<li>绘制 和 显示: UIView底层调用coreGraphics绘制视图信息，这些绘图信息会被转换为bitMap数据缓存到Calyer的backingStore，</li>
+</ul>
+<ul>
+<li>缓存在自己的contents中，进一步通过CoreAnimaiton 将这些位图信息提交到GPU进行渲染和合成。</li>
+</ul>
+<p><a href="http://joeshang.github.io/2015/01/10/understand-contentsscale/" target="_blank" rel="external">理解contentsScale</a></p>
+<p><a href="http://vizlabxt.github.io/blog/2012/10/22/UIView-Rendering/" target="_blank" rel="external">理解UIView的绘制</a></p>
+<p><a href="http://www.jianshu.com/p/079e5cf0f014" target="_blank" rel="external">详解CALayer 和 UIView的区别和联系</a></p>
+<p><a href="https://learnopengl-cn.readthedocs.io/zh/latest/01%20Getting%20started/06%20Textures/" target="_blank" rel="external">OPENGL</a></p>
+<p><a href="http://apprize.info/apple/ios/6.html" target="_blank" rel="external">iOS Programming: The Big Nerd Ranch Guide (2014)</a></p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="atony2099.github.io/2016/02/08/1语法特性/atomic/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="tony2009">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="/images/avatar.gif">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="托尼的开发笔记">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="托尼的开发笔记" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2016/02/08/1语法特性/atomic/" itemprop="url">
+                  nonatomic VS atomic
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2016-02-08T01:26:58+08:00">
+                2016-02
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>stackoverflow上关于这个问题的讨论:<a href="http://stackoverflow.com/questions/588866/whats-the-difference-between-the-atomic-and-nonatomic-attributes" target="_blank" rel="external">What’s the difference between the atomic and nonatomic attributes?</a></p>
+<p>主要在于他们生成的getter 和setter方法有所不同。</p>
+<p>对于atomic关键字，相关伪代码如下:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">- (UITextField *) userName &#123;</span><br><span class="line">    </span><br><span class="line">    @synchronized(self) &#123;</span><br><span class="line">       return _userName;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (void) setUserName:(UITextField *)userName &#123;</span><br><span class="line">    @synchronized(self) &#123;</span><br><span class="line">      _userName = userName;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p> 也就是通过加锁来保证线程安全，能避免线程分配竞争，保证数据操作的完整性</p>
+<p>更具体例子如下:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">@property (atomic)CGRect domain;</span><br></pre></td></tr></table></figure>
+<p><img src="https://www.bignerdranch.com/img/blog/2013/10/puppyrect-1.png" alt=""></p>
+<p>假如你需要在两条线程上修改domin，如下</p>
+<blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&gt; &lt;b&gt;thread 1:&lt;/b&gt; puppy.domain = CGRectMake (1.0, 2.0, 3.0, 4.0);</span><br><span class="line">&gt; &lt;b&gt;thread 2:&lt;/b&gt; puppy.domain = CGRectMake (10.0, 20.0, 30.0, 40.0);</span><br><span class="line">&gt;</span><br></pre></td></tr></table></figure>
+</blockquote>
+<p>你只会得到两种结果:</p>
+<p><img src="https://www.bignerdranch.com/img/blog/2013/10/puppyrect-3.png" alt=""></p>
+<p>或者：</p>
+<p><img src="https://www.bignerdranch.com/img/blog/2013/10/puppyrect-4.png" alt=""></p>
+<p>而不会出现:</p>
+<p><img src="https://www.bignerdranch.com/img/blog/2013/10/puppyrect-2.png" alt=""></p>
+<p>这种混合的状态。</p>
+<p>所以我们可以说atomic是一种线程安全的机制，但要注意这种线程安全是局部的，之所以这样说，我们还是来看一个例子更直观：</p>
+<p>假如puppy有三个成员变量，那我们在A线程设置它的值</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">puppy.name = @&quot;Hoover&quot;;</span><br><span class="line">puppy.domain = CGRectMake (1.0, 2.0, 3.0, 4.0);</span><br><span class="line">puppy.housebroken = NO;</span><br></pre></td></tr></table></figure>
+<p>在b线程设置它的值</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">puppy.name = @&quot;Rumpelstiltskin&quot;;</span><br><span class="line">puppy.domain = CGRectMake (1.0, 2.0, 3.0, 4.0);</span><br><span class="line">puppy.housebroken = YES;</span><br></pre></td></tr></table></figure>
+<p>我们有可能得到</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">puppy.name = @&quot;Hoover&quot;;</span><br><span class="line">puppy.domain = CGRectMake (10.0, 20.0, 30.0, 40.0);</span><br><span class="line">puppy.housebroken = NO;</span><br></pre></td></tr></table></figure>
+<p>解决方案</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">[P lock] // thread a excute</span><br><span class="line">puppy.name = @&quot;Hoover&quot;;</span><br><span class="line">puppy.domain = CGRectMake (1.0, 2.0, 3.0, 4.0);</span><br><span class="line">puppy.housebroken = NO;</span><br><span class="line">[p unlock]</span><br><span class="line">// thread b now can excute </span><br><span class="line">puppy.name = @&quot;Hoover&quot;;</span><br><span class="line">puppy.domain = CGRectMake (10.0, 20.0, 30.0, 40.0);</span><br><span class="line">puppy.housebroken = NO;</span><br></pre></td></tr></table></figure>
+<p>这样一组结果，这组数据是错误的。所以单纯靠atomic并不能保证真正的线程安全。</p>
+<p>参考:<a href="https://www.bignerdranch.com/blog/property-values/" target="_blank" rel="external">Property Values</a></p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="atony2099.github.io/2016/02/08/网络请求/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="tony2009">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="/images/avatar.gif">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="托尼的开发笔记">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="托尼的开发笔记" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2016/02/08/网络请求/" itemprop="url">
+                  nonatomic VS atomic
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2016-02-08T01:26:58+08:00">
+                2016-02
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h4 id="BASE"><a href="#BASE" class="headerlink" title="BASE"></a>BASE</h4><p>Apps that communicate with a server via HTTP usually have two particular requirements:</p>
+<blockquote>
+<p>don’t make the user wait for data whenever possible, </p>
+<p> be useful when there is no internet connection</p>
+</blockquote>
+<p>iOS  has the APIs we need to implement response caching and offline mode.</p>
+<p>Very little code is required, even less if your server plays nice with cache headers and you’re targeting iOS 7 and above.</p>
+<p>The shared <code>NSURLCache</code> gives us much out of the box</p>
+<h4 id="offlineMode"><a href="#offlineMode" class="headerlink" title="offlineMode"></a>offlineMode</h4><p>In most cases, showing old data is better that showing no data (exceptions being weather and stock, for example). </p>
+<p>If we want our offline mode to always return the cached data, then our requests must have a different cache policy, one that uses cache data regardless of its expiration date. Both <code>NSURLRequestReturnCacheDataDontLoad</code> and <code>NSURLRequestReturnCacheDataElseLoad</code> fit this criteria. In particular, <code>NSURLRequestReturnCacheDataElseLoad</code>has the advantage of trying the network if no cached response is found</p>
+<ol>
+<li>what is cache-Control </li>
+</ol>
+<h4 id="Http-Request"><a href="#Http-Request" class="headerlink" title="Http  Request"></a>Http  Request</h4><ol>
+<li><p>http  request</p>
+<ul>
+<li>请求行</li>
+<li>请求头: </li>
+<li>请求体</li>
+</ul>
+<blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">&gt; POST /index.php HTTP/1.1</span><br><span class="line">&gt; Host: localhost</span><br><span class="line">&gt; User-Agent: Mozilla/5.0 (Windows NT 5.1; rv:10.0.2) Gecko/20100101 Firefox/10.0.2</span><br><span class="line">&gt; Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8</span><br><span class="line">&gt; Accept-Language: zh-cn,zh;q=0.5</span><br><span class="line">&gt; Accept-Encoding: gzip, deflate</span><br><span class="line">&gt; Connection: keep-alive</span><br><span class="line">&gt; Referer: http://localhost/</span><br><span class="line">&gt; Content-Length：25</span><br><span class="line">&gt; Content-Type：application/x-www-form-urlencoded</span><br><span class="line">&gt;</span><br><span class="line">&gt; username=aa&amp;password=1234</span><br><span class="line">&gt;</span><br></pre></td></tr></table></figure>
+</blockquote>
+</li>
+<li><p>http response</p>
+<ul>
+<li>响应行</li>
+<li>响应头</li>
+<li>响应体</li>
+</ul>
+</li>
+</ol>
+<blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">&gt; HTTP/1.1 200 OK</span><br><span class="line">&gt; Date: Sun, 17 Mar 2013 08:12:54 GMT</span><br><span class="line">&gt; Server: Apache/2.2.8 (Win32) PHP/5.2.5</span><br><span class="line">&gt; X-Powered-By: PHP/5.2.5</span><br><span class="line">&gt; Set-Cookie: PHPSESSID=c0huq7pdkmm5gg6osoe3mgjmm3; path=/</span><br><span class="line">&gt; Expires: Thu, 19 Nov 1981 08:52:00 GMT</span><br><span class="line">&gt; Cache-Control: no-store, no-cache, must-revalidate, post-check=0, pre-check=0</span><br><span class="line">&gt; Pragma: no-cache</span><br><span class="line">&gt; Content-Length: 4393</span><br><span class="line">&gt; Keep-Alive: timeout=5, max=100</span><br><span class="line">&gt; Connection: Keep-Alive</span><br><span class="line">&gt; Content-Type: text/html; charset=utf-8</span><br><span class="line">&gt;</span><br><span class="line">&gt;</span><br><span class="line">&gt; &lt;html&gt;</span><br><span class="line">&gt; &lt;head&gt;</span><br><span class="line">&gt; &lt;title&gt;HTTP响应示例&lt;title&gt;</span><br><span class="line">&gt; &lt;/head&gt;</span><br><span class="line">&gt; &lt;body&gt;</span><br><span class="line">&gt; Hello HTTP!</span><br><span class="line">&gt; &lt;/body&gt;</span><br><span class="line">&gt; &lt;/html&gt;</span><br><span class="line">&gt;</span><br></pre></td></tr></table></figure>
+</blockquote>
+<p>http 的缓存策略  Cache-Control</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Cache-Control: <span class="keyword">private</span>/<span class="keyword">public</span> Public 响应会被缓存，并且在多用户间共享。 Private 响应只能够作为私有的缓存，不能再用户间共享。</span><br><span class="line">Cache-Control: no-cache：不进行缓存 </span><br><span class="line">Cache-Control: max-age=x：缓存时间 以秒为单位 </span><br><span class="line">Cache-Control: must-revalidate：如果页面是过期的 则去服务器进行获取。</span><br></pre></td></tr></table></figure>
+<p>http1.0 vs http 1.0  response header</p>
+<p>Pragma : no-cache 表示防止客户端缓存，需要强制从服务器获取最新的数据；<br>Expires: HTTP1.0 响应头，本地副本缓存过期时间，如果客服端发现缓存文件没有过期则不发送请求，HTTP的日期必须是格林威治时间（GMT）,如”Expires:Wed,14 Mar 2015 14:30:32 GMT” </p>
+<p>Cache-Control </p>
+<h4 id="how-cache-control-work"><a href="#how-cache-control-work" class="headerlink" title="how cache-control work"></a>how cache-control work</h4><p>An <a href="http://nshipster.com/nsurlcache/" target="_blank" rel="external"><code>NSURLCache</code></a> <code>sharedCache</code> is enabled by default and will be used by any <a href="https://developer.apple.com/library/mac/documentation/cocoa/reference/foundation/classes/NSURLConnection_Class/Reference/Reference.html" target="_blank" rel="external"><code>NSURLConnection</code></a>objects fetching URL contents for you.</p>
+<p>Unfortunately, it has a tendency to hog memory and does not write to disk in its default configuration. To tame the beast and potentially add some persistance, you can simply declare a shared <a href="http://nshipster.com/nsurlcache/" target="_blank" rel="external"><code>NSURLCache</code></a> in your app delegate like so:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">NSURLCache *sharedCache = [[NSURLCache alloc] initWithMemoryCapacity:2 * 1024 * 1024</span><br><span class="line">                                              diskCapacity:100 * 1024 * 1024</span><br><span class="line">                                              diskPath:nil];</span><br><span class="line">[NSURLCache setSharedURLCache:sharedCache];</span><br></pre></td></tr></table></figure>
+<p><a href="http://blog.originate.com/blog/2014/02/20/afimagecache-vs-nsurlcache/" target="_blank" rel="external">How Does Caching Work in AFNetworking? : AFImageCache &amp; NSUrlCache Explained</a></p>
+<p><a href="http://www.hpique.com/2014/03/how-to-cache-server-responses-in-ios-apps/" target="_blank" rel="external">How to cache server responses in iOS apps</a></p>
+<p><a href="https://cnbin.github.io/blog/2016/02/20/http-qing-qiu-,-xiang-ying-,-huan-cun/" target="_blank" rel="external">HTTP-请求、响应、缓存</a></p>
+<p><a href="http://tools.jb51.net/table/http_request_method" target="_blank" rel="external">HTTP请求方法对照表</a><br><a href="http://www.cocoachina.com/ios/20160525/16438.html" target="_blank" rel="external">HTTP in iOS你看我就够</a></p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="atony2099.github.io/2016/01/22/1coreAnimation/layer/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="tony2009">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="/images/avatar.gif">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="托尼的开发笔记">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="托尼的开发笔记" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2016/01/22/1coreAnimation/layer/" itemprop="url">
+                  CAReplicatorLayer && CAShapeLayer
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2016-01-22T14:24:17+08:00">
+                2016-01
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>参考：<a href="http://blog.csdn.net/u014084081/article/details/49421011" target="_blank" rel="external">CAReplicatorLayer</a></p>
+<h4 id="CAReplicatorLayer"><a href="#CAReplicatorLayer" class="headerlink" title="CAReplicatorLayer"></a>CAReplicatorLayer</h4><ol>
+<li><code>CAReplicatorLayer</code>的目的是为了高效生成许多相似的图层。它会绘制一个或多个图层的子图层，并在每个复制体上应用不同的变换。</li>
+</ol>
+<ol>
+<li>相关属性: <ul>
+<li><code>instanceCount</code>: 子层总数（包括原生子层）</li>
+<li><code>instanceDelay</code>: 复制子层动画延迟时长</li>
+<li><code>instanceTransform</code>: 复制子层形变(不包括原生子层)，每个复制子层都是相对上一个。</li>
+<li><code>instanceRedOffset、instanceGreenOffset、instanceBlueOffset、instanceAlphaOffset</code>: 颜色通道偏移量，每个复制子层都是相对上一个的偏移量。</li>
+</ul>
+</li>
+</ol>
+<h4 id="CAReplicatorLayer例子"><a href="#CAReplicatorLayer例子" class="headerlink" title="CAReplicatorLayer例子"></a>CAReplicatorLayer例子</h4><p>实现一个音乐振幅条的效果:</p>
+<p><img src="http://7xrn7f.com1.z0.glb.clouddn.com/16-7-22/81481818.jpg" alt=""></p>
+<p>相关代码如下: </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line">- (void)viewDidLoad &#123;</span><br><span class="line">    [super viewDidLoad];</span><br><span class="line">   </span><br><span class="line">    // 创建CAReplicatorLayer对象</span><br><span class="line">    CAReplicatorLayer *layer = [CAReplicatorLayer layer];</span><br><span class="line">    layer.frame = CGRectMake(50, 50, 200, 200);</span><br><span class="line">    layer.backgroundColor = [UIColor blueColor].CGColor;</span><br><span class="line">    [self.view.layer addSublayer:layer];</span><br><span class="line"></span><br><span class="line">    // 添加子layer</span><br><span class="line">    CALayer *bar = [CALayer layer];</span><br><span class="line">    bar.backgroundColor = [UIColor redColor].CGColor;</span><br><span class="line">    bar.bounds = CGRectMake(0, 0, 30, 100);</span><br><span class="line">    bar.position = CGPointMake(15, 200);</span><br><span class="line">    bar.anchorPoint = CGPointMake(0.5, 1);</span><br><span class="line">    [layer addSublayer:bar];</span><br><span class="line">    </span><br><span class="line">    // 子layer执行动画操作</span><br><span class="line">    CABasicAnimation *anim = [CABasicAnimation animation];</span><br><span class="line">    anim.keyPath = @&quot;transform.scale.y&quot;;</span><br><span class="line">    anim.toValue = @(0.1);</span><br><span class="line">    anim.autoreverses = YES;</span><br><span class="line">    anim.repeatCount = MAXFLOAT;</span><br><span class="line">    [bar addAnimation:anim forKey:nil];</span><br><span class="line">    </span><br><span class="line">    // 复制3个子layer+原来子layer = 4；</span><br><span class="line">    layer.instanceCount = 4;</span><br><span class="line">    // 子laye执行的动画进行延时操作</span><br><span class="line">    layer.instanceDelay = 0.3f;</span><br><span class="line">    // 子layer进行位移操作</span><br><span class="line">    layer.instanceTransform = CATransform3DMakeTranslation(40, 0, 0);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="CAShapeLayer"><a href="#CAShapeLayer" class="headerlink" title="CAShapeLayer"></a>CAShapeLayer</h4><p>普通CALayer在被初始化时是需要给一个frame值的,这个frame值一般都与给定view的bounds值一致,它本身是有形状的,而且是矩形.</p>
+<p>CAShapeLayer在初始化时也需要给一个frame值,但是,它本身没有形状,它的形状来源于你给定的一个path,然后它去取CGPath值,它与CALayer有着很大的区别。</p>
+<p>CAShapeLayer有着几点很重要:</p>
+<ul>
+<li>它依附于一个给定的path,必须给与path,而且,即使path不完整也会自动首尾相接</li>
+</ul>
+<ul>
+<li>strokeStart以及strokeEnd代表着在这个path中所占用的百分比</li>
+</ul>
+<ul>
+<li>CAShapeLayer动画仅仅限于沿着边缘的动画效果,它实现不了填充效果</li>
+</ul>
+<p><img src="http://i2.piimg.com/567571/bb1e26e70397fc34.png" alt=""></p>
+<h4 id="CAShapeLayer例子"><a href="#CAShapeLayer例子" class="headerlink" title="CAShapeLayer例子"></a>CAShapeLayer例子</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">- (void)viewDidLoad &#123;</span><br><span class="line">    [super viewDidLoad];</span><br><span class="line">	CGPoint startPoint = CGPointMake(50, 300);</span><br><span class="line">    CGPoint endPoint = CGPointMake(300, 300);</span><br><span class="line">    CGPoint controlPoint = CGPointMake(170, 200);</span><br><span class="line">    </span><br><span class="line">    //贝塞尔曲线</span><br><span class="line">    UIBezierPath *path = [[UIBezierPath alloc] init];</span><br><span class="line">    [path moveToPoint:startPoint];</span><br><span class="line">    [path addQuadCurveToPoint:endPoint controlPoint:controlPoint];</span><br><span class="line">    </span><br><span class="line">    //shaperLayer相关属性设置</span><br><span class="line">    CAShapeLayer *shapeLayer = [CAShapeLayer layer];</span><br><span class="line">    shapeLayer.strokeColor = [UIColor redColor].CGColor;</span><br><span class="line">    shapeLayer.fillColor = [UIColor clearColor].CGColor;</span><br><span class="line">    shapeLayer.lineWidth = 5;</span><br><span class="line">    shapeLayer.lineJoin = kCALineJoinRound;</span><br><span class="line">    shapeLayer.lineCap = kCALineCapRound;</span><br><span class="line">    shapeLayer.path = path.CGPath; //路径</span><br><span class="line">    [self.view.layer addSublayer:shapeLayer];</span><br><span class="line">	</span><br><span class="line">  // 添加动画效果</span><br><span class="line">    CABasicAnimation *rBase = [CABasicAnimation animationWithKeyPath:@&quot;strokeEnd&quot;];</span><br><span class="line">    rBase.fromValue = @0.0;</span><br><span class="line">    rBase.toValue = @1;</span><br><span class="line">    rBase.duration = 2.f;</span><br><span class="line">    [shapeLayer addAnimation:rBase forKey:nil];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
           
         
@@ -1696,7 +1953,7 @@
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/4/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/4/">4</a><span class="page-number current">5</span><a class="page-number" href="/page/6/">6</a><span class="space">&hellip;</span><a class="page-number" href="/page/9/">9</a><a class="extend next" rel="next" href="/page/6/"><i class="fa fa-angle-right"></i></a>
+    <a class="extend prev" rel="prev" href="/page/4/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/4/">4</a><span class="page-number current">5</span><a class="page-number" href="/page/6/">6</a><span class="space">&hellip;</span><a class="page-number" href="/page/8/">8</a><a class="extend next" rel="next" href="/page/6/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 
@@ -1739,7 +1996,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives">
-                <span class="site-state-item-count">83</span>
+                <span class="site-state-item-count">73</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>

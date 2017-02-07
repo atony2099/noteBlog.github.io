@@ -1,0 +1,736 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="构造过程
+
+init 
+
+构造过程: 使用类，结构体，的实例之前的准备过程，
+
+设置非optional实例变量还没赋值的的初始值。
+其他一些初始化工作
+
+规则: 
+
+指定构造器必须总是向上代理
+便利构造器必须总是横向代理指定构造器调用父亲指定构造器
+
+两段式构造过程
+每个存储属性指定一个初始值
+
+进一步定制存储属性
+
+vs object-c: object-c帮我们指定了初始值(nil 或者 0)">
+<meta property="og:type" content="article">
+<meta property="og:title" content="init方法">
+<meta property="og:url" content="atony2099.github.io/2016/05/01/1swift-tips/swift-init/index.html">
+<meta property="og:site_name" content="托尼的开发笔记">
+<meta property="og:description" content="构造过程
+
+init 
+
+构造过程: 使用类，结构体，的实例之前的准备过程，
+
+设置非optional实例变量还没赋值的的初始值。
+其他一些初始化工作
+
+规则: 
+
+指定构造器必须总是向上代理
+便利构造器必须总是横向代理指定构造器调用父亲指定构造器
+
+两段式构造过程
+每个存储属性指定一个初始值
+
+进一步定制存储属性
+
+vs object-c: object-c帮我们指定了初始值(nil 或者 0)">
+<meta property="og:updated_time" content="2017-02-05T11:15:37.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="init方法">
+<meta name="twitter:description" content="构造过程
+
+init 
+
+构造过程: 使用类，结构体，的实例之前的准备过程，
+
+设置非optional实例变量还没赋值的的初始值。
+其他一些初始化工作
+
+规则: 
+
+指定构造器必须总是向上代理
+便利构造器必须总是横向代理指定构造器调用父亲指定构造器
+
+两段式构造过程
+每个存储属性指定一个初始值
+
+进一步定制存储属性
+
+vs object-c: object-c帮我们指定了初始值(nil 或者 0)">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="atony2099.github.io/2016/05/01/1swift-tips/swift-init/"/>
+
+
+
+
+
+  <title> init方法 | 托尼的开发笔记 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">托尼的开发笔记</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+    
+      <p class="site-subtitle"></p>
+    
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="atony2099.github.io/2016/05/01/1swift-tips/swift-init/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="tony2009">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="/images/avatar.gif">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="托尼的开发笔记">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="托尼的开发笔记" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                init方法
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2016-05-01T00:22:12+08:00">
+                2016-05
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p><a href="http://wiki.jikexueyuan.com/project/swift/chapter2/14_Initialization.html" target="_blank" rel="external">构造过程</a></p>
+<ul>
+<li>init </li>
+</ul>
+<p>构造过程: 使用类，结构体，的实例之前的准备过程，</p>
+<ol>
+<li>设置非optional实例变量还没赋值的的初始值。</li>
+<li>其他一些初始化工作</li>
+</ol>
+<p>规则: </p>
+<ul>
+<li>指定构造器必须总是<em>向上</em>代理</li>
+<li>便利构造器必须总是<em>横向</em>代理指定构造器调用父亲指定构造器</li>
+</ul>
+<h4 id="两段式构造过程"><a href="#两段式构造过程" class="headerlink" title="两段式构造过程"></a>两段式构造过程</h4><ol>
+<li><p>每个存储属性指定一个初始值</p>
+</li>
+<li><p>进一步定制存储属性</p>
+<blockquote>
+<p>vs object-c: object-c帮我们指定了初始值(nil 或者 0)</p>
+</blockquote>
+</li>
+</ol>
+<h4 id="构造函数的重载-重写"><a href="#构造函数的重载-重写" class="headerlink" title="构造函数的重载,重写"></a>构造函数的重载,重写</h4><p>重载: overload: 参数列表: 不一样，返回列表： 无所谓</p>
+<blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&gt; 一旦重载构造函数  默认的构造函数就不能访问</span><br><span class="line">&gt;</span><br></pre></td></tr></table></figure>
+</blockquote>
+<p>重写 override :参数列表和返回类型一致</p>
+<h4 id="构造器的继承"><a href="#构造器的继承" class="headerlink" title="构造器的继承:"></a>构造器的继承:</h4><p>子类默认情况下不会继承父类的构造器</p>
+<p> 1 . 如果子类没有定义任何指定构造器，它将自动继承父类的指定构造器</p>
+<ol>
+<li>如果他实现了弗雷所有指定构造实现，他也就继承所有便利构造器</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">import UIKit</span><br><span class="line"></span><br><span class="line">class wheel: UIControl &#123;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>But this code doesn’t:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">class wheel: UIControl &#123;</span><br><span class="line">override init(frame: CGRect) &#123;</span><br><span class="line">    super.init(frame: frame)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>It shows error “<em>required initializer init must be provided in subclass of UIControl</em>“ when I override init(frame: CGRect) but not init(coder aDecoder: NSCoder)</p>
+<p>Look. According to <a href="https://developer.apple.com/library/ios/documentation/Swift/Conceptual/Swift_Programming_Language/Initialization.html" target="_blank" rel="external">Apple documentations</a> Swift subclasses do not inherit their superclass initializers by default. They are inherited only in certain circumstances, one of which is: If your subclass doesn’t define any designated initializers, it automatically inherits all of its superclass designated initializers. So if you’re not implementing <code>init(frame: CGRect)</code> all super initializers are inherited.</p>
+<p>Also UIView adopts NSCoding protocol, which requires an <code>init(coder:)</code> initializer. So if you’re implementing <code>init(frame: CGRect)</code>, your class is no longer inheriting super initializers. So you must implement that one too:</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">required</span> <span class="keyword">init</span>?(coder decoder: <span class="type">NSCoder</span>) &#123;</span><br><span class="line">    <span class="keyword">super</span>.<span class="keyword">init</span>?(coder: decoder)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>批阅: 你自己实现了一个指定构造器，那你就不继承了他的构造器了。</p>
+</blockquote>
+<h4 id="可失败的构造器"><a href="#可失败的构造器" class="headerlink" title="可失败的构造器"></a>可失败的构造器</h4><p>如果一个类、结构体或枚举类型的对象，在构造过程中有可能失败，则为其定义一个可失败构造器。这里所指的“失败”是指，如给构造器传入无效的参数值，或缺少某种所需的外部资源，又或是不满足某种必要的条件等。</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">Animal</span> </span>&#123;</span><br><span class="line">    <span class="keyword">let</span> species: <span class="type">String</span></span><br><span class="line">    <span class="keyword">init</span>?(species: <span class="type">String</span>) &#123;</span><br><span class="line">        <span class="keyword">if</span> species.isEmpty &#123; <span class="keyword">return</span> <span class="literal">nil</span> &#125;</span><br><span class="line">        <span class="keyword">self</span>.species = species</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/05/01/1swift-tips/as/" rel="next" title="swift protocol">
+                <i class="fa fa-chevron-left"></i> swift protocol
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/05/01/1swift-tips/string比较/" rel="prev" title="String">
+                String <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+          
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.gif"
+               alt="tony2009" />
+          <p class="site-author-name" itemprop="name">tony2009</p>
+          <p class="site-description motion-element" itemprop="description"></p>
+        </div>
+        <nav class="site-state motion-element">
+        
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">73</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">3</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#两段式构造过程"><span class="nav-number">1.</span> <span class="nav-text">两段式构造过程</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#构造函数的重载-重写"><span class="nav-number">2.</span> <span class="nav-text">构造函数的重载,重写</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#构造器的继承"><span class="nav-number">3.</span> <span class="nav-text">构造器的继承:</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#可失败的构造器"><span class="nav-number">4.</span> <span class="nav-text">可失败的构造器</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">tony2009</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+      <!-- UY BEGIN -->
+      <script type="text/javascript" src="http://v2.uyan.cc/code/uyan.js?uid="></script>
+      <!-- UY END -->
+  
+
+
+
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+
+</body>
+</html>

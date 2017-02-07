@@ -1,0 +1,759 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="基础概念的理解:
+密钥： 改变密码(加密算法)结果的参数
+for: 
+
+凯撒密码: 每个字符都由字母表中三个位置后字符代替
+
+加密算法：E :d = x&amp;gt;&amp;gt;2 
+假设输入是ab， 则输出 de
+解密算法：x = d&amp;lt;&amp;lt;2
+此时函数E就是加密算法，参数3就是密钥，如果更改密钥的值为1，则输出结果是bc.
+一般加密算法是公开的，密钥是保密的
+
+对称加密：加密和解密使用同一个密钥">
+<meta property="og:type" content="article">
+<meta property="og:title" content="https">
+<meta property="og:url" content="atony2099.github.io/2016/06/19/1HTTP/https/index.html">
+<meta property="og:site_name" content="托尼的开发笔记">
+<meta property="og:description" content="基础概念的理解:
+密钥： 改变密码(加密算法)结果的参数
+for: 
+
+凯撒密码: 每个字符都由字母表中三个位置后字符代替
+
+加密算法：E :d = x&amp;gt;&amp;gt;2 
+假设输入是ab， 则输出 de
+解密算法：x = d&amp;lt;&amp;lt;2
+此时函数E就是加密算法，参数3就是密钥，如果更改密钥的值为1，则输出结果是bc.
+一般加密算法是公开的，密钥是保密的
+
+对称加密：加密和解密使用同一个密钥">
+<meta property="og:image" content="http://image.beekka.com/blog/201108/bg2011080901.png">
+<meta property="og:image" content="http://image.beekka.com/blog/201108/bg2011080902.png">
+<meta property="og:image" content="http://image.beekka.com/blog/201108/bg2011080903.png">
+<meta property="og:image" content="http://image.beekka.com/blog/201108/bg2011080904.png">
+<meta property="og:image" content="http://image.beekka.com/blog/201108/bg2011080905.png">
+<meta property="og:image" content="http://image.beekka.com/blog/201108/bg2011080906.png">
+<meta property="og:image" content="http://image.beekka.com/blog/201108/bg2011080907.png">
+<meta property="og:image" content="http://image.beekka.com/blog/201108/bg2011080908.png">
+<meta property="og:image" content="http://image.beekka.com/blog/201108/bg2011080909.png">
+<meta property="og:image" content="http://ohbzayk4i.bkt.clouddn.com/17-2-3/69996892-file_1486091654670_11590.png">
+<meta property="og:image" content="http://image.beekka.com/blog/2014/bg2014092002.png">
+<meta property="og:image" content="http://ohbzayk4i.bkt.clouddn.com/17-2-3/38246802-file_1486097177054_9b76.jpg">
+<meta property="og:updated_time" content="2017-02-03T10:41:08.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="https">
+<meta name="twitter:description" content="基础概念的理解:
+密钥： 改变密码(加密算法)结果的参数
+for: 
+
+凯撒密码: 每个字符都由字母表中三个位置后字符代替
+
+加密算法：E :d = x&amp;gt;&amp;gt;2 
+假设输入是ab， 则输出 de
+解密算法：x = d&amp;lt;&amp;lt;2
+此时函数E就是加密算法，参数3就是密钥，如果更改密钥的值为1，则输出结果是bc.
+一般加密算法是公开的，密钥是保密的
+
+对称加密：加密和解密使用同一个密钥">
+<meta name="twitter:image" content="http://image.beekka.com/blog/201108/bg2011080901.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="atony2099.github.io/2016/06/19/1HTTP/https/"/>
+
+
+
+
+
+  <title> https | 托尼的开发笔记 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">托尼的开发笔记</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+    
+      <p class="site-subtitle"></p>
+    
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="atony2099.github.io/2016/06/19/1HTTP/https/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="tony2009">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="/images/avatar.gif">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="托尼的开发笔记">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="托尼的开发笔记" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                https
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2016-06-19T20:14:18+08:00">
+                2016-06
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h4 id="基础概念的理解"><a href="#基础概念的理解" class="headerlink" title="基础概念的理解:"></a>基础概念的理解:</h4><ol>
+<li><p>密钥： 改变密码(加密算法)结果的参数</p>
+<p>for: </p>
+<blockquote>
+<p>凯撒密码: 每个字符都由字母表中三个位置后字符代替</p>
+</blockquote>
+<p>加密算法：E :d = x&gt;&gt;2 </p>
+<p>假设输入是ab， 则输出 de</p>
+<p>解密算法：x = d&lt;&lt;2</p>
+<p>此时函数E就是加密算法，参数3就是密钥，如果更改密钥的值为1，则输出结果是bc.</p>
+<p><strong>一般加密算法是公开的，密钥是保密的</strong></p>
+</li>
+<li><p>对称加密：加密和解密使用同一个密钥</p>
+<p>非对称加密：加密和解密不使用同一个密钥</p>
+</li>
+<li><p>什么是数字签名验证: 用摘要算法(md5，SHA</p>
+<p>等)将源文件转换为一段密文A。,客户端获取源文件后用同样算法转换成密文B, A=B则证明密文灭有被篡改。</p>
+<p>详情如下: </p>
+<p>1.</p>
+<p><img src="http://image.beekka.com/blog/201108/bg2011080901.png" alt="img"></p>
+<p>鲍勃有两把钥匙，一把是公钥，另一把是私钥。</p>
+<p>2.</p>
+<p><img src="http://image.beekka.com/blog/201108/bg2011080902.png" alt="img"></p>
+<p>鲍勃把公钥送给他的朋友们—-帕蒂、道格、苏珊—-每人一把。</p>
+<p>3.</p>
+<p><img src="http://image.beekka.com/blog/201108/bg2011080903.png" alt="img"></p>
+<p>苏珊要给鲍勃写一封保密的信。她写完后用鲍勃的公钥加密，就可以达到保密的效果。</p>
+<p>4.</p>
+<p><img src="http://image.beekka.com/blog/201108/bg2011080904.png" alt="img"></p>
+<p>鲍勃收信后，用私钥解密，就看到了信件内容。这里要强调的是，只要鲍勃的私钥不泄露，这封信就是安全的，即使落在别人手里，也无法解密。</p>
+<p>5.</p>
+<p><img src="http://image.beekka.com/blog/201108/bg2011080905.png" alt="img"></p>
+<p>鲍勃给苏珊回信，决定采用”数字签名”。他写完后先用Hash函数，生成信件的摘要（digest）。</p>
+<p>6.</p>
+<p><img src="http://image.beekka.com/blog/201108/bg2011080906.png" alt="img"></p>
+<p>然后，鲍勃使用私钥，对这个摘要加密，生成”数字签名”（signature）。</p>
+<p>7.</p>
+<p><img src="http://image.beekka.com/blog/201108/bg2011080907.png" alt="img"></p>
+<p>鲍勃将这个签名，附在信件下面，一起发给苏珊。</p>
+<p>8.</p>
+<p><img src="http://image.beekka.com/blog/201108/bg2011080908.png" alt="img"></p>
+<p>苏珊收信后，取下数字签名，用鲍勃的公钥解密，得到信件的摘要。由此证明，这封信确实是鲍勃发出的。</p>
+<p>9.</p>
+<p><img src="http://image.beekka.com/blog/201108/bg2011080909.png" alt="img"></p>
+<p>苏珊再对信件本身使用Hash函数，将得到的结果，与上一步得到的摘要进行对比。如果两者一致，就证明这封信未被修改过。</p>
+<p>​</p>
+<p>​</p>
+</li>
+</ol>
+<h4 id="https-加密过程"><a href="#https-加密过程" class="headerlink" title="https 加密过程"></a>https 加密过程</h4><p><img src="http://ohbzayk4i.bkt.clouddn.com/17-2-3/69996892-file_1486091654670_11590.png" alt=""></p>
+<p><img src="http://image.beekka.com/blog/2014/bg2014092002.png" alt=""></p>
+<blockquote>
+<p>第一步，爱丽丝给出协议版本号、一个客户端生成的随机数（Client random），以及客户端支持的加密方法。</p>
+<p>第二步，鲍勃确认双方使用的加密方法，并给出数字证书、以及一个服务器生成的随机数（Server random）。</p>
+<p>第三步，爱丽丝确认数字证书有效，然后生成一个新的随机数（Premaster secret），并使用数字证书中的公钥，加密这个随机数，发给鲍勃。</p>
+<p>第四步，鲍勃使用自己的私钥，获取爱丽丝发来的随机数（即Premaster secret）。</p>
+<p>第五步，爱丽丝和鲍勃根据约定的加密方法，使用前面的三个随机数，生成”对话密钥”（session key），用来加密接下来的整个对话过程。</p>
+</blockquote>
+<ol>
+<li><p>握手阶段: 使用非对称加密传输“对称密钥”。</p>
+</li>
+<li><p>传输阶段：使用对称密钥传输数据。</p>
+<p>​</p>
+<p>​</p>
+</li>
+</ol>
+<p><strong>什么是证书</strong>:  相当于公司公章，用来证明东西是可靠的，此处是证明服务端返回的公钥是值得信赖的证书。</p>
+<p><strong>CA</strong>: Certificate Authority,它是负责管理和签发证书的第三方机构，一般来说，CA必须是所有行业和所有公众都信任的、认可的。因此它必须具有足够的权威性。</p>
+<p><strong>CA证书</strong>:有CA版本的证书</p>
+<p><img src="http://ohbzayk4i.bkt.clouddn.com/17-2-3/38246802-file_1486097177054_9b76.jpg" alt=""></p>
+<p><a href="[数字证书及CA的扫盲介绍](http://kb.cnblogs.com/page/194742/">http://kb.cnblogs.com/page/194742/</a>)</p>
+<p><a href="http://www.ruanyifeng.com/blog/2011/08/what_is_a_digital_signature.html" target="_blank" rel="external">数字签名是什么</a></p>
+<p><a href="https://www.sdk.cn/news/2921" target="_blank" rel="external">详解https是如何确保安全的？</a></p>
+<p><a href="https://autolayout.club/2016/12/22/%E5%86%99%E7%BB%99-iOS-%E5%BC%80%E5%8F%91%E8%80%85%E7%9C%8B%E7%9A%84-HTTPS-%E6%8C%87%E5%8D%97/" target="_blank" rel="external">写给 iOS 开发者看的 HTTPS 指南</a></p>
+<p><a href="http://www.jianshu.com/p/7158568e4867" target="_blank" rel="external">SSL/TLS 握手过程详解</a></p>
+<p><a href="http://www.jianshu.com/p/ffe8c203a471" target="_blank" rel="external">互联网安全之数字签名、数字证书与PKI系统</a></p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/06/12/1我的简历/" rel="next" title="property">
+                <i class="fa fa-chevron-left"></i> property
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/07/03/1多线程编程/dispatch-group/" rel="prev" title="dispatch_group管理任务依赖">
+                dispatch_group管理任务依赖 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+          
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.gif"
+               alt="tony2009" />
+          <p class="site-author-name" itemprop="name">tony2009</p>
+          <p class="site-description motion-element" itemprop="description"></p>
+        </div>
+        <nav class="site-state motion-element">
+        
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">73</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">3</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#基础概念的理解"><span class="nav-number">1.</span> <span class="nav-text">基础概念的理解:</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#https-加密过程"><span class="nav-number">2.</span> <span class="nav-text">https 加密过程</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">tony2009</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+      <!-- UY BEGIN -->
+      <script type="text/javascript" src="http://v2.uyan.cc/code/uyan.js?uid="></script>
+      <!-- UY END -->
+  
+
+
+
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+
+</body>
+</html>

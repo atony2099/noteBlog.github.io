@@ -241,7 +241,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-  <link itemprop="mainEntityOfPage" href="atony2099.github.io/2016/08/11/RAC大法好/函数式编程 copy/">
+  <link itemprop="mainEntityOfPage" href="atony2099.github.io/2016/08/11/MVVM/">
 
   <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
     <meta itemprop="name" content="tony2009">
@@ -266,8 +266,8 @@
             
               
                 
-                <a class="post-title-link" href="/2016/08/11/RAC大法好/函数式编程 copy/" itemprop="url">
-                  组件化初始
+                <a class="post-title-link" href="/2016/08/11/MVVM/" itemprop="url">
+                  断言
                 </a>
               
             
@@ -321,25 +321,29 @@
       
         
           
-            <p>参考文章:</p>
-<p><a href="http://mrpeak.cn/blog/module/" target="_blank" rel="external">iOS组件化方案</a></p>
-<p><a href="http://blog.cnbang.net/tech/3080/" target="_blank" rel="external">iOS 组件化方案探索</a></p>
+            <p>ReactiveCocoa思考: </p>
 <ol>
-<li><p>为什么需要组件化?</p>
-<blockquote>
-<p>我们假设这样一个场景，公司有 A，B，C三个项目在appstore运作，三个项目分别由Team A，Team B，Team C开发维护，每个Team由五名工程师组成，其中一名担任小组长，三个Team之上再配备一位Leader，一位架构师。这时，公司决定开辟新的业务领域，成立项目D，并新招了5名工程师来开发。架构师和Leader此时首要工作是选定技术方案，让项目D能又快又稳的启动，同时要规避新工程师磨合期可能引入的副作用。如果之前有过组件化的设计，项目D可以重用之前A，B，C的部分组件，比如【用户登录】，【内存管理】，【日志打点系统】，【个人Profile模块】等等，新成员也可以在已有的codebase基础之上快速上手。如果没有做过组件化的处理，那么要从A，B，C中抽离出诸如【用户登录】的独立模块，会相当的痛苦，高度耦合的代码盘根错节，重用起来费时费力，对团队的人力是浪费，更影响整体的项目进度。我们的目标是重用高度抽象的代码单元。</p>
-<p>简单理解: 减少各个模块的耦合。</p>
-</blockquote>
-</li>
-<li><p>ios 的push方式为什么不能叫组件化？</p>
+<li>输入—-&gt;&gt; 输出</li>
+</ol>
+<h4 id="信号的处理"><a href="#信号的处理" class="headerlink" title="信号的处理"></a>信号的处理</h4><ol>
+<li><p>reduceEach： — </p>
+<p><img src="http://zhangbuhuai.com/reactive-cocoa-part-2/reduce-each@2x.png" alt=""></p>
+<p>​</p>
 </li>
 </ol>
-<p><img src="http://blog.cnbang.net/wp-content/uploads/2016/03/component1.png" alt=""></p>
+<h4 id="Map"><a href="#Map" class="headerlink" title="Map"></a>Map</h4><p>flattenMap: 根据前一个信号的参数创建一个新的信号</p>
+<p>-flattenMap: is used to transform each of a stream’s values into a new stream.</p>
+<p>map: 创建一个新的信号，输出值是block(value);</p>
 <blockquote>
-<p>传统push 各个模块耦合性非常强</p>
+<p>Use the <code>map</code> operator when you want to intercept whenever a Signal sends a value and have the opportunity to alter that value or send a completely different value. A way to think about this is a production line that passes partially completed products down the line. There are various points on the production line where a line operator will pick the product and screw something in or alter it in some way.</p>
+<p><code>Flatten map</code> is for when you might want to inject another Signal into some other signal that depends on the initial signal. You can therefor use the initial signal to effect or determine the signal returned. This is one of the ways you can take one or more signals and join them in a way that results in one signal. Hence the terminology: flatten. The other slightly different ways you can do this in RAC is <code>merge:</code> and <code>switchToLatest()</code> to name a few. Imaging you had a signal that did a network fetch based on a particular search query. Then imagine you had another signal for text typed into a search box. In order to do a search request based on the current search query in the searchText signal you could use a flatten map.</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">&gt; <span class="keyword">self</span>.searchTextSignal.flattenMap(&#123;(object: <span class="type">AnyObject</span>!) -&gt; <span class="type">RACSignal</span>! <span class="keyword">in</span></span><br><span class="line">&gt;     <span class="keyword">if</span> <span class="keyword">let</span> searchQuery: <span class="type">String</span> = object <span class="keyword">as</span>? <span class="type">String</span> &#123;</span><br><span class="line">&gt;         <span class="keyword">return</span> <span class="keyword">self</span>.networkFetchSignal(query: searchQuery)</span><br><span class="line">&gt;     &#125;</span><br><span class="line">&gt;     <span class="keyword">return</span> <span class="type">RACSignal</span>.empty()</span><br><span class="line">&gt; &#125;).subscribeNext(&#123;(object: <span class="type">AnyObject</span>) -&gt; <span class="type">Void</span> <span class="keyword">in</span> </span><br><span class="line">&gt;    <span class="comment">//the results</span></span><br><span class="line">&gt; &#125;)</span><br><span class="line">&gt;</span><br></pre></td></tr></table></figure>
 </blockquote>
-<p>解决方案： 加一个中间层</p>
-<p><img src="http://blog.cnbang.net/wp-content/uploads/2016/03/component2-1024x597.png" alt=""></p>
+<h4 id="RACCommmand"><a href="#RACCommmand" class="headerlink" title="RACCommmand"></a>RACCommmand</h4><p>switchLast:  get  the lastest signals</p>
+<p>—-signal of signals(信号的信号)  : 信号发出的数据是信号</p>
+<h4 id="parm-mark-RAC"><a href="#parm-mark-RAC" class="headerlink" title="parm mark - RAC"></a>parm mark - RAC</h4><blockquote>
+<p>Make sure to <code>@strongify(self)</code> when using this macro within a block! The<br>/// macro will <em>always</em> reference <code>self</code>, which can silently introduce a retain</p>
+</blockquote>
 
           
         
@@ -540,7 +544,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-  <link itemprop="mainEntityOfPage" href="atony2099.github.io/2016/08/11/数据存储/断言副本 2/">
+  <link itemprop="mainEntityOfPage" href="atony2099.github.io/2016/07/29/1swift-tips/可选/">
 
   <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
     <meta itemprop="name" content="tony2009">
@@ -565,8 +569,8 @@
             
               
                 
-                <a class="post-title-link" href="/2016/08/11/数据存储/断言副本 2/" itemprop="url">
-                  断言
+                <a class="post-title-link" href="/2016/07/29/1swift-tips/可选/" itemprop="url">
+                  Swift中的optional
                 </a>
               
             
@@ -582,553 +586,7 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2016-08-11T23:38:06+08:00">
-                2016-08
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-  <link itemprop="mainEntityOfPage" href="atony2099.github.io/2016/08/11/MVVM/">
-
-  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
-    <meta itemprop="name" content="tony2009">
-    <meta itemprop="description" content="">
-    <meta itemprop="image" content="/images/avatar.gif">
-  </span>
-
-  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-    <meta itemprop="name" content="托尼的开发笔记">
-    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
-      <img style="display:none;" itemprop="url image" alt="托尼的开发笔记" src="">
-    </span>
-  </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2016/08/11/MVVM/" itemprop="url">
-                  断言
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2016-08-11T23:38:06+08:00">
-                2016-08
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>ReactiveCocoa思考: </p>
-<ol>
-<li>输入—-&gt;&gt; 输出</li>
-</ol>
-<h4 id="信号的处理"><a href="#信号的处理" class="headerlink" title="信号的处理"></a>信号的处理</h4><ol>
-<li><p>reduceEach： — </p>
-<p><img src="http://zhangbuhuai.com/reactive-cocoa-part-2/reduce-each@2x.png" alt=""></p>
-<p>​</p>
-</li>
-</ol>
-<h4 id="Map"><a href="#Map" class="headerlink" title="Map"></a>Map</h4><p>flattenMap: 根据前一个信号的参数创建一个新的信号</p>
-<p>-flattenMap: is used to transform each of a stream’s values into a new stream.</p>
-<p>map: 创建一个新的信号，输出值是block(value);</p>
-<blockquote>
-<p>Use the <code>map</code> operator when you want to intercept whenever a Signal sends a value and have the opportunity to alter that value or send a completely different value. A way to think about this is a production line that passes partially completed products down the line. There are various points on the production line where a line operator will pick the product and screw something in or alter it in some way.</p>
-<p><code>Flatten map</code> is for when you might want to inject another Signal into some other signal that depends on the initial signal. You can therefor use the initial signal to effect or determine the signal returned. This is one of the ways you can take one or more signals and join them in a way that results in one signal. Hence the terminology: flatten. The other slightly different ways you can do this in RAC is <code>merge:</code> and <code>switchToLatest()</code> to name a few. Imaging you had a signal that did a network fetch based on a particular search query. Then imagine you had another signal for text typed into a search box. In order to do a search request based on the current search query in the searchText signal you could use a flatten map.</p>
-<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">&gt; <span class="keyword">self</span>.searchTextSignal.flattenMap(&#123;(object: <span class="type">AnyObject</span>!) -&gt; <span class="type">RACSignal</span>! <span class="keyword">in</span></span><br><span class="line">&gt;     <span class="keyword">if</span> <span class="keyword">let</span> searchQuery: <span class="type">String</span> = object <span class="keyword">as</span>? <span class="type">String</span> &#123;</span><br><span class="line">&gt;         <span class="keyword">return</span> <span class="keyword">self</span>.networkFetchSignal(query: searchQuery)</span><br><span class="line">&gt;     &#125;</span><br><span class="line">&gt;     <span class="keyword">return</span> <span class="type">RACSignal</span>.empty()</span><br><span class="line">&gt; &#125;).subscribeNext(&#123;(object: <span class="type">AnyObject</span>) -&gt; <span class="type">Void</span> <span class="keyword">in</span> </span><br><span class="line">&gt;    <span class="comment">//the results</span></span><br><span class="line">&gt; &#125;)</span><br><span class="line">&gt;</span><br></pre></td></tr></table></figure>
-</blockquote>
-<h4 id="RACCommmand"><a href="#RACCommmand" class="headerlink" title="RACCommmand"></a>RACCommmand</h4><p>switchLast:  get  the lastest signals</p>
-<p>—-signal of signals(信号的信号)  : 信号发出的数据是信号</p>
-<h4 id="parm-mark-RAC"><a href="#parm-mark-RAC" class="headerlink" title="parm mark - RAC"></a>parm mark - RAC</h4><blockquote>
-<p>Make sure to <code>@strongify(self)</code> when using this macro within a block! The<br>/// macro will <em>always</em> reference <code>self</code>, which can silently introduce a retain</p>
-</blockquote>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-  <link itemprop="mainEntityOfPage" href="atony2099.github.io/2016/08/11/数据存储/NSCoding/">
-
-  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
-    <meta itemprop="name" content="tony2009">
-    <meta itemprop="description" content="">
-    <meta itemprop="image" content="/images/avatar.gif">
-  </span>
-
-  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-    <meta itemprop="name" content="托尼的开发笔记">
-    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
-      <img style="display:none;" itemprop="url image" alt="托尼的开发笔记" src="">
-    </span>
-  </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2016/08/11/数据存储/NSCoding/" itemprop="url">
-                  NSCoding
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2016-08-11T23:38:06+08:00">
-                2016-08
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h4 id="目录结构"><a href="#目录结构" class="headerlink" title="目录结构"></a>目录结构</h4><p><img src="http://images2015.cnblogs.com/blog/80291/201602/80291-20160213212622903-985718705.png" alt=""></p>
-<ol>
-<li><p>document : </p>
-<p>目的： 目录用于存储用户数据,自动备份.</p>
-</li>
-<li><p>library: </p>
-<p>user defaults:  偏好设置文件，自动备份</p>
-<p>cache: 大文件，不会被备份</p>
-</li>
-<li><p>temp： 临时文件</p>
-</li>
-</ol>
-<p>数据存档的方式: </p>
-<p>序列化: 将对象转化为可存储的二进制流</p>
-<ol>
-<li><p>自带类: NSString、NSArray、NSData、NSDictionary 已经实现NSCopying协议</p>
-<ul>
-<li>直接写入沙盒</li>
-<li>userdefaulte 操作</li>
-</ul>
-<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> array:<span class="type">NSArray</span> = [<span class="number">1</span>, <span class="number">2</span>,<span class="number">3</span>]</span><br><span class="line"><span class="keyword">let</span> filePath:<span class="type">String</span> = <span class="type">NSHomeDirectory</span>() + <span class="string">"/Documents/webs.plist"</span></span><br><span class="line">array.write(toFile: filePath, atomically: <span class="literal">true</span>)</span><br></pre></td></tr></table></figure>
-<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">UserDefaults</span>.standard.<span class="keyword">set</span>(<span class="literal">true</span>, forKey: <span class="string">"isBool"</span>)</span><br><span class="line"><span class="type">UserDefaults</span>.standard.object(forKey: <span class="string">"isBool"</span>)</span><br></pre></td></tr></table></figure>
-<p>​</p>
-</li>
-<li><p>自定义对象: </p>
-<ul>
-<li>实现NSCoping</li>
-<li>archieve进行序列化操作</li>
-</ul>
-</li>
-</ol>
-<p>###swift 的lian·</p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-  <link itemprop="mainEntityOfPage" href="atony2099.github.io/2016/08/11/客户端架构/">
-
-  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
-    <meta itemprop="name" content="tony2009">
-    <meta itemprop="description" content="">
-    <meta itemprop="image" content="/images/avatar.gif">
-  </span>
-
-  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-    <meta itemprop="name" content="托尼的开发笔记">
-    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
-      <img style="display:none;" itemprop="url image" alt="托尼的开发笔记" src="">
-    </span>
-  </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2016/08/11/客户端架构/" itemprop="url">
-                  断言
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2016-08-11T23:38:06+08:00">
-                2016-08
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <blockquote>
-<p>最近看了 <a href="http://casatwy.com/iosying-yong-jia-gou-tan-kai-pian.html" target="_blank" rel="external">Casa Taloyum</a>一系类架构的文章，虽然对于很多观点不敢苟同，但是还是有一部分可以借鉴的,特别是思考问题的方式。</p>
-</blockquote>
-<h4 id="基础"><a href="#基础" class="headerlink" title="基础"></a>基础</h4><ol>
-<li><p>fat model </p>
-<blockquote>
-<p>contain : 弱业务逻辑 out of box TO VC</p>
-<p>缺点: 难以复用， 臃肿后也是难以维护</p>
-</blockquote>
-</li>
-<li><p>slim  model </p>
-<blockquote>
-<p>only layer </p>
-<p>by 辅助方法 |  类 完成展示逻辑转换</p>
-</blockquote>
-</li>
-<li><p>MVVM  fat model = viewModel + model </p>
-</li>
-</ol>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-  <link itemprop="mainEntityOfPage" href="atony2099.github.io/2016/07/29/闲聊/费曼学习技巧/">
-
-  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
-    <meta itemprop="name" content="tony2009">
-    <meta itemprop="description" content="">
-    <meta itemprop="image" content="/images/avatar.gif">
-  </span>
-
-  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-    <meta itemprop="name" content="托尼的开发笔记">
-    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
-      <img style="display:none;" itemprop="url image" alt="托尼的开发笔记" src="">
-    </span>
-  </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2016/07/29/闲聊/费曼学习技巧/" itemprop="url">
-                  费曼学习技巧
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2016-07-29T21:48:20+08:00">
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2016-07-29T19:48:20+08:00">
                 2016-07
               </time>
             
@@ -1166,29 +624,33 @@
       
         
           
-            <h4 id="费曼技巧"><a href="#费曼技巧" class="headerlink" title="费曼技巧"></a>费曼技巧</h4><ul>
-<li><p>写出某个知识点现有的认知，</p>
+            <h4 id="为什么需要optional"><a href="#为什么需要optional" class="headerlink" title="为什么需要optional"></a>为什么需要optional</h4><p>在多数的语言中，一个<code>nil</code>值的出现，可以轻易的让程式产生错误，进而被系统强制关闭。一般使用者叫他闪退；开发者叫他崩溃。如何防止<code>nil</code>造成的错误，各式各样的检查早已不可或缺，但无论如何防堵，<code>nil</code>总是在程式运行阶段(runtime)才会发生，无法在编译时期(compile time)就检查出<code>nil</code>发生问题的可能性，也没有稳定的规则可以找出<code>nil</code>的出没之处。</p>
+<p>虽然Objective-C有一个有趣的特性，可以在对象成为<code>nil</code>时，执行该对象的method ，而不产生错误，也不会引发crash 。<em>但是由于对象是否为nil状况不明，还是会造成意外的情况</em></p>
+<p>因此，以安全做为诉求的Swift设计成所有的变量在赋值时只能有值，不能是<code>nil</code>，只要接受到<code>nil</code>，就会抛出错误。</p>
+<h5 id="但是变量还是有nil的需求"><a href="#但是变量还是有nil的需求" class="headerlink" title="但是变量还是有nil的需求"></a>但是变量还是有nil的需求</h5><p>为了从根本上解决<code>nil</code>不明确的问题， Swift导入了Optional的概念，由<code>enum</code>实作，并在Compiler中加强了对Optional的操作性。</p>
+<p>当变量存在值有可能缺失的情况下使用可选类型，官方文档如下定义：</p>
 <ul>
-<li><p>用简单的话描述，比喻的话描述，像给一个外行人讲述一样。(越形象说明你理解得越透彻)</p>
-</li>
-<li><p>如何写，先不看书 </p>
-<ul>
-<li>按照你现有的理解去写，这样你才能知晓你现在你的掌握程度和欠缺程度</li>
+<li><em>There is a value ,and it equals x</em>,值存在且等于<em>x</em>.</li>
+<li><em>There isn’t a value at all</em>,值不存在!</li>
 </ul>
-<p>​                    </p>
-</li>
-</ul>
-</li>
-<li><p>如果那块知识点不懂再回去查，这时候是带着问题去查</p>
-</li>
-</ul>
+<p><em>opetinal是主动描述变量是否存在nil值，减少变量在传递在传递过程中，存在nil的不确定性</em></p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">let</span> intValue:<span class="type">Int</span> = <span class="number">0</span> <span class="comment">// 合法</span></span><br><span class="line"><span class="keyword">let</span> intValue2:<span class="type">Int</span> = <span class="literal">nil</span> <span class="comment">//不合法</span></span><br><span class="line"><span class="keyword">let</span> optionalIntValue:<span class="type">Int</span>? = <span class="literal">nil</span> <span class="comment">//合法，這是一個Int的Optional</span></span><br></pre></td></tr></table></figure>
+<h4 id="optional"><a href="#optional" class="headerlink" title="optional"></a>optional</h4><p>Optional其实是个<code>enum</code>，里面有<code>None</code>和<code>Some</code>两种类型。其实所谓的nil就是<code>Optional.None</code>, 非nil就是<code>Optional.Some</code>, 然后会通过<code>Some(T)</code>包装（wrap）原始值，这也是为什么在使用Optional的时候要拆包（从enum里取出来原始值）的原因, 也是PlayGround会把Optional值显示为类似<code>{Some &quot;hello world&quot;}</code>的原因，这里是enum Optional的定义：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">enum</span> <span class="title">Optional</span>&lt;<span class="title">T</span>&gt; : <span class="title">LogicValue</span>, <span class="title">Reflectable</span> </span>&#123;</span><br><span class="line">    <span class="keyword">case</span> <span class="type">None</span></span><br><span class="line">    <span class="keyword">case</span> <span class="type">Some</span>(<span class="type">T</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <blockquote>
-<p>包含的思想：</p>
-<ul>
-<li>自我反思组织的思想</li>
-<li>具象化的思想？</li>
-</ul>
+<p>可以把optional 想象成一个糖果盒子，里面可能装着糖果 或者空气</p>
 </blockquote>
+<h5 id="拆包："><a href="#拆包：" class="headerlink" title="拆包："></a>拆包：</h5><p><em>1.在糖果盒里面有糖果的时候，2.取出来让他参与运算</em></p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 强制解包</span></span><br><span class="line"><span class="keyword">if</span> possibleNumber != <span class="literal">nil</span> &#123;</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">"hello<span class="subst">\(possibleNumber!)</span>"</span>) <span class="comment">// 使用前需!强制解析</span></span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">   </span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 拆包方式二，guard守护</span></span><br><span class="line"><span class="comment">/* guard充当了警卫员一职，保证条件满足情况下，才会让你通过，否则只能else让你返回了！切记else中一定需要有返回  的语句，比如return、continue、break、throw这种提早退出的关键字！！*/</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">unWrapped</span><span class="params">()</span></span> &#123;</span><br><span class="line">    <span class="keyword">guard</span> <span class="keyword">let</span> number = possibleNumber <span class="keyword">else</span>&#123;</span><br><span class="line">        <span class="keyword">return</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">"hello<span class="subst">\(number)</span> "</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 拆包方式三,使用可选绑定（optional binding）来判断可选类型是否包含值，如果包含就把值赋给一个临时常量或者变量。</span></span><br><span class="line"><span class="keyword">if</span> <span class="keyword">let</span> number = possibleNumber &#123;</span><br><span class="line">   <span class="built_in">print</span>(<span class="string">"hello<span class="subst">\(number)</span>"</span>)</span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">// 拆包方式三，替代物</span></span><br><span class="line"><span class="keyword">var</span> number:<span class="type">Int</span>?</span><br><span class="line"><span class="keyword">let</span> number1 = number ?? <span class="number">0</span></span><br></pre></td></tr></table></figure>
+<h5 id="optional-binding的特殊形式-optional-chaining"><a href="#optional-binding的特殊形式-optional-chaining" class="headerlink" title="optional binding的特殊形式:  optional chaining"></a>optional binding的特殊形式:  optional chaining</h5><p>optional chaining 行为类似OC中的 nil 不响应消息</p>
+<p>调用属性或者方法的过程中，如果遇到optional，忽视optianl，并执行下一个语法，知道语法完成，如果过程中有一个属性是nil，直接结束语法，并传回nil</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">let 使用者名字:String? = grady.禮物收藏盒?.使用者名字</span><br></pre></td></tr></table></figure>
+<p><em>optianl chaining取得的值，最终一定是optional</em></p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Toy</span> </span>&#123;</span><br><span class="line">    <span class="keyword">let</span> name: <span class="type">String</span></span><br><span class="line">    <span class="keyword">init</span>(name: <span class="type">String</span>) &#123;</span><br><span class="line">        <span class="keyword">self</span>.name = name</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Pet</span> </span>&#123;</span><br><span class="line">    <span class="keyword">var</span> toy: <span class="type">Toy</span>?</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Child</span> </span>&#123;</span><br><span class="line">    <span class="keyword">var</span> pet: <span class="type">Pet</span>?</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">let</span> xiaomi = <span class="type">Chilid</span>()</span><br><span class="line"><span class="keyword">let</span> name = xiaomi.pet?.toy?.name <span class="comment">// 虽然name被声明为不是nil，但是 获得的name一定是 optianal</span></span><br></pre></td></tr></table></figure>
+<p><a href="http://letsswift.com/2014/06/swift-questionmark-exclamatorymark/" target="_blank" rel="external">Swift中的问号?和感叹号!</a></p>
+<p> <a href="http://blog.csdn.net/zhangao0086/article/details/386402099" target="_blank" rel="external">Swift 可选值(Optional Values)介绍</a></p>
+<p><a href="http://blog.barat.cc/ios/understanding-swift-optional/" target="_blank" rel="external">理解Swift中Optional类型－有和无的哲学</a></p>
+<p><a href="http://www.appcoda.com.tw/swift-optional/" target="_blank" rel="external">初学Swift：爱恨交织的Optional</a></p>
 
           
         
@@ -1227,7 +689,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-  <link itemprop="mainEntityOfPage" href="atony2099.github.io/2016/07/29/闲聊/幸存者偏差/">
+  <link itemprop="mainEntityOfPage" href="atony2099.github.io/2016/07/29/计算机基础知识/递归/">
 
   <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
     <meta itemprop="name" content="tony2009">
@@ -1252,7 +714,7 @@
             
               
                 
-                <a class="post-title-link" href="/2016/07/29/闲聊/幸存者偏差/" itemprop="url">
+                <a class="post-title-link" href="/2016/07/29/计算机基础知识/递归/" itemprop="url">
                   Swift中的optional
                 </a>
               
@@ -1308,6 +770,200 @@
         
           
             <h4 id="定义"><a href="#定义" class="headerlink" title="定义:"></a>定义:</h4><p>运行过程中调用自己 , 必须要有一个出口</p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="atony2099.github.io/2016/07/29/1swift-tips/正则表达式/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="tony2009">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="/images/avatar.gif">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="托尼的开发笔记">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="托尼的开发笔记" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2016/07/29/1swift-tips/正则表达式/" itemprop="url">
+                  Swift中的optional
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2016-07-29T19:48:20+08:00">
+                2016-07
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p><a href="http://deerchao.net/tutorials/regex/regex.htm" target="_blank" rel="external">正则表达式30分钟入门教程</a></p>
+<p>常用的元字符</p>
+<table>
+<thead>
+<tr>
+<th>.</th>
+<th>匹配除换行符以外的任意字符</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>\w</td>
+<td>匹配字母或数字或下划线或汉字</td>
+</tr>
+<tr>
+<td>\s</td>
+<td>匹配任意的空白符</td>
+</tr>
+<tr>
+<td>\d</td>
+<td>匹配数字</td>
+</tr>
+<tr>
+<td>\b</td>
+<td>匹配单词的开始或结束</td>
+</tr>
+<tr>
+<td>^</td>
+<td>匹配字符串的开始</td>
+</tr>
+<tr>
+<td>$</td>
+<td>匹配字符串的结束</td>
+</tr>
+</tbody>
+</table>
+<p>重复</p>
+<table>
+<thead>
+<tr>
+<th>代码/语法</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>*</td>
+<td>重复零次或更多次</td>
+</tr>
+<tr>
+<td>+</td>
+<td>重复一次或更多次</td>
+</tr>
+<tr>
+<td>?</td>
+<td>重复零次或一次</td>
+</tr>
+<tr>
+<td>{n}</td>
+<td>重复n次</td>
+</tr>
+<tr>
+<td>{n,}</td>
+<td>重复n次或更多次</td>
+</tr>
+<tr>
+<td>{n,m}</td>
+<td>重复n到m次</td>
+</tr>
+</tbody>
+</table>
+<p>分组: </p>
+<blockquote>
+<p> (\d{1,3}.){3}\d{1,3}是一个简单的IP地址匹配表达式。要理解这个表达式，请按下列顺序分析它：\d{1,3}匹配1到3位的数字，(\d{1,3}.){3}匹配三位数字加上一个英文句号(这个整体也就是这个分组)重复3次，最后再加上一个一到三位的数字(\d{1,3})。</p>
+<p>使用小括号指定一个子表达式后，<strong>匹配这个子表达式的文本</strong>(也就是此分组捕获的内容)可以在表达式或其它程序中作进一步的处理。默认情况下，每个分组会自动拥有一个组号，规则是：从左向右，以分组的左括号为标志，第一个出现的分组的组号为1，第二个为2，以此类推。</p>
+</blockquote>
 
           
         
@@ -1466,7 +1122,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-  <link itemprop="mainEntityOfPage" href="atony2099.github.io/2016/07/29/swift-tips/可选/">
+  <link itemprop="mainEntityOfPage" href="atony2099.github.io/2016/07/29/1swift-tips/error hanlding/">
 
   <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
     <meta itemprop="name" content="tony2009">
@@ -1491,7 +1147,141 @@
             
               
                 
-                <a class="post-title-link" href="/2016/07/29/swift-tips/可选/" itemprop="url">
+                <a class="post-title-link" href="/2016/07/29/1swift-tips/error hanlding/" itemprop="url">
+                  error  Handling
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2016-07-29T19:48:20+08:00">
+                2016-07
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <blockquote>
+<p><em>Error handling</em> is the process of responding to and recovering from error conditions in your program. Swift provides first-class(一等公民) support for throwing, catching, propagating, and manipulating recoverable errors at runtime.</p>
+</blockquote>
+<p>why not nil ?</p>
+<blockquote>
+<p>Some operations aren’t guaranteed to always complete execution or produce a useful output. Optionals are used to represent the absence of a value, but when an operation fails, <strong>it’s often useful to understand what caused the failure, so that your code can respond accordingly</strong>.</p>
+</blockquote>
+<h4 id="Propagating"><a href="#Propagating" class="headerlink" title="Propagating"></a>Propagating</h4><figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">Item</span> </span>&#123;</span><br><span class="line">    <span class="keyword">var</span> price: <span class="type">Int</span></span><br><span class="line">    <span class="keyword">var</span> <span class="built_in">count</span>: <span class="type">Int</span></span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">VendingMachine</span> </span>&#123;</span><br><span class="line">    <span class="keyword">var</span> inventory = [</span><br><span class="line">        <span class="string">"Candy Bar"</span>: <span class="type">Item</span>(price: <span class="number">12</span>, <span class="built_in">count</span>: <span class="number">7</span>),</span><br><span class="line">        <span class="string">"Chips"</span>: <span class="type">Item</span>(price: <span class="number">10</span>, <span class="built_in">count</span>: <span class="number">4</span>),</span><br><span class="line">        <span class="string">"Pretzels"</span>: <span class="type">Item</span>(price: <span class="number">7</span>, <span class="built_in">count</span>: <span class="number">11</span>)</span><br><span class="line">    ]</span><br><span class="line">    <span class="keyword">var</span> coinsDeposited = <span class="number">0</span></span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">func</span> <span class="title">vend</span><span class="params">(itemNamed name: String)</span></span> <span class="keyword">throws</span> &#123;</span><br><span class="line">        <span class="keyword">guard</span> <span class="keyword">let</span> item = inventory[name] <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="keyword">throw</span> <span class="type">VendingMachineError</span>.invalidSelection</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">guard</span> item.<span class="built_in">count</span> &gt; <span class="number">0</span> <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="keyword">throw</span> <span class="type">VendingMachineError</span>.outOfStock</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">guard</span> item.price &lt;= coinsDeposited <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="keyword">throw</span> <span class="type">VendingMachineError</span>.insufficientFunds(coinsNeeded: item.price - coinsDeposited)</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        coinsDeposited -= item.price</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">var</span> newItem = item</span><br><span class="line">        newItem.<span class="built_in">count</span> -= <span class="number">1</span></span><br><span class="line">        inventory[name] = newItem</span><br><span class="line">        </span><br><span class="line">        <span class="built_in">print</span>(<span class="string">"Dispensing <span class="subst">\(name)</span>"</span>)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>continue to propagate them.</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> favoriteSnacks = [</span><br><span class="line">    <span class="string">"Alice"</span>: <span class="string">"Chips"</span>,</span><br><span class="line">    <span class="string">"Bob"</span>: <span class="string">"Licorice"</span>,</span><br><span class="line">    <span class="string">"Eve"</span>: <span class="string">"Pretzels"</span>,</span><br><span class="line">]</span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">buyFavoriteSnack</span><span class="params">(person: String, vendingMachine: VendingMachine)</span></span> <span class="keyword">throws</span> &#123;</span><br><span class="line">    <span class="keyword">let</span> snackName = favoriteSnacks[person] ?? <span class="string">"Candy Bar"</span></span><br><span class="line">    <span class="keyword">try</span> vendingMachine.vend(itemNamed: snackName)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="Handling-Errors-Using-Do-Catch"><a href="#Handling-Errors-Using-Do-Catch" class="headerlink" title="Handling Errors Using Do-Catch"></a>Handling Errors Using Do-Catch</h3><figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> vendingMachine = <span class="type">VendingMachine</span>()</span><br><span class="line">vendingMachine.coinsDeposited = <span class="number">8</span></span><br><span class="line"><span class="keyword">do</span> &#123;</span><br><span class="line">    <span class="keyword">try</span> buyFavoriteSnack(person: <span class="string">"Alice"</span>, vendingMachine: vendingMachine)</span><br><span class="line">&#125; <span class="keyword">catch</span> <span class="type">VendingMachineError</span>.invalidSelection &#123;</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">"Invalid Selection."</span>)</span><br><span class="line">&#125; <span class="keyword">catch</span> <span class="type">VendingMachineError</span>.outOfStock &#123;</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">"Out of Stock."</span>)</span><br><span class="line">&#125; <span class="keyword">catch</span> <span class="type">VendingMachineError</span>.insufficientFunds(<span class="keyword">let</span> coinsNeeded) &#123;</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">"Insufficient funds. Please insert an additional <span class="subst">\(coinsNeeded)</span> coins."</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>You use <code>try?</code> to handle an error by converting it to an optional value. If an error is thrown while evaluating the <code>try?</code> expression, the value of the expression is <code>nil</code></p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">someThrowingFunction</span><span class="params">()</span></span> <span class="keyword">throws</span> -&gt; <span class="type">Int</span> &#123;</span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line"><span class="keyword">let</span> x = <span class="keyword">try</span>? someThrowingFunction()</span><br><span class="line"> </span><br><span class="line"><span class="keyword">let</span> y: <span class="type">Int</span>?</span><br><span class="line"><span class="keyword">do</span> &#123;</span><br><span class="line">    y = <span class="keyword">try</span> someThrowingFunction()</span><br><span class="line">&#125; <span class="keyword">catch</span> &#123;</span><br><span class="line">    y = <span class="literal">nil</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>Sometimes you know a throwing function or method won’t, in fact, throw an error at runtime. On those occasions, you can write <code>try!</code> before the expression to disable error propagation and wrap the call in a runtime assertion that no error will be thrown.</p>
+</blockquote>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="atony2099.github.io/2016/07/29/1swift-tips/swift错误类型的处理/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="tony2009">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="/images/avatar.gif">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="托尼的开发笔记">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="托尼的开发笔记" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2016/07/29/1swift-tips/swift错误类型的处理/" itemprop="url">
                   Swift中的optional
                 </a>
               
@@ -1546,33 +1336,309 @@
       
         
           
-            <h4 id="为什么需要optional"><a href="#为什么需要optional" class="headerlink" title="为什么需要optional"></a>为什么需要optional</h4><p>在多数的语言中，一个<code>nil</code>值的出现，可以轻易的让程式产生错误，进而被系统强制关闭。一般使用者叫他闪退；开发者叫他崩溃。如何防止<code>nil</code>造成的错误，各式各样的检查早已不可或缺，但无论如何防堵，<code>nil</code>总是在程式运行阶段(runtime)才会发生，无法在编译时期(compile time)就检查出<code>nil</code>发生问题的可能性，也没有稳定的规则可以找出<code>nil</code>的出没之处。</p>
-<p>虽然Objective-C有一个有趣的特性，可以在对象成为<code>nil</code>时，执行该对象的method ，而不产生错误，也不会引发crash 。<em>但是由于对象是否为nil状况不明，还是会造成意外的情况</em></p>
-<p>因此，以安全做为诉求的Swift设计成所有的变量在赋值时只能有值，不能是<code>nil</code>，只要接受到<code>nil</code>，就会抛出错误。</p>
-<h5 id="但是变量还是有nil的需求"><a href="#但是变量还是有nil的需求" class="headerlink" title="但是变量还是有nil的需求"></a>但是变量还是有nil的需求</h5><p>为了从根本上解决<code>nil</code>不明确的问题， Swift导入了Optional的概念，由<code>enum</code>实作，并在Compiler中加强了对Optional的操作性。</p>
-<p>当变量存在值有可能缺失的情况下使用可选类型，官方文档如下定义：</p>
-<ul>
-<li><em>There is a value ,and it equals x</em>,值存在且等于<em>x</em>.</li>
-<li><em>There isn’t a value at all</em>,值不存在!</li>
-</ul>
-<p><em>opetinal是主动描述变量是否存在nil值，减少变量在传递在传递过程中，存在nil的不确定性</em></p>
-<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">let</span> intValue:<span class="type">Int</span> = <span class="number">0</span> <span class="comment">// 合法</span></span><br><span class="line"><span class="keyword">let</span> intValue2:<span class="type">Int</span> = <span class="literal">nil</span> <span class="comment">//不合法</span></span><br><span class="line"><span class="keyword">let</span> optionalIntValue:<span class="type">Int</span>? = <span class="literal">nil</span> <span class="comment">//合法，這是一個Int的Optional</span></span><br></pre></td></tr></table></figure>
-<h4 id="optional"><a href="#optional" class="headerlink" title="optional"></a>optional</h4><p>Optional其实是个<code>enum</code>，里面有<code>None</code>和<code>Some</code>两种类型。其实所谓的nil就是<code>Optional.None</code>, 非nil就是<code>Optional.Some</code>, 然后会通过<code>Some(T)</code>包装（wrap）原始值，这也是为什么在使用Optional的时候要拆包（从enum里取出来原始值）的原因, 也是PlayGround会把Optional值显示为类似<code>{Some &quot;hello world&quot;}</code>的原因，这里是enum Optional的定义：</p>
-<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">enum</span> <span class="title">Optional</span>&lt;<span class="title">T</span>&gt; : <span class="title">LogicValue</span>, <span class="title">Reflectable</span> </span>&#123;</span><br><span class="line">    <span class="keyword">case</span> <span class="type">None</span></span><br><span class="line">    <span class="keyword">case</span> <span class="type">Some</span>(<span class="type">T</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+            <ol>
+<li><p>optinal类型可以表示值缺失，但是当每个操作失败的时候，我们还想进一步知道操作失败的原因</p>
 <blockquote>
-<p>可以把optional 想象成一个糖果盒子，里面可能装着糖果 或者空气</p>
+<p>个从磁盘上的某个文件读取数据并进行处理的任务，该任务会有多种可能失败的情况，包括指定路径下文件并不存在，文件不具有可读权限，或者文件编码格式不兼容。区分这些不同的失败情况可以让程序解决并处理某些错误，然后把它解决不了的错误报告给用户。</p>
 </blockquote>
-<h5 id="拆包："><a href="#拆包：" class="headerlink" title="拆包："></a>拆包：</h5><p><em>1.在糖果盒里面有糖果的时候，2.取出来让他参与计算</em></p>
-<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 拆包方式一</span></span><br><span class="line"><span class="keyword">if</span> possibleNumber != <span class="literal">nil</span> &#123;</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">"hello<span class="subst">\(possibleNumber!)</span>"</span>) <span class="comment">// 使用前需!强制解析</span></span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    </span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 拆包方式二，与nil 合并</span></span><br><span class="line"><span class="keyword">var</span> number:<span class="type">Int</span>?</span><br><span class="line"><span class="keyword">let</span> number1 = number ?? <span class="number">0</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">// 拆包方式二,使用可选绑定（optional binding）来判断可选类型是否包含值，如果包含就把值赋给一个临时常量或者变量。</span></span><br><span class="line"><span class="keyword">if</span> <span class="keyword">let</span> number = possibleNumber &#123;</span><br><span class="line">   <span class="built_in">print</span>(<span class="string">"hello<span class="subst">\(number)</span>"</span>)</span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 拆包方式四，guard守护</span></span><br><span class="line"><span class="comment">/* guard充当了警卫员一职，保证条件满足情况下，才会让你通过，否则只能else让你返回了！切记else中一定需要有返回  的语句，比如return、continue、break、throw这种提早退出的关键字！！*/</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">unWrapped</span><span class="params">()</span></span> &#123;</span><br><span class="line">    <span class="keyword">guard</span> <span class="keyword">let</span> number = possibleNumber <span class="keyword">else</span>&#123;</span><br><span class="line">        <span class="keyword">return</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">"hello<span class="subst">\(number)</span> "</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h5 id="optional-chaining"><a href="#optional-chaining" class="headerlink" title="optional chaining"></a>optional chaining</h5><p>optional chaining 行为类似OC中的 nil 不响应消息</p>
-<p>调用属性或者方法的过程中，如果遇到optional，忽视optianl，并执行下一个语法，知道语法完成，如果过程中有一个属性是nil，直接结束语法，并传回nil</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">let 使用者名字:String? = grady.禮物收藏盒?.使用者名字</span><br></pre></td></tr></table></figure>
-<p><em>optianl chaining取得的值，最终一定是optional</em></p>
-<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Toy</span> </span>&#123;</span><br><span class="line">    <span class="keyword">let</span> name: <span class="type">String</span></span><br><span class="line">    <span class="keyword">init</span>(name: <span class="type">String</span>) &#123;</span><br><span class="line">        <span class="keyword">self</span>.name = name</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Pet</span> </span>&#123;</span><br><span class="line">    <span class="keyword">var</span> toy: <span class="type">Toy</span>?</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Child</span> </span>&#123;</span><br><span class="line">    <span class="keyword">var</span> pet: <span class="type">Pet</span>?</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">let</span> xiaomi = <span class="type">Chilid</span>()</span><br><span class="line"><span class="keyword">let</span> name = xiaomi.pet?.toy?.name <span class="comment">// 虽然name被声明为不是nil，但是 获得的name一定是 optianal</span></span><br></pre></td></tr></table></figure>
-<p>Swift中的问号?和感叹号!](<a href="http://letsswift.com/2014/06/swift-questionmark-exclamatorymark/" target="_blank" rel="external">http://letsswift.com/2014/06/swift-questionmark-exclamatorymark/</a>)</p>
-<p> <a href="http://blog.csdn.net/zhangao0086/article/details/386402099" target="_blank" rel="external">Swift 可选值(Optional Values)介绍</a></p>
-<p><a href="http://blog.barat.cc/ios/understanding-swift-optional/" target="_blank" rel="external">理解Swift中Optional类型－有和无的哲学</a></p>
-<p><a href="http://www.appcoda.com.tw/swift-optional/" target="_blank" rel="external">初学Swift：爱恨交织的Optional</a></p>
+</li>
+</ol>
+<ol>
+<li>例子</li>
+</ol>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="atony2099.github.io/2016/07/03/dispatch-group/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="tony2009">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="/images/avatar.gif">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="托尼的开发笔记">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="托尼的开发笔记" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2016/07/03/dispatch-group/" itemprop="url">
+                  dispatch_group管理任务依赖
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2016-07-03T15:13:11+08:00">
+                2016-07
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h4 id="场景"><a href="#场景" class="headerlink" title="场景"></a>场景</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">NSArray *urlStrings = @[ @&quot;http://octree.me&quot;, @&quot;http://google.com&quot;, @&quot;http://github.com&quot; ];</span><br><span class="line"></span><br><span class="line">for(NSString urlString in urlStrings) &#123;  </span><br><span class="line">    AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];</span><br><span class="line">    [manager GET:urlString parameters:nil success:^(AFHTTPRequestOperation *operation, id responseObject) &#123;  </span><br><span class="line">        //do sth </span><br><span class="line">        </span><br><span class="line">        </span><br><span class="line">     &#125; failure:^(AFHTTPRequestOperation *operation, NSError *error) &#123;</span><br><span class="line">        NSLog(@&quot;Error: %@&quot;, error);</span><br><span class="line">&#125;];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>同时发起网络请求，但是我们需要在三个网络请求都成功获取数据后才执行do sth，显然上面的写法不符合要求，</p>
+<h4 id="dispatch-group"><a href="#dispatch-group" class="headerlink" title="dispatch_group"></a>dispatch_group</h4><blockquote>
+<p>Grouping blocks allows for aggregate synchronization. Your application can submit multiple blocks and track when they all complete, even though they might run on different queues. This behavior can be helpful when progress can’t be made until all of the specified tasks are complete.</p>
+</blockquote>
+<p>dispatch_group提供了多个block同步的机制，可以再多个不同bloc都执行完后再去执行指定的任务</p>
+<p>相关函数: </p>
+<p>dispatch_group_enter:</p>
+<blockquote>
+<p> Explicitly indicates that a block has entered the group.Calling this function increments the current count of outstanding tasks in the group</p>
+</blockquote>
+<p>dispatch_group_leave : </p>
+<blockquote>
+<p>Explicitly indicates that a block in the group has completed.Calling this function decrements the current count of outstanding tasks in the group</p>
+</blockquote>
+<p>dispatch_group_notify</p>
+<blockquote>
+<p> Schedules a block object to be submitted to a queue when a group of previously submitted block objects have completed.</p>
+</blockquote>
+<h4 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h4><pre><code>NSArray *urlStrings = @[ @&quot;http://octree.me&quot;, @&quot;http://google.com&quot;, @&quot;http://github.com&quot; ];
+
+dispatch_group_t requestGroup = dispatch_group_create(); 
+for(NSString urlString in urlStrings) {
+  dispatch_group_enter(requestGroup);   //当前的任务加入group
+  AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
+  [manager GET:urlString parameters:nil success:^(AFHTTPRequestOperation *operation, id responseObject) {
+      NSLog(@&quot;Success&quot;);
+      dispatch_group_leave(requestGroup);
+   } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+      NSLog(@&quot;Error: %@&quot;, error);
+      dispatch_group_leave(requestGroup); // 当前的任务已经执行完
+  }];
+}
+
+dispatch_group_notify(requestGroup, dispatch_get_main_queue(), ^{ // 上面的
+    //doSomething
+});
+</code></pre><p>参考: </p>
+<p><a href="http://outofmemory.cn/objective-c/ios-async-task-monitor" target="_blank" rel="external">iOS 多个异步任务的监控</a></p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="atony2099.github.io/2016/07/03/1多线程编程/dispatch-group/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="tony2009">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="/images/avatar.gif">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="托尼的开发笔记">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="托尼的开发笔记" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2016/07/03/1多线程编程/dispatch-group/" itemprop="url">
+                  dispatch_group管理任务依赖
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2016-07-03T15:13:11+08:00">
+                2016-07
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h4 id="场景"><a href="#场景" class="headerlink" title="场景"></a>场景</h4><pre><code>dispatch_group_t requestGroup = dispatch_group_create(); 
+for(NSString urlString in urlStrings) {
+  dispatch_group_enter(requestGroup);   //当前的任务加入group
+  AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
+  [manager GET:urlString parameters:nil success:^(AFHTTPRequestOperation *operation, id responseObject) {
+      NSLog(@&quot;Success&quot;);
+      dispatch_group_leave(requestGroup);
+   } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+      NSLog(@&quot;Error: %@&quot;, error);
+      dispatch_group_leave(requestGroup); // 当前的任务已经执行完
+  }];
+}
+
+dispatch_group_notify(requestGroup, dispatch_get_main_queue(), ^{ // 上面的
+    //doSomething
+});
+</code></pre><p>参考: </p>
+<p><a href="http://outofmemory.cn/objective-c/ios-async-task-monitor" target="_blank" rel="external">iOS 多个异步任务的监控</a></p>
 
           
         
@@ -1606,7 +1672,7 @@
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/2/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><span class="page-number current">3</span><a class="page-number" href="/page/4/">4</a><span class="space">&hellip;</span><a class="page-number" href="/page/9/">9</a><a class="extend next" rel="next" href="/page/4/"><i class="fa fa-angle-right"></i></a>
+    <a class="extend prev" rel="prev" href="/page/2/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><span class="page-number current">3</span><a class="page-number" href="/page/4/">4</a><span class="space">&hellip;</span><a class="page-number" href="/page/8/">8</a><a class="extend next" rel="next" href="/page/4/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 
@@ -1649,7 +1715,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives">
-                <span class="site-state-item-count">83</span>
+                <span class="site-state-item-count">73</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>

@@ -241,7 +241,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-  <link itemprop="mainEntityOfPage" href="atony2099.github.io/2016/08/15/xcode基础配置/">
+  <link itemprop="mainEntityOfPage" href="atony2099.github.io/2016/08/20/UI再认识/延伸/">
 
   <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
     <meta itemprop="name" content="tony2009">
@@ -266,8 +266,8 @@
             
               
                 
-                <a class="post-title-link" href="/2016/08/15/xcode基础配置/" itemprop="url">
-                  xcode基础配置
+                <a class="post-title-link" href="/2016/08/20/UI再认识/延伸/" itemprop="url">
+                  ScrollView的再认识
                 </a>
               
             
@@ -283,7 +283,7 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2016-08-15T16:39:10+08:00">
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2016-08-20T13:28:35+08:00">
                 2016-08
               </time>
             
@@ -321,24 +321,21 @@
       
         
           
-            <p>  Product Name:项目名称；</p>
-<p>  Organization Name：</p>
-<blockquote>
-<p>The <em>organization name</em> is an <strong>attribute of the Xcode project</strong> and is used in boilerplate text throughout your project folder. For example, the organization name is used in the source and header file copyright strings. The organization name in your Xcode project isn’t the same as the organization name that you enter later in iTunes Connect.</p>
+            <blockquote>
+<p>ScrollView 是UI的基础！ —-tony</p>
 </blockquote>
-<p> bundle ID </p>
-<blockquote>
-<p> The product name and <em>organization identifier</em> you enter are concatenated to create the default bundle ID using reverse domain name service (reverse DNS) notation. The <em>bundle ID</em> needs to be unique to your app, so it’s important to set the organization identifier to a unique string as well.</p>
+<h4 id="Base"><a href="#Base" class="headerlink" title="Base"></a>Base</h4><h5 id="contentSize"><a href="#contentSize" class="headerlink" title="contentSize"></a>contentSize</h5><p>The <code>contentSize</code> property is the size of the content that you need to display in the scroll view. In Creating Scroll Views in Interface Builder, it is set to 320 wide by 758 pixels high. The image in Figure 1-2 shows the content of the scroll view with the <code>contentSize</code> width and height indicated.</p>
+<p><img src="https://developer.apple.com/library/content/documentation/WindowsViews/Conceptual/UIScrollView_pg/Art/contentSize.jpg" alt=""></p>
+<h5 id="contentInset-amp-amp-contentoffset-产生联动"><a href="#contentInset-amp-amp-contentoffset-产生联动" class="headerlink" title="contentInset  &amp;&amp; contentoffset 产生联动"></a>contentInset  &amp;&amp; contentoffset 产生联动</h5><blockquote>
+<p>The property <a href="http://developer.apple.com/library/ios/documentation/uikit/reference/UIScrollView_Class/Reference/UIScrollView.html#//apple_ref/occ/instp/UIScrollView/contentInset" target="_blank" rel="external"><code>contentInset</code></a> can  <strong> change the maximum and minimum values of the content offset to allow scrolling outside of the scrollable area.</strong> </p>
+<p>Its type is<a href="http://developer.apple.com/library/ios/#documentation/uikit/reference/UIKitDataTypesReference/Reference/reference.html#//apple_ref/doc/c_ref/UIEdgeInsets" target="_blank" rel="external"><code>UIEdgeInsets</code></a>, which consists of 4 numbers: <code>{top, left, bottom, right}</code>. When you introduce an inset, you change the range of the content offset. For example, setting the content inset to have a value of 10 for its top value allows the content offset’s y value to reach -10. This introduces padding around the scrollable area.</p>
 </blockquote>
-<p>product NAME</p>
-<ul>
-<li><strong>Product Name:</strong> The product name will be the name of your application. I have named my application Colorific, but feel free to name your application whatever you’d like.</li>
-</ul>
-<p><strong>Company Identifier:</strong></p>
+<p><img src="https://www.objc.io/images/issue-3/SV6@2x-7ad19d8b.png" alt=""></p>
+<p><strong>automaticallyAdjustsScrollViewInsets</strong></p>
+<p>A Boolean value that indicates whether the view controller should automatically adjust its scroll view insets.</p>
 <blockquote>
-<p> Apple recommends adopting the reverse-domain naming convention in an attempt to make this unique.  <strong>Note that the domain that you use has no tie to the DNS system or Internet domain names</strong></p>
+<p> which auto set the  top to 64 if having navigationBar (toobar considing)</p>
 </blockquote>
-<p><a href="http://code.tutsplus.com/tutorials/creating-your-first-ios-application--mobile-13892" target="_blank" rel="external">Creating Your First iOS Application</a></p>
 
           
         
@@ -377,7 +374,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-  <link itemprop="mainEntityOfPage" href="atony2099.github.io/2016/08/14/CAShapeLayer/">
+  <link itemprop="mainEntityOfPage" href="atony2099.github.io/2016/08/11/1框架阅读/sdweb/">
 
   <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
     <meta itemprop="name" content="tony2009">
@@ -402,283 +399,7 @@
             
               
                 
-                <a class="post-title-link" href="/2016/08/14/CAShapeLayer/" itemprop="url">
-                  CAShapeLayer
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2016-08-14T17:27:19+08:00">
-                2016-08
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h3 id=""><a href="#" class="headerlink" title="#"></a>#</h3>
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-  <link itemprop="mainEntityOfPage" href="atony2099.github.io/2016/08/11/性能优化/性能调试/">
-
-  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
-    <meta itemprop="name" content="tony2009">
-    <meta itemprop="description" content="">
-    <meta itemprop="image" content="/images/avatar.gif">
-  </span>
-
-  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-    <meta itemprop="name" content="托尼的开发笔记">
-    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
-      <img style="display:none;" itemprop="url image" alt="托尼的开发笔记" src="">
-    </span>
-  </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2016/08/11/性能优化/性能调试/" itemprop="url">
-                  性能调试
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2016-08-11T23:38:06+08:00">
-                2016-08
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p><a href="https://developer.apple.com/library/content/documentation/DeveloperTools/Conceptual/InstrumentsUserGuide/Instrument-Allocations.html" target="_blank" rel="external">Allocations Instrument</a></p>
-<p><img src="http://img2016.itdadao.com/d/file/tech/2016/12/13/it316026131410147.png" alt=""></p>
-<p><img src="http://upload-images.jianshu.io/upload_images/266345-34d339d54700e6a4.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""></p>
-<blockquote>
-<p><em>All Heap Allocations</em> 是程序真实的内存分配情况，<em>All Anonymous VM</em>则是系统为程序分配的虚拟内存，为的就是当程序有需要的时候，能够及时为程序提供足够的内存空间，**</p>
-<p>Remember the second sentence in the previous paragraph. The operating system determines the size of the virtual memory block, not your app. That’s why you should focus on the heap allocations instead of anonymous VM. <strong>Your app has no control over the size of the anonymous VM.</strong></p>
-</blockquote>
-<table>
-<thead>
-<tr>
-<th>Persistent Bytes</th>
-<th>The number of bytes that have been allocated, but not released, during the selected time range.</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td># Persistent</td>
-<td>The number of allocations that have been allocated, but not released, during the selected time range.</td>
-</tr>
-<tr>
-<td>Transient Bytes</td>
-<td>The number of bytes that have been created and destroyed during the selected time range.</td>
-</tr>
-<tr>
-<td># Transient</td>
-<td>The number of allocations that have been created and destroyed during the selected time range.</td>
-</tr>
-<tr>
-<td>Total Bytes</td>
-<td>The total number of bytes that have existed during the selected time range.</td>
-</tr>
-<tr>
-<td># Total</td>
-<td>The total number of allocations that have existed during the selected time range.</td>
-</tr>
-<tr>
-<td></td>
-</tr>
-</tbody>
-</table>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-  <link itemprop="mainEntityOfPage" href="atony2099.github.io/2016/08/11/框架阅读/sdweb/">
-
-  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
-    <meta itemprop="name" content="tony2009">
-    <meta itemprop="description" content="">
-    <meta itemprop="image" content="/images/avatar.gif">
-  </span>
-
-  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-    <meta itemprop="name" content="托尼的开发笔记">
-    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
-      <img style="display:none;" itemprop="url image" alt="托尼的开发笔记" src="">
-    </span>
-  </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2016/08/11/框架阅读/sdweb/" itemprop="url">
+                <a class="post-title-link" href="/2016/08/11/1框架阅读/sdweb/" itemprop="url">
                   SDWeb源码简析
                 </a>
               
@@ -760,533 +481,6 @@
 <p><a href="http://blog.csdn.net/hello_hwc/article/details/51404322" target="_blank" rel="external">iOS开源库源码解析之SDWebImage</a></p>
 <p><a href="http://www.cnblogs.com/Mike-zh/p/5204240.html" target="_blank" rel="external">通读SDWebImage①–总体梳理、下载和缓存</a></p>
 <p><a href="http://www.cnblogs.com/polobymulberry/category/785704.html" target="_blank" rel="external">SDWebImage源码阅读系列</a></p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-  <link itemprop="mainEntityOfPage" href="atony2099.github.io/2016/08/11/断言/">
-
-  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
-    <meta itemprop="name" content="tony2009">
-    <meta itemprop="description" content="">
-    <meta itemprop="image" content="/images/avatar.gif">
-  </span>
-
-  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-    <meta itemprop="name" content="托尼的开发笔记">
-    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
-      <img style="display:none;" itemprop="url image" alt="托尼的开发笔记" src="">
-    </span>
-  </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2016/08/11/断言/" itemprop="url">
-                  断言
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2016-08-11T23:38:06+08:00">
-                2016-08
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <ol>
-<li><p>什么是断言</p>
-<blockquote>
-<p>NSAssert()是一个宏，用于开发阶段调试程序中的Bug，通过为NSAssert()传递条件表达式来断定是否属于Bug，满足条件返回真值，程序继续运行，如果返回假值，则抛出异常，并且可以自定义异常描述。</p>
-</blockquote>
-</li>
-</ol>
-<p>NSAssert()是这样定义的：</p>
-<blockquote>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&gt;  #define NSAssert(condition, desc)</span><br><span class="line">&gt;</span><br></pre></td></tr></table></figure>
-</blockquote>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-  <link itemprop="mainEntityOfPage" href="atony2099.github.io/2016/08/11/断言副本/">
-
-  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
-    <meta itemprop="name" content="tony2009">
-    <meta itemprop="description" content="">
-    <meta itemprop="image" content="/images/avatar.gif">
-  </span>
-
-  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-    <meta itemprop="name" content="托尼的开发笔记">
-    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
-      <img style="display:none;" itemprop="url image" alt="托尼的开发笔记" src="">
-    </span>
-  </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2016/08/11/断言副本/" itemprop="url">
-                  断言
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2016-08-11T23:38:06+08:00">
-                2016-08
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h4 id="Designated-Initializer干嘛的？"><a href="#Designated-Initializer干嘛的？" class="headerlink" title="Designated Initializer干嘛的？"></a>Designated Initializer干嘛的？</h4><p>保证关系链的正确调用: </p>
-<p>原则:1.  Designated Initializer 指向父类的Designated Initializer；</p>
-<pre><code>2.  便利构造方法指向Designated Initialize
-</code></pre><p>message: </p>
-<p>code: </p>
-<p>data:{  </p>
-<p>}</p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-  <link itemprop="mainEntityOfPage" href="atony2099.github.io/2016/08/11/编译器/编译器/">
-
-  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
-    <meta itemprop="name" content="tony2009">
-    <meta itemprop="description" content="">
-    <meta itemprop="image" content="/images/avatar.gif">
-  </span>
-
-  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-    <meta itemprop="name" content="托尼的开发笔记">
-    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
-      <img style="display:none;" itemprop="url image" alt="托尼的开发笔记" src="">
-    </span>
-  </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2016/08/11/编译器/编译器/" itemprop="url">
-                  编译器
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2016-08-11T23:38:06+08:00">
-                2016-08
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p><a href="https://www.objccn.io/issue-6-2/" target="_blank" rel="external">编译器</a></p>
-<h4 id="基础概念"><a href="#基础概念" class="headerlink" title="基础概念"></a>基础概念</h4><h5 id="机器语言"><a href="#机器语言" class="headerlink" title="机器语言"></a>机器语言</h5><blockquote>
-<p>机器语言是用<a href="http://baike.baidu.com/view/18536.htm" target="_blank" rel="external">二进制</a>代码表示的计算机能直接识别和执行的一种机器指令的集合</p>
-<ul>
-<li><a href="https://zh.wikipedia.org/wiki/CPU" target="_blank" rel="external">CPU</a>可直接解读的数据</li>
-</ul>
-</blockquote>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">以下是一些示例：</span><br><span class="line">指令部份的示例</span><br><span class="line">0000 代表 加载（LOAD）</span><br><span class="line">0001 代表 存储（STORE）</span><br><span class="line">...</span><br><span class="line">暂存器部份的示例</span><br><span class="line">0000 代表暂存器 A</span><br><span class="line">0001 代表暂存器 B</span><br><span class="line">...</span><br><span class="line">存储器部份的示例</span><br><span class="line">000000000000 代表地址为 0 的存储器</span><br><span class="line">000000000001 代表地址为 1 的存储器</span><br><span class="line">000000010000 代表地址为 16 的存储器</span><br><span class="line">100000000000 代表地址为 2^11 的存储器</span><br><span class="line">集成示例</span><br><span class="line">0000,0000,000000010000 代表 LOAD A, 16</span><br><span class="line">0000,0001,000000000001 代表 LOAD B, 1</span><br><span class="line">0001,0001,000000010000 代表 STORE B, 16</span><br><span class="line">0001,0001,000000000001 代表 STORE B, 1[1]</span><br></pre></td></tr></table></figure>
-<h4 id="编译"><a href="#编译" class="headerlink" title="编译"></a>编译</h4><p>编译[ 是从<a href="http://baike.baidu.com/view/60376.htm" target="_blank" rel="external">源代码</a>（通常为<a href="http://baike.baidu.com/view/14900.htm" target="_blank" rel="external">高级语言</a>）到能直接被计算机器或<a href="http://baike.baidu.com/view/1132.htm" target="_blank" rel="external">虚拟机</a>执行的<a href="http://baike.baidu.com/view/1272000.htm" target="_blank" rel="external">目标代码</a>（通常为低级语言或<a href="http://baike.baidu.com/view/111847.htm" target="_blank" rel="external">机器语言</a>）的翻译过程</p>
-<h4 id="编译器前后端"><a href="#编译器前后端" class="headerlink" title="编译器前后端"></a>编译器前后端</h4><p><em>前端</em>:  前端是语言相关的，输出为抽象语法树；</p>
-<blockquote>
-<p> clang 的功能是首先对 Objective-C 代码做分析检查，然后将其转换为低级的类汇编代码：</p>
-</blockquote>
-<p><em>后端:</em>后端是机器相关的，输出为机器代码。有些优化是机器无关的，这一部分可能被单列出来称为中端。</p>
-<blockquote>
-<p>LLVM Intermediate Representation(LLVM 中间表达码)。接着 LLVM 会执行相关指令将 LLVM IR 编译成目标平台上的本地字节码，这个过程的完成方式可以是即时编译 (Just-in-time)，或在编译的时候完成。</p>
-</blockquote>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-  <link itemprop="mainEntityOfPage" href="atony2099.github.io/2016/08/11/数据结构/断言 copy/">
-
-  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
-    <meta itemprop="name" content="tony2009">
-    <meta itemprop="description" content="">
-    <meta itemprop="image" content="/images/avatar.gif">
-  </span>
-
-  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-    <meta itemprop="name" content="托尼的开发笔记">
-    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
-      <img style="display:none;" itemprop="url image" alt="托尼的开发笔记" src="">
-    </span>
-  </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2016/08/11/数据结构/断言 copy/" itemprop="url">
-                  栈和队列
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2016-08-11T23:38:06+08:00">
-                2016-08
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h4 id="数据结构"><a href="#数据结构" class="headerlink" title="数据结构"></a>数据结构</h4><blockquote>
-<p>数据结构:  存在一种或者多种关系的数据元素的集合</p>
-</blockquote>
-<p>逻辑结构: 1.集合结构 2. 线性结构 3.树形结构 4. 图形结构</p>
-<p>物理结构: 在计算机中的存储形式</p>
-<ol>
-<li>顺序结构 2. 链式存储结构</li>
-</ol>
-<h4 id="线性表"><a href="#线性表" class="headerlink" title="线性表"></a>线性表</h4><p><img src="http://ohbzayk4i.bkt.clouddn.com/17-1-4/46062697-file_1483465204435_450.jpg" alt="n"></p>
-<ul>
-<li>线性表的顺序存储结构代码</li>
-</ul>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> MAXSIZE 20             <span class="comment">/* 存储空间初始分配量 */</span>typedef int ElemType;          <span class="comment">/* ElemType类型根据实际情况而定，这里假设为int*/</span></span></span><br><span class="line"><span class="keyword">typedef</span> <span class="keyword">struct</span></span><br><span class="line">&#123;    ElemType data[MAXSIZE];    <span class="comment">/* 数组存储数据元素，最大值为MAXSIZE */</span>    <span class="keyword">int</span> length;                <span class="comment">/* 线性表当前长度 */</span></span><br><span class="line">&#125; SqList;</span><br></pre></td></tr></table></figure>
-<p>线性表优缺点：    </p>
-<p><img src="http://ohbzayk4i.bkt.clouddn.com/17-1-4/21662702-file_1483469533257_146a4.jpg" alt=""></p>
-<p>头指针</p>
-<p><img src="http://hi.csdn.net/attachment/201012/22/0_1293027039qq3J.gif" alt=""></p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//-----线性表的单链表存储结构-----   </span></span><br><span class="line"><span class="keyword">typedef</span> <span class="keyword">struct</span> LNode&#123;   </span><br><span class="line">    ElemType   data;   </span><br><span class="line">    <span class="keyword">struct</span> LNode  *next; </span><br><span class="line">&#125;LNode, *LinkList;</span><br></pre></td></tr></table></figure>
-<p><img src="http://hi.csdn.net/attachment/201012/22/0_12930270416p63.gif" alt=""></p>
-<p>链表反转</p>
 
           
         
@@ -1463,7 +657,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-  <link itemprop="mainEntityOfPage" href="atony2099.github.io/2016/08/11/RAC大法好/函数式编程/">
+  <link itemprop="mainEntityOfPage" href="atony2099.github.io/2016/08/11/数据结构/断言 copy/">
 
   <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
     <meta itemprop="name" content="tony2009">
@@ -1488,7 +682,145 @@
             
               
                 
-                <a class="post-title-link" href="/2016/08/11/RAC大法好/函数式编程/" itemprop="url">
+                <a class="post-title-link" href="/2016/08/11/数据结构/断言 copy/" itemprop="url">
+                  栈和队列
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2016-08-11T23:38:06+08:00">
+                2016-08
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h4 id="数据结构"><a href="#数据结构" class="headerlink" title="数据结构"></a>数据结构</h4><blockquote>
+<p>数据结构:  存在一种或者多种关系的数据元素的集合</p>
+</blockquote>
+<p>逻辑结构: 1.集合结构 2. 线性结构 3.树形结构 4. 图形结构</p>
+<p>物理结构: 在计算机中的存储形式</p>
+<ol>
+<li>顺序结构 2. 链式存储结构</li>
+</ol>
+<h4 id="线性表"><a href="#线性表" class="headerlink" title="线性表"></a>线性表</h4><p><img src="http://ohbzayk4i.bkt.clouddn.com/17-1-4/46062697-file_1483465204435_450.jpg" alt="n"></p>
+<ul>
+<li>线性表的顺序存储结构代码</li>
+</ul>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> MAXSIZE 20             <span class="comment">/* 存储空间初始分配量 */</span>typedef int ElemType;          <span class="comment">/* ElemType类型根据实际情况而定，这里假设为int*/</span></span></span><br><span class="line"><span class="keyword">typedef</span> <span class="keyword">struct</span></span><br><span class="line">&#123;    ElemType data[MAXSIZE];    <span class="comment">/* 数组存储数据元素，最大值为MAXSIZE */</span>    <span class="keyword">int</span> length;                <span class="comment">/* 线性表当前长度 */</span></span><br><span class="line">&#125; SqList;</span><br></pre></td></tr></table></figure>
+<p>线性表优缺点：    </p>
+<p><img src="http://ohbzayk4i.bkt.clouddn.com/17-1-4/21662702-file_1483469533257_146a4.jpg" alt=""></p>
+<p>头指针</p>
+<p><img src="http://hi.csdn.net/attachment/201012/22/0_1293027039qq3J.gif" alt=""></p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//-----线性表的单链表存储结构-----   </span></span><br><span class="line"><span class="keyword">typedef</span> <span class="keyword">struct</span> LNode&#123;   </span><br><span class="line">    ElemType   data;   </span><br><span class="line">    <span class="keyword">struct</span> LNode  *next; </span><br><span class="line">&#125;LNode, *LinkList;</span><br></pre></td></tr></table></figure>
+<p><img src="http://hi.csdn.net/attachment/201012/22/0_12930270416p63.gif" alt=""></p>
+<p>链表反转</p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="atony2099.github.io/2016/08/11/1reactivecocoa/函数式编程/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="tony2009">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="/images/avatar.gif">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="托尼的开发笔记">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="托尼的开发笔记" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2016/08/11/1reactivecocoa/函数式编程/" itemprop="url">
                   MVVM
                 </a>
               
@@ -1631,11 +963,703 @@
 
 
     
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="atony2099.github.io/2016/08/11/客户端架构/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="tony2009">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="/images/avatar.gif">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="托尼的开发笔记">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="托尼的开发笔记" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2016/08/11/客户端架构/" itemprop="url">
+                  断言
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2016-08-11T23:38:06+08:00">
+                2016-08
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <blockquote>
+<p>最近看了 <a href="http://casatwy.com/iosying-yong-jia-gou-tan-kai-pian.html" target="_blank" rel="external">Casa Taloyum</a>一系类架构的文章，虽然对于很多观点不敢苟同，但是还是有一部分可以借鉴的,特别是思考问题的方式。</p>
+</blockquote>
+<h4 id="基础"><a href="#基础" class="headerlink" title="基础"></a>基础</h4><ol>
+<li><p>fat model </p>
+<blockquote>
+<p>contain : 弱业务逻辑 out of box TO VC</p>
+<p>缺点: 难以复用， 臃肿后也是难以维护</p>
+</blockquote>
+</li>
+<li><p>slim  model </p>
+<blockquote>
+<p>only layer </p>
+<p>by 辅助方法 |  类 完成展示逻辑转换</p>
+</blockquote>
+</li>
+<li><p>MVVM  fat model = viewModel + model </p>
+</li>
+</ol>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="atony2099.github.io/2016/08/11/数据存储/NSCoding/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="tony2009">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="/images/avatar.gif">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="托尼的开发笔记">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="托尼的开发笔记" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2016/08/11/数据存储/NSCoding/" itemprop="url">
+                  NSCoding
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2016-08-11T23:38:06+08:00">
+                2016-08
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h4 id="目录结构"><a href="#目录结构" class="headerlink" title="目录结构"></a>目录结构</h4><p><img src="http://images2015.cnblogs.com/blog/80291/201602/80291-20160213212622903-985718705.png" alt=""></p>
+<ol>
+<li><p>document : </p>
+<p>目的： 目录用于存储用户数据,自动备份.</p>
+</li>
+<li><p>library: </p>
+<p>user defaults:  偏好设置文件，自动备份</p>
+<p>cache: 大文件，不会被备份</p>
+</li>
+<li><p>temp： 临时文件</p>
+</li>
+</ol>
+<p>数据存档的方式: </p>
+<p>序列化: 将对象转化为可存储的二进制流</p>
+<ol>
+<li><p>自带类: NSString、NSArray、NSData、NSDictionary 已经实现NSCopying协议</p>
+<ul>
+<li>直接写入沙盒</li>
+<li>userdefaulte 操作</li>
+</ul>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> array:<span class="type">NSArray</span> = [<span class="number">1</span>, <span class="number">2</span>,<span class="number">3</span>]</span><br><span class="line"><span class="keyword">let</span> filePath:<span class="type">String</span> = <span class="type">NSHomeDirectory</span>() + <span class="string">"/Documents/webs.plist"</span></span><br><span class="line">array.write(toFile: filePath, atomically: <span class="literal">true</span>)</span><br></pre></td></tr></table></figure>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">UserDefaults</span>.standard.<span class="keyword">set</span>(<span class="literal">true</span>, forKey: <span class="string">"isBool"</span>)</span><br><span class="line"><span class="type">UserDefaults</span>.standard.object(forKey: <span class="string">"isBool"</span>)</span><br></pre></td></tr></table></figure>
+<p>​</p>
+</li>
+<li><p>自定义对象: </p>
+<ul>
+<li>实现NSCoping</li>
+<li>archieve进行序列化操作</li>
+</ul>
+</li>
+</ol>
+<p>###swift 的lian·</p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="atony2099.github.io/2016/08/11/断言/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="tony2009">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="/images/avatar.gif">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="托尼的开发笔记">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="托尼的开发笔记" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2016/08/11/断言/" itemprop="url">
+                  断言
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2016-08-11T23:38:06+08:00">
+                2016-08
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <ol>
+<li><p>什么是断言</p>
+<blockquote>
+<p>NSAssert()是一个宏，用于开发阶段调试程序中的Bug，通过为NSAssert()传递条件表达式来断定是否属于Bug，满足条件返回真值，程序继续运行，如果返回假值，则抛出异常，并且可以自定义异常描述。</p>
+</blockquote>
+</li>
+</ol>
+<p>NSAssert()是这样定义的：</p>
+<blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&gt;  #define NSAssert(condition, desc)</span><br><span class="line">&gt;</span><br></pre></td></tr></table></figure>
+</blockquote>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="atony2099.github.io/2016/08/11/数据存储/断言副本 2/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="tony2009">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="/images/avatar.gif">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="托尼的开发笔记">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="托尼的开发笔记" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2016/08/11/数据存储/断言副本 2/" itemprop="url">
+                  断言
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2016-08-11T23:38:06+08:00">
+                2016-08
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="atony2099.github.io/2016/08/11/1性能优化/性能调试/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="tony2009">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="/images/avatar.gif">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="托尼的开发笔记">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="托尼的开发笔记" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2016/08/11/1性能优化/性能调试/" itemprop="url">
+                  性能调试
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2016-08-11T23:38:06+08:00">
+                2016-08
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p><a href="https://developer.apple.com/library/content/documentation/DeveloperTools/Conceptual/InstrumentsUserGuide/Instrument-Allocations.html" target="_blank" rel="external">Allocations Instrument</a></p>
+<p><img src="http://img2016.itdadao.com/d/file/tech/2016/12/13/it316026131410147.png" alt=""></p>
+<p><img src="http://upload-images.jianshu.io/upload_images/266345-34d339d54700e6a4.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""></p>
+<blockquote>
+<p><em>All Heap Allocations</em> 是程序真实的内存分配情况，<em>All Anonymous VM</em>则是系统为程序分配的虚拟内存，为的就是当程序有需要的时候，能够及时为程序提供足够的内存空间，**</p>
+<p>Remember the second sentence in the previous paragraph. The operating system determines the size of the virtual memory block, not your app. That’s why you should focus on the heap allocations instead of anonymous VM. <strong>Your app has no control over the size of the anonymous VM.</strong></p>
+</blockquote>
+<table>
+<thead>
+<tr>
+<th>Persistent Bytes</th>
+<th>The number of bytes that have been allocated, but not released, during the selected time range.</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td># Persistent</td>
+<td>The number of allocations that have been allocated, but not released, during the selected time range.</td>
+</tr>
+<tr>
+<td>Transient Bytes</td>
+<td>The number of bytes that have been created and destroyed during the selected time range.</td>
+</tr>
+<tr>
+<td># Transient</td>
+<td>The number of allocations that have been created and destroyed during the selected time range.</td>
+</tr>
+<tr>
+<td>Total Bytes</td>
+<td>The total number of bytes that have existed during the selected time range.</td>
+</tr>
+<tr>
+<td># Total</td>
+<td>The total number of allocations that have existed during the selected time range.</td>
+</tr>
+<tr>
+<td></td>
+</tr>
+</tbody>
+</table>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
   </section>
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/9/">9</a><a class="extend next" rel="next" href="/page/3/"><i class="fa fa-angle-right"></i></a>
+    <a class="extend prev" rel="prev" href="/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/8/">8</a><a class="extend next" rel="next" href="/page/3/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 
@@ -1678,7 +1702,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives">
-                <span class="site-state-item-count">83</span>
+                <span class="site-state-item-count">73</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>

@@ -1,0 +1,731 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="load &amp;amp;&amp;amp; initialize
+load
+
+
+Invoked whenever a class or category is added to the Objective-C runtime; implement this method to perform class-specific behavior upon loading.
+The load message is s">
+<meta property="og:type" content="article">
+<meta property="og:title" content="load && initialize">
+<meta property="og:url" content="atony2099.github.io/2015/12/12/1语法特性/load&&initialize/index.html">
+<meta property="og:site_name" content="托尼的开发笔记">
+<meta property="og:description" content="load &amp;amp;&amp;amp; initialize
+load
+
+
+Invoked whenever a class or category is added to the Objective-C runtime; implement this method to perform class-specific behavior upon loading.
+The load message is s">
+<meta property="og:updated_time" content="2017-01-14T08:24:05.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="load && initialize">
+<meta name="twitter:description" content="load &amp;amp;&amp;amp; initialize
+load
+
+
+Invoked whenever a class or category is added to the Objective-C runtime; implement this method to perform class-specific behavior upon loading.
+The load message is s">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="atony2099.github.io/2015/12/12/1语法特性/load&&initialize/"/>
+
+
+
+
+
+  <title> load && initialize | 托尼的开发笔记 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">托尼的开发笔记</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+    
+      <p class="site-subtitle"></p>
+    
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="atony2099.github.io/2015/12/12/1语法特性/load&&initialize/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="tony2009">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="/images/avatar.gif">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="托尼的开发笔记">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="托尼的开发笔记" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                load && initialize
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2015-12-12T16:32:39+08:00">
+                2015-12
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h4 id="load-amp-amp-initialize"><a href="#load-amp-amp-initialize" class="headerlink" title="load &amp;&amp; initialize"></a>load &amp;&amp; initialize</h4><ul>
+<li>load</li>
+</ul>
+<blockquote>
+<p>Invoked whenever a class or category is added to the Objective-C runtime; implement this method to perform class-specific behavior upon loading.</p>
+<p>The load message is sent to classes and categories that are both dynamically loaded and statically linked, but only if the newly loaded class or category implements a method that can respond.</p>
+</blockquote>
+<p>从上面的描述可以看出这个方法调用的时机很早，在类(分类)被加载到runtime的时候就会调用，同时只有类实现了这个方法才能被响应。</p>
+<ul>
+<li>initialize</li>
+</ul>
+<blockquote>
+<p>The runtime sends initialize to each class in a program just before the class, or any class that inherits from it, is sent its first message from within the program. </p>
+</blockquote>
+<p>不同于load，initialize只有在类或者它的子类第一次接收到消息之前才会调用,相当于懒加载。</p>
+<h4 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line">int main(int argc, char * argv[]) &#123;</span><br><span class="line">    @autoreleasepool &#123;</span><br><span class="line">        NSLog(@&quot;%s&quot;,__func__);</span><br><span class="line">        return UIApplicationMain(argc, argv, nil, NSStringFromClass([AppDelegate class]));</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">@interface Animal : NSObject</span><br><span class="line"></span><br><span class="line">@end</span><br><span class="line"></span><br><span class="line">@implementation Animal</span><br><span class="line">+ (void)load&#123;</span><br><span class="line">    NSLog(@&quot;%s&quot;,__func__);</span><br><span class="line">&#125;</span><br><span class="line">+ (void)initialize&#123;</span><br><span class="line">    [super initialize];</span><br><span class="line">    NSLog(@&quot;%s %@&quot;,__func__,[self class]);</span><br><span class="line">&#125;</span><br><span class="line">@end</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">@interface Dog : Animal</span><br><span class="line"></span><br><span class="line">@end</span><br><span class="line"></span><br><span class="line">@implementation Dog</span><br><span class="line">+ (void)load&#123;</span><br><span class="line">    NSLog(@&quot;%s &quot;,__func__);</span><br><span class="line">&#125;</span><br><span class="line">+ (void)initialize&#123;</span><br><span class="line">    [super initialize];</span><br><span class="line">    NSLog(@&quot;%s &quot;,__func__);</span><br><span class="line">&#125;</span><br><span class="line">@end</span><br></pre></td></tr></table></figure>
+<p>在main.m文件里执行上述代码，可以输出</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">+[Animal load]</span><br><span class="line">+[Dog load] </span><br><span class="line">main</span><br></pre></td></tr></table></figure>
+<p>可以看出在没有主动对类执行操作情况下，load会默认执行，并且在main函数之前执行</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">@interface Animal : NSObject</span><br><span class="line"></span><br><span class="line">@end</span><br><span class="line"></span><br><span class="line">@implementation Animal</span><br><span class="line">+ (void)load&#123;</span><br><span class="line">    NSLog(@&quot;%s &quot;,__func__);</span><br><span class="line">&#125;</span><br><span class="line">  </span><br><span class="line">+ (void)initialize &#123;</span><br><span class="line">    NSLog(@&quot;%s %@&quot;,__func__,[self class]);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">@end</span><br><span class="line"></span><br><span class="line">@interface Dog : Animal</span><br><span class="line"></span><br><span class="line">@end</span><br><span class="line"></span><br><span class="line">@implementation Dog</span><br><span class="line"></span><br><span class="line">@end</span><br><span class="line"></span><br><span class="line">@implementation ViewController</span><br><span class="line">- (void)viewDidLoad &#123;</span><br><span class="line">    [super viewDidLoad];</span><br><span class="line">    Dog *dog = [[Dog alloc] init];</span><br><span class="line">&#125;</span><br><span class="line">@end</span><br></pre></td></tr></table></figure>
+<p>执行结果: </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">+[Animal load]</span><br><span class="line">+[Animal initialize] Animal</span><br><span class="line">+[Animal initialize] Dog</span><br></pre></td></tr></table></figure>
+<p>从上面我们可以看出initialize明显的一个特点是当子类没有实现的时候，它会主动调用父类的方法，而load并没有这一特性，为了解释这一特性，我们得从runtime源码层面剖析: </p>
+<p>load方法的调用核心代码</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">// Call all +loads for the detached list.</span><br><span class="line">for (i = 0; i &lt; used; i++) &#123;</span><br><span class="line">    Class cls = classes[i].cls;</span><br><span class="line">    load_method_t load_method = (load_method_t)classes[i].method;</span><br><span class="line">    if (!cls) continue;</span><br><span class="line"></span><br><span class="line">    if (PrintLoading) &#123;</span><br><span class="line">        _objc_inform(&quot;LOAD: +[%s load]\n&quot;, cls-&gt;nameForLogging());</span><br><span class="line">    &#125;</span><br><span class="line">    (*load_method)(cls, SEL_load);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这段代码循环调用所有类的 +load 方法。<strong>注意</strong>，这里是（调用分类的 +load 方法也是如此）直接使用函数内存地址的方式 <code>(*load_method)(cls, SEL_load);</code> 对 +load 方法进行调用的，而不是使用发送消息 <code>objc_msgSend</code> 的方式。</p>
+<p>这样的调用方式就使得 +load 方法拥有了一个非常有趣的特性，那就是子类、父类和分类中的 +load 方法的实现是被区别对待的。也就是说如果子类没有实现 +load 方法，那么当它被加载时 runtime 是不会去调用父类的 +load 方法的。同理，当一个类和它的分类都实现了 +load 方法时，两个方法都会被调用。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line">void _class_initialize(Class cls)</span><br><span class="line">&#123;</span><br><span class="line">    ...</span><br><span class="line">    Class supercls;</span><br><span class="line">    BOOL reallyInitialize = NO;</span><br><span class="line"></span><br><span class="line">    // Make sure super is done initializing BEFORE beginning to initialize cls.</span><br><span class="line">    // See note about deadlock above.</span><br><span class="line">    supercls = cls-&gt;superclass;</span><br><span class="line">    if (supercls  &amp;&amp;  !supercls-&gt;isInitialized()) &#123;</span><br><span class="line">        _class_initialize(supercls);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    // Try to atomically set CLS_INITIALIZING.</span><br><span class="line">    monitor_enter(&amp;classInitLock);</span><br><span class="line">    if (!cls-&gt;isInitialized() &amp;&amp; !cls-&gt;isInitializing()) &#123;</span><br><span class="line">        cls-&gt;setInitializing();</span><br><span class="line">        reallyInitialize = YES;</span><br><span class="line">    &#125;</span><br><span class="line">    monitor_exit(&amp;classInitLock);</span><br><span class="line"></span><br><span class="line">    if (reallyInitialize) &#123;</span><br><span class="line">        // We successfully set the CLS_INITIALIZING bit. Initialize the class.</span><br><span class="line"></span><br><span class="line">        // Record that we&apos;re initializing this class so we can message it.</span><br><span class="line">        _setThisThreadIsInitializingClass(cls);</span><br><span class="line"></span><br><span class="line">        // Send the +initialize message.</span><br><span class="line">        // Note that +initialize is sent to the superclass (again) if </span><br><span class="line">        // this class doesn&apos;t implement +initialize. 2157218</span><br><span class="line">        if (PrintInitializing) &#123;</span><br><span class="line">            _objc_inform(&quot;INITIALIZE: calling +[%s initialize]&quot;,</span><br><span class="line">                         cls-&gt;nameForLogging());</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        ((void(*)(Class, SEL))objc_msgSend)(cls, SEL_initialize);</span><br><span class="line"></span><br><span class="line">        if (PrintInitializing) &#123;</span><br><span class="line">            _objc_inform(&quot;INITIALIZE: finished +[%s initialize]&quot;,</span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这段代码有两个关键点: </p>
+<ul>
+<li>入参的父类进行了递归调用，以确保父类优先于子类初始化</li>
+<li>runtime 使用了发送消息 <code>objc_msgSend</code>的方式对 +initialize 方法进行调用。也就是说 +initialize 方法的调用与普通方法的调用是一样的，走的都是发送消息的流程。换言之，如果子类没有实现 +initialize 方法，那么继承自父类的实现会被调用；如果一个类的分类实现了 +initialize 方法，那么就会对这个类中的实现造成覆盖</li>
+</ul>
+<h4 id="使用场景"><a href="#使用场景" class="headerlink" title="使用场景"></a>使用场景</h4><ul>
+<li><p>load</p>
+<blockquote>
+<p>method swizzling</p>
+</blockquote>
+</li>
+</ul>
+<h4 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h4><ul>
+<li>两者在runtime都是递归调用，父类先于子类被调用</li>
+<li>load根据函数地址发送，(分类.子类，父类调用分开)  initialise(懒加载) meg_send发送 (子类没有实现会查找父亲的方法列表，分类覆盖所属类的实现)</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>+load</th>
+<th>+initialize</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>调用时机</td>
+<td>被添加到 runtime 时</td>
+<td>收到第一条消息前，可能永远不调用</td>
+</tr>
+<tr>
+<td>调用顺序</td>
+<td>父类-&gt;子类-&gt;分类</td>
+<td>父类-&gt;子类</td>
+</tr>
+<tr>
+<td>调用次数</td>
+<td>1次</td>
+<td>多次</td>
+</tr>
+<tr>
+<td>若自身未定义，是否沿用父类的方法？</td>
+<td>否</td>
+<td>是</td>
+</tr>
+<tr>
+<td>分类中的实现</td>
+<td>类和分类都执行</td>
+<td>覆盖类中的方法，只执行分类的实现</td>
+</tr>
+</tbody>
+</table>
+<p>参考: </p>
+<p><a href="http://blog.leichunfeng.com/blog/2015/05/02/objective-c-plus-load-vs-plus-initialize/" target="_blank" rel="external">Objective-C +load vs +initialize</a></p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2015/12/11/编译器/静态语言&& 动态语言/" rel="next" title="静态语言&& 动态语言">
+                <i class="fa fa-chevron-left"></i> 静态语言&& 动态语言
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/01/08/1runtime/runtime/" rel="prev" title="Understanding the Objective-C Runtime">
+                Understanding the Objective-C Runtime <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+          
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.gif"
+               alt="tony2009" />
+          <p class="site-author-name" itemprop="name">tony2009</p>
+          <p class="site-description motion-element" itemprop="description"></p>
+        </div>
+        <nav class="site-state motion-element">
+        
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">73</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">3</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#load-amp-amp-initialize"><span class="nav-number">1.</span> <span class="nav-text">load && initialize</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#代码"><span class="nav-number">2.</span> <span class="nav-text">代码</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#使用场景"><span class="nav-number">3.</span> <span class="nav-text">使用场景</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#总结"><span class="nav-number">4.</span> <span class="nav-text">总结</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">tony2009</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+      <!-- UY BEGIN -->
+      <script type="text/javascript" src="http://v2.uyan.cc/code/uyan.js?uid="></script>
+      <!-- UY END -->
+  
+
+
+
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+
+</body>
+</html>
