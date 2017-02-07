@@ -1,0 +1,731 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="来源: 
+
+
+写给后端程序员的http缓存介绍
+浅谈web缓存
+HTTP 缓存
+web制作、开发人员需知的Web缓存知识
+什么是http缓存
+通常所说的Web缓存指的是可以自动保存常见http请求副本的http设备。对于前端开发者来说，浏览器充当了重要角色。除此外常见的还有各种各样的代理服务器也可以做缓存。当Web请求到达缓存时，缓存从本地副本中提取这个副本内容而不需要经过服务器。
+
+为什么需要缓">
+<meta property="og:type" content="article">
+<meta property="og:title" content="autolayout 高级用法">
+<meta property="og:url" content="atony2099.github.io/2016/02/19/HTTP/HTTP缓存/index.html">
+<meta property="og:site_name" content="托尼的开发笔记">
+<meta property="og:description" content="来源: 
+
+
+写给后端程序员的http缓存介绍
+浅谈web缓存
+HTTP 缓存
+web制作、开发人员需知的Web缓存知识
+什么是http缓存
+通常所说的Web缓存指的是可以自动保存常见http请求副本的http设备。对于前端开发者来说，浏览器充当了重要角色。除此外常见的还有各种各样的代理服务器也可以做缓存。当Web请求到达缓存时，缓存从本地副本中提取这个副本内容而不需要经过服务器。
+
+为什么需要缓">
+<meta property="og:image" content="http://ohbzayk4i.bkt.clouddn.com/16-12-23/45621673-file_1482505841490_b5db.jpg">
+<meta property="og:image" content="http://ohbzayk4i.bkt.clouddn.com/16-12-23/57245387-file_1482506619851_1265.png">
+<meta property="og:image" content="http://www.plantuml.com/plantuml/svg/RL9DRzD05BpxLwp49JsOtcsfI4W88S49ReY3iTVOmlL6zYB1BK7GfZHfoeVIjB44eI54HRQX498sqFmPxzh-5zZUnevftcdtlT6RsPd5EZOW2F-y9sxtzgq7aJ-XFrw6Hw_ek1wETadlWjEWf42B0qcf5je46iPLONqT8Kr62hmkeqqEcWguXDbOiZ0dHDuyFl14Zjy0zDCPRNbqt8w-DiZXY7PziZ-apWxZZEQzgDyaZG7jk2Adgw3206HooW0trW3Me0agBw2zbgaGw76DZdTfvtjywf3pePXrJOGXiFGd6iwkQSMresY-BKko1daPcTX2HZuZxvhmULMte1rC1y7qXBW7r1ilTAI8z57fqknI28j-_oI3ZupyghQq-8VN7XlFu2D-8sy9jBqVNFJ2sI7nFjF69FpcY_cmK2w0ODgAdLeqh8T_tuOpXyLHG6sCgaoSOKDGCL71AWJJFUgqo9j-OlAbgrkj-AGP-VLLN7ahhV33w8xAtqEAhkfGuU_BkYd34YBnwwvaunmJkZkCv7-6acqBwt8bIHx1-TPgtz974FyiJvvsjcd_EFsBYwGP8-tzIZfBZ5UyoEoOBTcnDo7jZbXcShlazHV6L5AlgrnnAdOdgTuq9Fbf6klAvIL0UVloYErT-I7ITFy1">
+<meta property="og:updated_time" content="2017-02-02T13:00:48.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="autolayout 高级用法">
+<meta name="twitter:description" content="来源: 
+
+
+写给后端程序员的http缓存介绍
+浅谈web缓存
+HTTP 缓存
+web制作、开发人员需知的Web缓存知识
+什么是http缓存
+通常所说的Web缓存指的是可以自动保存常见http请求副本的http设备。对于前端开发者来说，浏览器充当了重要角色。除此外常见的还有各种各样的代理服务器也可以做缓存。当Web请求到达缓存时，缓存从本地副本中提取这个副本内容而不需要经过服务器。
+
+为什么需要缓">
+<meta name="twitter:image" content="http://ohbzayk4i.bkt.clouddn.com/16-12-23/45621673-file_1482505841490_b5db.jpg">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="atony2099.github.io/2016/02/19/HTTP/HTTP缓存/"/>
+
+
+
+
+
+  <title> autolayout 高级用法 | 托尼的开发笔记 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">托尼的开发笔记</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+    
+      <p class="site-subtitle"></p>
+    
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="atony2099.github.io/2016/02/19/HTTP/HTTP缓存/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="tony2009">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="/images/avatar.gif">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="托尼的开发笔记">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="托尼的开发笔记" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                autolayout 高级用法
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2016-02-19T17:14:18+08:00">
+                2016-02
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>来源: </p>
+<http权威指南>
+
+<p><a href="http://www.codeceo.com/article/http-cache-backend-programmer.html" target="_blank" rel="external">写给后端程序员的http缓存介绍</a></p>
+<p><a href="http://www.alloyteam.com/2016/03/discussion-on-web-caching/#prettyPhoto" target="_blank" rel="external">浅谈web缓存</a></p>
+<p><a href="https://developers.google.cn/web/fundamentals/performance/optimizing-content-efficiency/http-caching?hl=zh-cn" target="_blank" rel="external">HTTP 缓存</a></p>
+<p><a href="http://www.zhangxinxu.com/wordpress/2013/05/caching-tutorial-for-web-authors-and-webmasters/#BROWSER" target="_blank" rel="external">web制作、开发人员需知的Web缓存知识</a></p>
+<h4 id="什么是http缓存"><a href="#什么是http缓存" class="headerlink" title="什么是http缓存"></a>什么是http缓存</h4><blockquote>
+<p>通常所说的Web缓存指的是可以自动保存常见http请求副本的http设备。对于前端开发者来说，浏览器充当了重要角色。除此外常见的还有各种各样的代理服务器也可以做缓存。当Web请求到达缓存时，缓存从<code>本地副本</code>中提取这个副本内容而不需要经过服务器。</p>
+</blockquote>
+<h4 id="为什么需要缓存"><a href="#为什么需要缓存" class="headerlink" title="为什么需要缓存"></a>为什么需要缓存</h4><blockquote>
+<ul>
+<li>缓存减少了冗余的数据传输，节省流量</li>
+</ul>
+<ul>
+<li>缓存缓解了带宽瓶颈问题。不需要更多的带宽就能更快加载页面</li>
+<li>缓存缓解了瞬间拥塞，降低了对原始服务器的要求。</li>
+<li>缓存降低了距离延时， 因为从较远的地方加载页面会更慢一些。</li>
+</ul>
+</blockquote>
+<p>   总之能更快的响应用户的请求，减少用户的等待时间</p>
+<h4 id="缓存的种类："><a href="#缓存的种类：" class="headerlink" title="缓存的种类："></a>缓存的种类：</h4><ul>
+<li>私有缓存</li>
+</ul>
+<blockquote>
+<p>针对专门的用户，web浏览器有内建的私有缓存——大多数浏览器都会将常用资源缓存在你的个人电脑的磁盘和内存中。如Chrome浏览器的缓存存放位置就在：<code>Users\Your_Account\AppData\Local\Google\Chrome\User Data\Default</code>中的Cache文件夹和Media Cache文件夹。</p>
+</blockquote>
+<ul>
+<li><p>公有缓存</p>
+<blockquote>
+<p>公有缓存是特殊的共享代理服务器，被称为<code>缓存代理服务器</code>或<code>代理缓存</code>（反向代理的一种用途）。公有缓存会接受来自多个用户的访问，</p>
+</blockquote>
+</li>
+</ul>
+<p>其他分类:  </p>
+<blockquote>
+<p>数据库缓存,代理服务器缓存，CDN缓存，浏览器缓存</p>
+</blockquote>
+<h4 id="缓存的处理步骤"><a href="#缓存的处理步骤" class="headerlink" title="缓存的处理步骤:"></a>缓存的处理步骤:</h4><ol>
+<li><p><img src="http://ohbzayk4i.bkt.clouddn.com/16-12-23/45621673-file_1482505841490_b5db.jpg" alt=""></p>
+<p>​</p>
+<h4 id="cache-control-："><a href="#cache-control-：" class="headerlink" title="cache-control ："></a>cache-control ：</h4><p>定义了缓存的策略</p>
+<ul>
+<li>什么条件下可以缓存</li>
+<li>缓存的时效</li>
+</ul>
+<p>相关字段值:</p>
+<p><strong>max- age</strong>: 该指令指定从当前请求开始，允许获取的响应被重用的最长时间</p>
+<p><strong>public</strong>: 该响应可以再浏览器或者任何中继的Web代理中缓存，public是默认值，即Cache-Control:max-age=60等同于Cache-Control:public, max-age=60。</p>
+<p><strong>private</strong>：只有客户端能缓存private响应</p>
+<p><strong>no-cache</strong>:表示该响应可以缓存，在使用该缓存对象时，必须先做新鲜度验证。</p>
+<p><strong>no-store</strong>:表示该响应不能缓存，通常这些数据是一些敏感数据。</p>
+<p><em>cache-control的控制</em>: </p>
+<p><img src="http://ohbzayk4i.bkt.clouddn.com/16-12-23/57245387-file_1482506619851_1265.png" alt=""></p>
+<h4 id="缓存新鲜度检测相关字段"><a href="#缓存新鲜度检测相关字段" class="headerlink" title="缓存新鲜度检测相关字段"></a>缓存新鲜度检测相关字段</h4><p><strong>Etag</strong>:响应首部字段，为web资源定义唯一版本标识符，一旦该响应报文的数据发生改变，则Etag值也会发生改变。</p>
+<p><strong>Last-Modified</strong>：响应首部，用于通知缓存服务器或客户端其请求的资源最近一次的修改时间。该响应首部也可以用来判断请求的资源是否被更新过。</p>
+<p><strong>If-Modified-Since</strong>：条件式请求首部，如果在此请求首部指定的时间后其请求的web资源发生了更改，则服务器响应更改后的内容，否则，则响应304(not modified)。</p>
+<p><strong>If-None-Match</strong>：条件式请求首部，web服务器会为某web资源定义一个ETag首部，并将其返回给缓存服务器，缓存服务器会将该首部保存在本地。当下一次请求时，缓存服务器会携带该请求首部，原始服务器端收到后，对比该请求报文中的ETag和服务器端的本地资源的ETag是否一样，如果一样，表示缓存没有更新，则返回304(not modified)；否则，将返回服务器端最新的数据给原始服务器。</p>
+<p><em>缓存新鲜度检测流程</em>:</p>
+</li>
+</ol>
+<p>!(<a href="http://ohbzayk4i.bkt.clouddn.com/16-12-23/6877600-file_1482507439627_9d0a.png" target="_blank" rel="external">http://ohbzayk4i.bkt.clouddn.com/16-12-23/6877600-file_1482507439627_9d0a.png</a>)</p>
+<p><img src="http://www.plantuml.com/plantuml/svg/RL9DRzD05BpxLwp49JsOtcsfI4W88S49ReY3iTVOmlL6zYB1BK7GfZHfoeVIjB44eI54HRQX498sqFmPxzh-5zZUnevftcdtlT6RsPd5EZOW2F-y9sxtzgq7aJ-XFrw6Hw_ek1wETadlWjEWf42B0qcf5je46iPLONqT8Kr62hmkeqqEcWguXDbOiZ0dHDuyFl14Zjy0zDCPRNbqt8w-DiZXY7PziZ-apWxZZEQzgDyaZG7jk2Adgw3206HooW0trW3Me0agBw2zbgaGw76DZdTfvtjywf3pePXrJOGXiFGd6iwkQSMresY-BKko1daPcTX2HZuZxvhmULMte1rC1y7qXBW7r1ilTAI8z57fqknI28j-_oI3ZupyghQq-8VN7XlFu2D-8sy9jBqVNFJ2sI7nFjF69FpcY_cmK2w0ODgAdLeqh8T_tuOpXyLHG6sCgaoSOKDGCL71AWJJFUgqo9j-OlAbgrkj-AGP-VLLN7ahhV33w8xAtqEAhkfGuU_BkYd34YBnwwvaunmJkZkCv7-6acqBwt8bIHx1-TPgtz974FyiJvvsjcd_EFsBYwGP8-tzIZfBZ5UyoEoOBTcnDo7jZbXcShlazHV6L5AlgrnnAdOdgTuq9Fbf6klAvIL0UVloYErT-I7ITFy1" alt=""></p>
+</http权威指南>
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/02/11/性能优化/UIView的绘制/" rel="next" title="UIView的绘制">
+                <i class="fa fa-chevron-left"></i> UIView的绘制
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/03/02/js-oc交互/" rel="prev" title="js&&oc交互">
+                js&&oc交互 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+          
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.gif"
+               alt="tony2009" />
+          <p class="site-author-name" itemprop="name">tony2009</p>
+          <p class="site-description motion-element" itemprop="description"></p>
+        </div>
+        <nav class="site-state motion-element">
+        
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">83</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">3</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#什么是http缓存"><span class="nav-number">1.</span> <span class="nav-text">什么是http缓存</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#为什么需要缓存"><span class="nav-number">2.</span> <span class="nav-text">为什么需要缓存</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#缓存的种类："><span class="nav-number">3.</span> <span class="nav-text">缓存的种类：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#缓存的处理步骤"><span class="nav-number">4.</span> <span class="nav-text">缓存的处理步骤:</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#cache-control-："><span class="nav-number">5.</span> <span class="nav-text">cache-control ：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#缓存新鲜度检测相关字段"><span class="nav-number">6.</span> <span class="nav-text">缓存新鲜度检测相关字段</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">tony2009</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+      <!-- UY BEGIN -->
+      <script type="text/javascript" src="http://v2.uyan.cc/code/uyan.js?uid="></script>
+      <!-- UY END -->
+  
+
+
+
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+
+</body>
+</html>

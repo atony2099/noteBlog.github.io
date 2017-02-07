@@ -1,0 +1,696 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="BASEApps that communicate with a server via HTTP usually have two particular requirements:
+
+don’t make the user wait for data whenever possible, 
+ be useful when there is no internet connection
+
+iOS">
+<meta property="og:type" content="article">
+<meta property="og:title" content="nonatomic VS atomic">
+<meta property="og:url" content="atony2099.github.io/2016/02/08/网络请求/index.html">
+<meta property="og:site_name" content="托尼的开发笔记">
+<meta property="og:description" content="BASEApps that communicate with a server via HTTP usually have two particular requirements:
+
+don’t make the user wait for data whenever possible, 
+ be useful when there is no internet connection
+
+iOS">
+<meta property="og:updated_time" content="2016-10-05T07:44:35.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="nonatomic VS atomic">
+<meta name="twitter:description" content="BASEApps that communicate with a server via HTTP usually have two particular requirements:
+
+don’t make the user wait for data whenever possible, 
+ be useful when there is no internet connection
+
+iOS">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="atony2099.github.io/2016/02/08/网络请求/"/>
+
+
+
+
+
+  <title> nonatomic VS atomic | 托尼的开发笔记 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">托尼的开发笔记</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+    
+      <p class="site-subtitle"></p>
+    
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="atony2099.github.io/2016/02/08/网络请求/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="tony2009">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="/images/avatar.gif">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="托尼的开发笔记">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="托尼的开发笔记" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                nonatomic VS atomic
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2016-02-08T01:26:58+08:00">
+                2016-02
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h4 id="BASE"><a href="#BASE" class="headerlink" title="BASE"></a>BASE</h4><p>Apps that communicate with a server via HTTP usually have two particular requirements:</p>
+<blockquote>
+<p>don’t make the user wait for data whenever possible, </p>
+<p> be useful when there is no internet connection</p>
+</blockquote>
+<p>iOS  has the APIs we need to implement response caching and offline mode.</p>
+<p>Very little code is required, even less if your server plays nice with cache headers and you’re targeting iOS 7 and above.</p>
+<p>The shared <code>NSURLCache</code> gives us much out of the box</p>
+<h4 id="offlineMode"><a href="#offlineMode" class="headerlink" title="offlineMode"></a>offlineMode</h4><p>In most cases, showing old data is better that showing no data (exceptions being weather and stock, for example). </p>
+<p>If we want our offline mode to always return the cached data, then our requests must have a different cache policy, one that uses cache data regardless of its expiration date. Both <code>NSURLRequestReturnCacheDataDontLoad</code> and <code>NSURLRequestReturnCacheDataElseLoad</code> fit this criteria. In particular, <code>NSURLRequestReturnCacheDataElseLoad</code>has the advantage of trying the network if no cached response is found</p>
+<ol>
+<li>what is cache-Control </li>
+</ol>
+<h4 id="Http-Request"><a href="#Http-Request" class="headerlink" title="Http  Request"></a>Http  Request</h4><ol>
+<li><p>http  request</p>
+<ul>
+<li>请求行</li>
+<li>请求头: </li>
+<li>请求体</li>
+</ul>
+<blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">&gt; POST /index.php HTTP/1.1</span><br><span class="line">&gt; Host: localhost</span><br><span class="line">&gt; User-Agent: Mozilla/5.0 (Windows NT 5.1; rv:10.0.2) Gecko/20100101 Firefox/10.0.2</span><br><span class="line">&gt; Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8</span><br><span class="line">&gt; Accept-Language: zh-cn,zh;q=0.5</span><br><span class="line">&gt; Accept-Encoding: gzip, deflate</span><br><span class="line">&gt; Connection: keep-alive</span><br><span class="line">&gt; Referer: http://localhost/</span><br><span class="line">&gt; Content-Length：25</span><br><span class="line">&gt; Content-Type：application/x-www-form-urlencoded</span><br><span class="line">&gt;</span><br><span class="line">&gt; username=aa&amp;password=1234</span><br><span class="line">&gt;</span><br></pre></td></tr></table></figure>
+</blockquote>
+</li>
+<li><p>http response</p>
+<ul>
+<li>响应行</li>
+<li>响应头</li>
+<li>响应体</li>
+</ul>
+</li>
+</ol>
+<blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">&gt; HTTP/1.1 200 OK</span><br><span class="line">&gt; Date: Sun, 17 Mar 2013 08:12:54 GMT</span><br><span class="line">&gt; Server: Apache/2.2.8 (Win32) PHP/5.2.5</span><br><span class="line">&gt; X-Powered-By: PHP/5.2.5</span><br><span class="line">&gt; Set-Cookie: PHPSESSID=c0huq7pdkmm5gg6osoe3mgjmm3; path=/</span><br><span class="line">&gt; Expires: Thu, 19 Nov 1981 08:52:00 GMT</span><br><span class="line">&gt; Cache-Control: no-store, no-cache, must-revalidate, post-check=0, pre-check=0</span><br><span class="line">&gt; Pragma: no-cache</span><br><span class="line">&gt; Content-Length: 4393</span><br><span class="line">&gt; Keep-Alive: timeout=5, max=100</span><br><span class="line">&gt; Connection: Keep-Alive</span><br><span class="line">&gt; Content-Type: text/html; charset=utf-8</span><br><span class="line">&gt;</span><br><span class="line">&gt;</span><br><span class="line">&gt; &lt;html&gt;</span><br><span class="line">&gt; &lt;head&gt;</span><br><span class="line">&gt; &lt;title&gt;HTTP响应示例&lt;title&gt;</span><br><span class="line">&gt; &lt;/head&gt;</span><br><span class="line">&gt; &lt;body&gt;</span><br><span class="line">&gt; Hello HTTP!</span><br><span class="line">&gt; &lt;/body&gt;</span><br><span class="line">&gt; &lt;/html&gt;</span><br><span class="line">&gt;</span><br></pre></td></tr></table></figure>
+</blockquote>
+<p>http 的缓存策略  Cache-Control</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Cache-Control: <span class="keyword">private</span>/<span class="keyword">public</span> Public 响应会被缓存，并且在多用户间共享。 Private 响应只能够作为私有的缓存，不能再用户间共享。</span><br><span class="line">Cache-Control: no-cache：不进行缓存 </span><br><span class="line">Cache-Control: max-age=x：缓存时间 以秒为单位 </span><br><span class="line">Cache-Control: must-revalidate：如果页面是过期的 则去服务器进行获取。</span><br></pre></td></tr></table></figure>
+<p>http1.0 vs http 1.0  response header</p>
+<p>Pragma : no-cache 表示防止客户端缓存，需要强制从服务器获取最新的数据；<br>Expires: HTTP1.0 响应头，本地副本缓存过期时间，如果客服端发现缓存文件没有过期则不发送请求，HTTP的日期必须是格林威治时间（GMT）,如”Expires:Wed,14 Mar 2015 14:30:32 GMT” </p>
+<p>Cache-Control </p>
+<h4 id="how-cache-control-work"><a href="#how-cache-control-work" class="headerlink" title="how cache-control work"></a>how cache-control work</h4><p>An <a href="http://nshipster.com/nsurlcache/" target="_blank" rel="external"><code>NSURLCache</code></a> <code>sharedCache</code> is enabled by default and will be used by any <a href="https://developer.apple.com/library/mac/documentation/cocoa/reference/foundation/classes/NSURLConnection_Class/Reference/Reference.html" target="_blank" rel="external"><code>NSURLConnection</code></a>objects fetching URL contents for you.</p>
+<p>Unfortunately, it has a tendency to hog memory and does not write to disk in its default configuration. To tame the beast and potentially add some persistance, you can simply declare a shared <a href="http://nshipster.com/nsurlcache/" target="_blank" rel="external"><code>NSURLCache</code></a> in your app delegate like so:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">NSURLCache *sharedCache = [[NSURLCache alloc] initWithMemoryCapacity:2 * 1024 * 1024</span><br><span class="line">                                              diskCapacity:100 * 1024 * 1024</span><br><span class="line">                                              diskPath:nil];</span><br><span class="line">[NSURLCache setSharedURLCache:sharedCache];</span><br></pre></td></tr></table></figure>
+<p><a href="http://blog.originate.com/blog/2014/02/20/afimagecache-vs-nsurlcache/" target="_blank" rel="external">How Does Caching Work in AFNetworking? : AFImageCache &amp; NSUrlCache Explained</a></p>
+<p><a href="http://www.hpique.com/2014/03/how-to-cache-server-responses-in-ios-apps/" target="_blank" rel="external">How to cache server responses in iOS apps</a></p>
+<p><a href="https://cnbin.github.io/blog/2016/02/20/http-qing-qiu-,-xiang-ying-,-huan-cun/" target="_blank" rel="external">HTTP-请求、响应、缓存</a></p>
+<p><a href="http://tools.jb51.net/table/http_request_method" target="_blank" rel="external">HTTP请求方法对照表</a><br><a href="http://www.cocoachina.com/ios/20160525/16438.html" target="_blank" rel="external">HTTP in iOS你看我就够</a></p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/01/07/copy/" rel="next" title="copy探究">
+                <i class="fa fa-chevron-left"></i> copy探究
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/02/08/面试准备/" rel="prev" title="nonatomic VS atomic">
+                nonatomic VS atomic <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+          
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.gif"
+               alt="tony2009" />
+          <p class="site-author-name" itemprop="name">tony2009</p>
+          <p class="site-description motion-element" itemprop="description"></p>
+        </div>
+        <nav class="site-state motion-element">
+        
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">83</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">3</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#BASE"><span class="nav-number">1.</span> <span class="nav-text">BASE</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#offlineMode"><span class="nav-number">2.</span> <span class="nav-text">offlineMode</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Http-Request"><span class="nav-number">3.</span> <span class="nav-text">Http  Request</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#how-cache-control-work"><span class="nav-number">4.</span> <span class="nav-text">how cache-control work</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">tony2009</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+      <!-- UY BEGIN -->
+      <script type="text/javascript" src="http://v2.uyan.cc/code/uyan.js?uid="></script>
+      <!-- UY END -->
+  
+
+
+
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+
+</body>
+</html>

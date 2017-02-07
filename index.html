@@ -1,1169 +1,1904 @@
-<!DOCTYPE HTML>
-<html>
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
 <head>
-  <meta charset="utf-8">
-  
-  <title>托尼的夏天</title>
-  <meta name="author" content="tony2009">
-  
-  
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
 
   
-  <meta property="og:site_name" content="托尼的夏天"/>
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
 
   
-    <meta property="og:image" content="undefined"/>
+  
+  
   
 
-  <link href="/favicon.ico" rel="icon">
-  <link rel="alternate" href="/atom.xml" title="托尼的夏天" type="application/atom+xml">
-  <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap.min.css">
-<link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css">
-<link rel="stylesheet" href="/css/style.css">
-  <script src="http://code.jquery.com/jquery-2.1.1.min.js"></script>
-  <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
   
-<script type="text/javascript">
-  var _gaq = _gaq || [];
-  _gaq.push(['_setAccount', 'UA-368771XX-X']);
-  _gaq.push(['_trackPageview']);
+    
+    
+  
 
-  (function() {
-    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-  })();
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description">
+<meta property="og:type" content="website">
+<meta property="og:title" content="托尼的开发笔记">
+<meta property="og:url" content="atony2099.github.io/index.html">
+<meta property="og:site_name" content="托尼的开发笔记">
+<meta property="og:description">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="托尼的开发笔记">
+<meta name="twitter:description">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
 </script>
 
+
+
+  <link rel="canonical" href="atony2099.github.io/"/>
+
+
+
+
+
+  <title> 托尼的开发笔记 </title>
 </head>
 
-<body>
-  <header id="header" class='normal_mode'>
-    <nav id="main-nav">
-  <ul class='container'>
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+  
     
-      <li><a href="/">Home</a></li>
+  
+
+  <div class="container one-collumn sidebar-position-left 
+   page-home 
+ ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">托尼的开发笔记</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
     
-      <li><a href="/archives">Archives</a></li>
+      <p class="site-subtitle"></p>
     
-  </ul>
-  <div class="clearfix"></div>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
 </nav>
-  </header>
-  <div id="content" class="container">
-    <div id="cover">
-	<div id="profile" alt="http://ww1.sinaimg.cn/large/6cea169fjw1edgyzma1xcj21kw16ohba.jpg">
-		<a href="/">
-			<div class="logo">
-				<img src="/logo.png" alt="Profile Picture">
-			</div>
-			<div id="title">托尼的夏天</div>
-		</a>
-
-		
-		 <ul class="my-socials">
-  
-  <li>
-  	<a href="https://github.com/your_id" class="github" target="_blank">
-  		<i class="fa fa-github"></i>
-  	</a>
-  </li>
-  
-  <li>
-  	<a href="http://weibo.com/your_id" class="weibo" target="_blank">
-  		<i class="fa fa-weibo"></i>
-  	</a>
-  </li>
-  
- 
-</ul>
-	</div>
-</div>
-
-
-  <article class="post">
-  
-    <div class="gallery">
-  <div class="photoset">
-    
-      <img src="">
-    
-  </div>
-  <div class="control">
-    <div class="prev"></div>
-    <div class="next"></div>
-  </div>
-</div>
-  
-  <div class="post-content">
-    <header>
-      
-      <time datetime="2016-07-29T11:48:20.000Z"><a href="/2016/07/29/可选/">Fri, Jul 29 2016, 7:48:20 pm</a></time>
-
-  
-    <h1 class="title"><a href="/2016/07/29/可选/">Swift中的optional</a></h1>
-  
 
 
 
-<div class="clear"></div>
-      
+ </div>
     </header>
-    <div class="entry">
-      
-        <p>当变量存在值有可能缺失的情况下使用可选类型，官方文档如下定义：</p>
-<ul>
-<li><em>There is a value ,and it equals x</em>,值存在且等于<em>x</em>.</li>
-<li><em>There isn’t a value at all</em>,值不存在!</li>
-</ul>
-<h4 id="optional"><a href="#optional" class="headerlink" title="optional"></a>optional</h4><p>Optional其实是个<code>enum</code>，里面有<code>None</code>和<code>Some</code>两种类型。其实所谓的nil就是<code>Optional.None</code>, 非nil就是<code>Optional.Some</code>, 然后会通过<code>Some(T)</code>包装（wrap）原始值，这也是为什么在使用Optional的时候要拆包（从enum里取出来原始值）的原因, 也是PlayGround会把Optional值显示为类似<code>{Some &quot;hello world&quot;}</code>的原因，这里是enum Optional的定义：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">enum Optional&lt;T&gt; : LogicValue, Reflectable &#123;</span><br><span class="line">    case None</span><br><span class="line">    case Some(T)</span><br><span class="line">    init()</span><br><span class="line">    init(_ some: T)</span><br><span class="line">    /// Allow use in a Boolean context.</span><br><span class="line">    func getLogicValue() -&gt; Bool</span><br><span class="line"></span><br><span class="line">    /// Haskell&apos;s fmap, which was mis-named</span><br><span class="line">    func map&lt;U&gt;(f: (T) -&gt; U) -&gt; U?</span><br><span class="line">    func getMirror() -&gt; Mirror</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h5 id="拆包"><a href="#拆包" class="headerlink" title="拆包"></a>拆包</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">// 拆包方式一</span><br><span class="line">if possibleNumber != nil &#123;</span><br><span class="line">    print(&quot;hello\(possibleNumber!)&quot;) // 使用前需!强制解析</span><br><span class="line">&#125; else &#123;</span><br><span class="line">    </span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">// 使用可选绑定（optional binding）来判断可选类型是否包含值，如果包含就把值赋给一个临时常量或者变量。</span><br><span class="line">if let number = possibleNumber &#123;</span><br><span class="line">   print(&quot;hello\(number)&quot;)</span><br><span class="line">&#125; else &#123;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">// 拆包方式三</span><br><span class="line">/* guard充当了警卫员一职，保证条件满足情况下，才会让你通过，否则只能else让你返回了！切记else中一定需要有返回  的语句，比如return、continue、break、throw这种提早退出的关键字！！*/</span><br><span class="line">func unWrapped() &#123;</span><br><span class="line">    guard let number = possibleNumber else&#123;</span><br><span class="line">        return</span><br><span class="line">    &#125;</span><br><span class="line">    print(&quot;hello\(number) &quot;)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p><a href="http://letsswift.com/2014/06/swift-questionmark-exclamatorymark/" target="_blank" rel="external">Swift中的问号?和感叹号!</a></p>
-<p> <a href="http://blog.csdn.net/zhangao0086/article/details/386402099" target="_blank" rel="external">Swift 可选值(Optional Values)介绍</a></p>
 
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+  <section id="posts" class="posts-expand">
+    
       
-    </div>
-    <footer>
-      
-        <div class="alignleft">
-            <a href="/2016/07/29/可选/#more" class="more-link"><i class="fa fa-chevron-right"></i>Read More</a>
-        </div>
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="atony2099.github.io/2016/12/19/HTTP/TCP:IP协议/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="tony2009">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="/images/avatar.gif">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="托尼的开发笔记">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="托尼的开发笔记" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
         
         
-          <div class="alignright"> 
-            <a href="atony2099.github.io/2016/07/29/可选/#comment" class="comment-link">
-              <i class="fa fa-comments"></i><span class="ds-thread-count" data-thread-key="/2016/07/29/可选/">&nbsp;
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2016/12/19/HTTP/TCP:IP协议/" itemprop="url">
+                  TCP/IP
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
               </span>
-            </a>
-          </div>
-        
-      
-      <div class="clearfix"></div>
-    </footer>
-  </div>
-</article>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2016-12-19T17:14:18+08:00">
+                2016-12
+              </time>
+            
 
+            
 
+            
+          </span>
 
+          
 
-  <article class="post">
-  
-    <div class="gallery">
-  <div class="photoset">
-    
-      <img src="">
-    
-  </div>
-  <div class="control">
-    <div class="prev"></div>
-    <div class="next"></div>
-  </div>
-</div>
-  
-  <div class="post-content">
-    <header>
-      
-      <time datetime="2016-07-28T11:05:25.000Z"><a href="/2016/07/28/reactive-cocoa学习笔记/">Thu, Jul 28 2016, 7:05:25 pm</a></time>
+          
+            
+          
 
-  
-    <h1 class="title"><a href="/2016/07/28/reactive-cocoa学习笔记/">reactive cocoa学习笔记</a></h1>
-  
+          
 
+          
+          
 
+          
 
-<div class="clear"></div>
-      
-    </header>
-    <div class="entry">
-      
-        <h4 id="响应式编程？"><a href="#响应式编程？" class="headerlink" title="响应式编程？"></a>响应式编程？</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">int a = 3;</span><br><span class="line">int b = 4;</span><br><span class="line">int c = a + b;</span><br><span class="line">NSLog(@&quot;c is %d&quot;, c); // =&gt; 12</span><br><span class="line">a = 5;</span><br><span class="line">b = 7;</span><br><span class="line">NSLog(@&quot;c is %d&quot;, c); // 仍然是12</span><br></pre></td></tr></table></figure>
-<p>上面是一段命令式编程的代码， c = a + b，只是一个瞬时的过程，随后a的变化和c没有关系了。</p>
-<p>而响应编程则相反</p>
-<blockquote>
-<p>响应式编程构是对象关系的描述</p>
-</blockquote>
-<p>响应式编程实现的思路如下: </p>
-<blockquote>
-<p>你可以用包括 Click 和 Hover 事件在内的任何东西创建 Data stream。Stream 廉价且常见，任何东西都可以是一个 Stream：变量、用户输入、属性、Cache、数据结构等等。举个例子，想像一下你的 Twitter feed 就像是 Click events 那样的 Data stream，你可以监听它并相应的作出响应。</p>
-<p>在这个基础上，你还有令人惊艳的函数去组合、创建、过滤这些 Streams</p>
-</blockquote>
-<p><a href="http://wiki.jikexueyuan.com/project/android-weekly/issue-145/introduction-to-RP.html" target="_blank" rel="external">响应式编程（Reactive Programming）介绍</a></p>
+          
 
-      
-    </div>
-    <footer>
-      
-        <div class="alignleft">
-            <a href="/2016/07/28/reactive-cocoa学习笔记/#more" class="more-link"><i class="fa fa-chevron-right"></i>Read More</a>
         </div>
-        
-        
-          <div class="alignright"> 
-            <a href="atony2099.github.io/2016/07/28/reactive-cocoa学习笔记/#comment" class="comment-link">
-              <i class="fa fa-comments"></i><span class="ds-thread-count" data-thread-key="/2016/07/28/reactive-cocoa学习笔记/">&nbsp;
-              </span>
-            </a>
-          </div>
-        
-      
-      <div class="clearfix"></div>
-    </footer>
-  </div>
-</article>
-
-
-
-
-  <article class="post">
-  
-    <div class="gallery">
-  <div class="photoset">
+      </header>
     
-      <img src="">
-    
-  </div>
-  <div class="control">
-    <div class="prev"></div>
-    <div class="next"></div>
-  </div>
-</div>
-  
-  <div class="post-content">
-    <header>
+
+
+    <div class="post-body" itemprop="articleBody">
+
       
-      <time datetime="2016-07-03T07:13:11.000Z"><a href="/2016/07/03/dispatch-group/">Sun, Jul 3 2016, 3:13:11 pm</a></time>
-
-  
-    <h1 class="title"><a href="/2016/07/03/dispatch-group/">dispatch_group管理任务依赖</a></h1>
-  
-
-
-
-<div class="clear"></div>
       
-    </header>
-    <div class="entry">
+
       
-        <h4 id="场景"><a href="#场景" class="headerlink" title="场景"></a>场景</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">NSArray *urlStrings = @[ @&quot;http://octree.me&quot;, @&quot;http://google.com&quot;, @&quot;http://github.com&quot; ];</span><br><span class="line"></span><br><span class="line">for(NSString urlString in urlStrings) &#123;  </span><br><span class="line">    AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];</span><br><span class="line">    [manager GET:urlString parameters:nil success:^(AFHTTPRequestOperation *operation, id responseObject) &#123;  </span><br><span class="line">        //do sth </span><br><span class="line">        </span><br><span class="line">        </span><br><span class="line">     &#125; failure:^(AFHTTPRequestOperation *operation, NSError *error) &#123;</span><br><span class="line">        NSLog(@&quot;Error: %@&quot;, error);</span><br><span class="line">&#125;];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>同时发起网络请求，但是我们需要在三个网络请求都成功获取数据后才执行do sth，显然上面的写法不符合要求，</p>
-<h4 id="dispatch-group"><a href="#dispatch-group" class="headerlink" title="dispatch_group"></a>dispatch_group</h4><blockquote>
-<p>Grouping blocks allows for aggregate synchronization. Your application can submit multiple blocks and track when they all complete, even though they might run on different queues. This behavior can be helpful when progress can’t be made until all of the specified tasks are complete.</p>
+        
+          
+            <h4 id="TCP-IP协议族"><a href="#TCP-IP协议族" class="headerlink" title="TCP/IP协议族"></a>TCP/IP协议族</h4><blockquote>
+<p>计算机与网络设备要相互通信，双方就必须基于相同的方法。比如，如何探测到通信目标、由哪一边先发起通信、使用哪种语言进行通信、怎样结束通信等规则都需要事先确定。不同的硬件、操作系统之间的通信，所有的这一切都需要一种规则。而我们就把这种规则称为协议（protocol）。</p>
 </blockquote>
-<p>dispatch_group提供了多个block同步的机制，可以再多个不同bloc都执行完后再去执行指定的任务</p>
-<p>相关函数: </p>
-<p>dispatch_group_enter:</p>
+<p>我们把互联网相关的协议的集合称作TCP/IP协议。</p>
 <blockquote>
-<p> Explicitly indicates that a block has entered the group.Calling this function increments the current count of outstanding tasks in the group</p>
+<p> 批阅:TCP/IP协议就是为了互联网设备之间相互通信，规定的一系列的集合的总称。</p>
 </blockquote>
-<p>dispatch_group_leave : </p>
+<h4 id="TCP-IP的分层"><a href="#TCP-IP的分层" class="headerlink" title="TCP/IP的分层"></a>TCP/IP的分层</h4><blockquote>
+<p>批阅: 为什么需要分层？</p>
+<p>分层是为了更好的解耦，各个部分独立设计，互不影响</p>
+</blockquote>
+<p><img src="http://ohbzayk4i.bkt.clouddn.com/17-2-3/26758168-file_1486133192003_15c58.png" alt=""></p>
 <blockquote>
-<p>Explicitly indicates that a block in the group has completed.Calling this function decrements the current count of outstanding tasks in the group</p>
+<p>OSI只是一个概念模型，TCP/IP是现实中我们在主要使用的网络协议。可以理解为tcp/ip是在osi的基础上实现了的网络协议</p>
+<p>TCP/IP对数据链路层和物理层未做定义，所以有时候会是四层或者五层。</p>
 </blockquote>
-<p>dispatch_group_notify</p>
+<p><strong>一个常见的请求过程</strong></p>
+<p><img src="http://ohbzayk4i.bkt.clouddn.com/17-2-3/31702148-file_1486137043794_780f.png" alt=""></p>
+<p><img src="http://ohbzayk4i.bkt.clouddn.com/17-2-3/67401161-file_1486137043953_2a8b.png" alt=""></p>
+<h5 id="分层详情"><a href="#分层详情" class="headerlink" title="分层详情"></a>分层详情</h5><p>参见 <a href="http://www.ruanyifeng.com/blog/2012/05/internet_protocol_suite_part_i.html" target="_blank" rel="external">互联网协议入门（一）</a></p>
+<p><img src="http://image.beekka.com/blog/201206/bg2012061106.png" alt=""></p>
 <blockquote>
-<p> Schedules a block object to be submitted to a queue when a group of previously submitted block objects have completed.</p>
+<p>物理层: 规定了通信设备的规格</p>
+<p>链路层: 规定了电信号的分组封装方式。首部包含目标设备mac地址(网卡的唯一编号)</p>
+<p>IP层: 在链路层的基础上规定了ip地址，从而能在不同子网络之间进行传输</p>
+<p>传输层:建立端口到端口通信，从而能在不同的应用程序之间进行通信</p>
+<p>应用层: 如何对原始数据进行包装。</p>
 </blockquote>
-<h4 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h4><pre><code>NSArray *urlStrings = @[ @&quot;http://octree.me&quot;, @&quot;http://google.com&quot;, @&quot;http://github.com&quot; ];
-
-dispatch_group_t requestGroup = dispatch_group_create(); 
-for(NSString urlString in urlStrings) {
-  dispatch_group_enter(requestGroup);   //当前的任务加入group
-  AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
-  [manager GET:urlString parameters:nil success:^(AFHTTPRequestOperation *operation, id responseObject) {
-      NSLog(@&quot;Success&quot;);
-      dispatch_group_leave(requestGroup);
-   } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-      NSLog(@&quot;Error: %@&quot;, error);
-      dispatch_group_leave(requestGroup); // 当前的任务已经执行完
-  }];
-}
-
-dispatch_group_notify(requestGroup, dispatch_get_main_queue(), ^{ // 上面的
-    //doSomething
-});
-</code></pre><p>参考: </p>
-<p><a href="http://outofmemory.cn/objective-c/ios-async-task-monitor" target="_blank" rel="external">iOS 多个异步任务的监控</a></p>
-
-      
-    </div>
-    <footer>
-      
-        <div class="alignleft">
-            <a href="/2016/07/03/dispatch-group/#more" class="more-link"><i class="fa fa-chevron-right"></i>Read More</a>
-        </div>
-        
-        
-          <div class="alignright"> 
-            <a href="atony2099.github.io/2016/07/03/dispatch-group/#comment" class="comment-link">
-              <i class="fa fa-comments"></i><span class="ds-thread-count" data-thread-key="/2016/07/03/dispatch-group/">&nbsp;
-              </span>
-            </a>
-          </div>
-        
-      
-      <div class="clearfix"></div>
-    </footer>
-  </div>
-</article>
-
-
-
-
-  <article class="post">
-  
-    <div class="gallery">
-  <div class="photoset">
-    
-      <img src="">
-    
-  </div>
-  <div class="control">
-    <div class="prev"></div>
-    <div class="next"></div>
-  </div>
-</div>
-  
-  <div class="post-content">
-    <header>
-      
-      <time datetime="2016-04-30T16:22:12.000Z"><a href="/2016/05/01/swift-protocol/">Sun, May 1 2016, 12:22:12 am</a></time>
-
-  
-    <h1 class="title"><a href="/2016/05/01/swift-protocol/">swift protocol</a></h1>
-  
-
-
-
-<div class="clear"></div>
-      
-    </header>
-    <div class="entry">
-      
-        
-      
-    </div>
-    <footer>
-      
-        <div class="alignleft">
-            <a href="/2016/05/01/swift-protocol/#more" class="more-link"><i class="fa fa-chevron-right"></i>Read More</a>
-        </div>
-        
-        
-          <div class="alignright"> 
-            <a href="atony2099.github.io/2016/05/01/swift-protocol/#comment" class="comment-link">
-              <i class="fa fa-comments"></i><span class="ds-thread-count" data-thread-key="/2016/05/01/swift-protocol/">&nbsp;
-              </span>
-            </a>
-          </div>
-        
-      
-      <div class="clearfix"></div>
-    </footer>
-  </div>
-</article>
-
-
-
-
-  <article class="post">
-  
-    <div class="gallery">
-  <div class="photoset">
-    
-      <img src="">
-    
-  </div>
-  <div class="control">
-    <div class="prev"></div>
-    <div class="next"></div>
-  </div>
-</div>
-  
-  <div class="post-content">
-    <header>
-      
-      <time datetime="2016-04-25T12:51:37.000Z"><a href="/2016/04/25/weak-block/">Mon, Apr 25 2016, 8:51:37 pm</a></time>
-
-  
-    <h1 class="title"><a href="/2016/04/25/weak-block/">__weak &amp;&amp; _strong</a></h1>
-  
-
-
-
-<div class="clear"></div>
-      
-    </header>
-    <div class="entry">
-      
-        <h4 id="retain-count"><a href="#retain-count" class="headerlink" title="retain count"></a>retain count</h4><p>在ARC环境下的，每个block在创建时，编译器会对里面用到的所有对象自动增加一个reference count,如下 Block 会 retain ‘self’，而 ‘self‘ 又 retain 了 Block。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">__weak __typeof__(self) weakSelf = self;</span><br><span class="line"> dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^&#123;</span><br><span class="line">    [weakSelf doSomething];</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
-<p>weakSelf是为了block不持有self，避免循环引用，而再声明一个strongSelf是因为一旦进入block执行，就不允许self在这个执行过程中释放。block执行完后这个strongSelf会自动释放，没有循环引用问题。</p>
-<h4 id="strong"><a href="#strong" class="headerlink" title="__strong"></a>__strong</h4><p><strong>weak </strong>typeof__(self) weakSelf = self;<br> dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{<br>​    [weakSelf doSomething];</p>
-<p>   [weakSelf doSomtThing];</p>
-<p>});</p>
-<p>上面的代码可能出现一种情况，，在调用doSomething的时候self还存在，在doMoreThing的时候self就变成nil了，所以为了避免这种情况发生，我们会重新strongify self。一般情况下，我们都建议这么做，这没什么风险，除非你不关心self在执行过程中变成nil，或者你确定它不会变成nil（比方说所以block都在main thread执行）。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">weak __typeof(self) weakSelf = self;    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^&#123;</span><br><span class="line">    _strong _typeof(self) strongSelf = weakSelf;</span><br><span class="line">    [strongSelf doSomething];</span><br><span class="line">    [strongSelf doOtherThing];</span><br><span class="line"></span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
-<h4 id="weak-strong-dance"><a href="#weak-strong-dance" class="headerlink" title="weak/strong dance"></a>weak/strong dance</h4><p>用过 <a href="https://github.com/ReactiveCocoa/ReactiveCocoa" target="_blank" rel="external">ReactiveCocoa</a>（这里讨论的是 ObjC 版本，下面简称 ReactiveCocoa 为 RAC）的朋友肯定对下面的代码非常熟悉</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">@weakify(self);</span><br><span class="line">[self.collectionView hh_addGifRefreshHeaderWithHandler:^&#123;</span><br><span class="line">    @strongify(self);</span><br><span class="line">    [self fetchLivesRefresh:YES];</span><br><span class="line">&#125;];</span><br></pre></td></tr></table></figure>
-<p>@weakify @strongify 是ReactiveCocoa宏定义，相当于下面代码</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">__weak __typeof(self) self_weak_ = (self);</span><br><span class="line">[self.collectionView hh_addGifRefreshHeaderWithHandler:^&#123;</span><br><span class="line">    _Pragma(&quot;clang diagnostic push&quot;)</span><br><span class="line">    _Pragma(&quot;clang diagnostic ignored \&quot;-Wshadow\&quot;&quot;)</span><br><span class="line">    __strong __typeof__(self) self = self_weak_;</span><br><span class="line">    _Pragma(&quot;clang diagnostic pop&quot;)</span><br><span class="line">    [self fetchLivesRefresh:YES];</span><br><span class="line">&#125;];</span><br></pre></td></tr></table></figure>
-<p><a href="http://blog.lessfun.com/blog/2014/11/22/when-should-use-weakself-and-strongself-in-objc-block/" target="_blank" rel="external">到底什么时候才需要在ObjC的Block中使用weakSelf/strongSelf</a></p>
-<p><a href="http://sherlockyao.com/blog/2015/08/08/weakself-and-strongself-in-blocks/" target="_blank" rel="external">使用Block时何时需要WeakSelf和StrongSelf?</a></p>
-<p><a href="http://devliu.com/2016/04/14/%E7%A5%9E%E7%A7%98%E7%9A%84-weakify%E5%92%8C-strongify/" target="_blank" rel="external">神秘的 @weakify 和 @strongify</a></p>
-
-      
-    </div>
-    <footer>
-      
-        <div class="alignleft">
-            <a href="/2016/04/25/weak-block/#more" class="more-link"><i class="fa fa-chevron-right"></i>Read More</a>
-        </div>
-        
-        
-          <div class="alignright"> 
-            <a href="atony2099.github.io/2016/04/25/weak-block/#comment" class="comment-link">
-              <i class="fa fa-comments"></i><span class="ds-thread-count" data-thread-key="/2016/04/25/weak-block/">&nbsp;
-              </span>
-            </a>
-          </div>
-        
-      
-      <div class="clearfix"></div>
-    </footer>
-  </div>
-</article>
-
-
-
-
-  <article class="post">
-  
-    <div class="gallery">
-  <div class="photoset">
-    
-      <img src="">
-    
-  </div>
-  <div class="control">
-    <div class="prev"></div>
-    <div class="next"></div>
-  </div>
-</div>
-  
-  <div class="post-content">
-    <header>
-      
-      <time datetime="2016-04-22T06:24:17.000Z"><a href="/2016/04/22/layer/">Fri, Apr 22 2016, 2:24:17 pm</a></time>
-
-  
-    <h1 class="title"><a href="/2016/04/22/layer/">CAReplicatorLayer</a></h1>
-  
-
-
-
-<div class="clear"></div>
-      
-    </header>
-    <div class="entry">
-      
-        <h4 id="CAReplicatorLayer"><a href="#CAReplicatorLayer" class="headerlink" title="CAReplicatorLayer"></a>CAReplicatorLayer</h4><ol>
-<li><code>CAReplicatorLayer</code>的目的是为了高效生成许多相似的图层。它会绘制一个或多个图层的子图层，并在每个复制体上应用不同的变换。</li>
-</ol>
+<p>一个完整的请求过程: </p>
 <ol>
-<li>相关属性: <ul>
-<li><code>instanceCount</code>: 子层总数（包括原生子层）</li>
-<li><code>instanceDelay</code>: 复制子层动画延迟时长</li>
-<li><code>instanceTransform</code>: 复制子层形变(不包括原生子层)，每个复制子层都是相对上一个。</li>
-<li><code>instanceRedOffset、instanceGreenOffset、instanceBlueOffset、instanceAlphaOffset</code>: 颜色通道偏移量，每个复制子层都是相对上一个的偏移量。</li>
-</ul>
+<li><p>我们假定这个部分的长度为4960字节，它会被嵌在TCP数据包之中。</p>
+</li>
+<li><p>TCP数据包需要设置端口，接收方（Google）的HTTP端口默认是80，发送方（本机）的端口是一个随机生成的1024-65535之间的整数，假定为51775。</p>
+<p>TCP数据包的标头长度为20字节，加上嵌入HTTP的数据包，总长度变为4980字节。</p>
+</li>
+<li><p>然后，TCP数据包再嵌入IP数据包。IP数据包需要设置双方的IP地址，这是已知的，发送方是192.168.1.100（本机），接收方是172.194.72.105（Google）。</p>
+<p>IP数据包的标头长度为20字节，加上嵌入的TCP数据包，总长度变为5000字节。</p>
+</li>
+<li><p>最后，IP数据包嵌入以太网数据包。以太网数据包需要设置双方的MAC地址，发送方为本机的网卡MAC地址，接收方为网关192.168.1.1的MAC地址（通过ARP协议得到）。</p>
+<p>以太网数据包的数据部分，最大长度为1500字节，而现在的IP数据包长度为5000字节。因此，IP数据包必须分割成四个包。因为每个包都有自己的IP标头（20字节），所以四个包的IP数据包的长度分别为1500、1500、1500、560。</p>
+</li>
+<li><p>经过多个网关的转发，Google的服务器172.194.72.105，收到了这四个以太网数据包。</p>
+<p>根据IP标头的序号，Google将四个包拼起来，取出完整的TCP数据包，然后读出里面的”HTTP请求”，接着做出”HTTP响应”，再用TCP协议发回来。</p>
 </li>
 </ol>
-<h4 id="CAReplicatorLayer例子"><a href="#CAReplicatorLayer例子" class="headerlink" title="CAReplicatorLayer例子"></a>CAReplicatorLayer例子</h4><p>实现一个音乐振幅条的效果:</p>
-<p><img src="http://7xrn7f.com1.z0.glb.clouddn.com/16-7-22/81481818.jpg" alt=""></p>
-<p>相关代码如下: </p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line">- (void)viewDidLoad &#123;</span><br><span class="line">    [super viewDidLoad];</span><br><span class="line">   </span><br><span class="line">    // 创建CAReplicatorLayer对象</span><br><span class="line">    CAReplicatorLayer *layer = [CAReplicatorLayer layer];</span><br><span class="line">    layer.frame = CGRectMake(50, 50, 200, 200);</span><br><span class="line">    layer.backgroundColor = [UIColor blueColor].CGColor;</span><br><span class="line">    [self.view.layer addSublayer:layer];</span><br><span class="line"></span><br><span class="line">    // 添加子layer</span><br><span class="line">    CALayer *bar = [CALayer layer];</span><br><span class="line">    bar.backgroundColor = [UIColor redColor].CGColor;</span><br><span class="line">    bar.bounds = CGRectMake(0, 0, 30, 100);</span><br><span class="line">    bar.position = CGPointMake(15, 200);</span><br><span class="line">    bar.anchorPoint = CGPointMake(0.5, 1);</span><br><span class="line">    [layer addSublayer:bar];</span><br><span class="line">    </span><br><span class="line">    // 子layer执行动画操作</span><br><span class="line">    CABasicAnimation *anim = [CABasicAnimation animation];</span><br><span class="line">    anim.keyPath = @&quot;transform.scale.y&quot;;</span><br><span class="line">    anim.toValue = @(0.1);</span><br><span class="line">    anim.autoreverses = YES;</span><br><span class="line">    anim.repeatCount = MAXFLOAT;</span><br><span class="line">    [bar addAnimation:anim forKey:nil];</span><br><span class="line">    </span><br><span class="line">    // 复制3个子layer+原来子layer = 4；</span><br><span class="line">    layer.instanceCount = 4;</span><br><span class="line">    // 子laye执行的动画进行延时操作</span><br><span class="line">    layer.instanceDelay = 0.3f;</span><br><span class="line">    // 子layer进行位移操作</span><br><span class="line">    layer.instanceTransform = CATransform3DMakeTranslation(40, 0, 0);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h4 id="CAShapeLayer"><a href="#CAShapeLayer" class="headerlink" title="CAShapeLayer"></a>CAShapeLayer</h4><p>普通CALayer在被初始化时是需要给一个frame值的,这个frame值一般都与给定view的bounds值一致,它本身是有形状的,而且是矩形.</p>
-<p>CAShapeLayer在初始化时也需要给一个frame值,但是,它本身没有形状,它的形状来源于你给定的一个path,然后它去取CGPath值,它与CALayer有着很大的区别。</p>
-<p>CAShapeLayer有着几点很重要:</p>
-<ul>
-<li>它依附于一个给定的path,必须给与path,而且,即使path不完整也会自动首尾相接</li>
-</ul>
-<ul>
-<li>strokeStart以及strokeEnd代表着在这个path中所占用的百分比</li>
-</ul>
-<ul>
-<li>CAShapeLayer动画仅仅限于沿着边缘的动画效果,它实现不了填充效果</li>
-</ul>
-<p><img src="http://i2.piimg.com/567571/bb1e26e70397fc34.png" alt=""></p>
-<h4 id="CAShapeLayer例子"><a href="#CAShapeLayer例子" class="headerlink" title="CAShapeLayer例子"></a>CAShapeLayer例子</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">- (void)viewDidLoad &#123;</span><br><span class="line">    [super viewDidLoad];</span><br><span class="line">	CGPoint startPoint = CGPointMake(50, 300);</span><br><span class="line">    CGPoint endPoint = CGPointMake(300, 300);</span><br><span class="line">    CGPoint controlPoint = CGPointMake(170, 200);</span><br><span class="line">    </span><br><span class="line">    //贝塞尔曲线</span><br><span class="line">    UIBezierPath *path = [[UIBezierPath alloc] init];</span><br><span class="line">    [path moveToPoint:startPoint];</span><br><span class="line">    [path addQuadCurveToPoint:endPoint controlPoint:controlPoint];</span><br><span class="line">    </span><br><span class="line">    //shaperLayer相关属性设置</span><br><span class="line">    CAShapeLayer *shapeLayer = [CAShapeLayer layer];</span><br><span class="line">    shapeLayer.strokeColor = [UIColor redColor].CGColor;</span><br><span class="line">    shapeLayer.fillColor = [UIColor clearColor].CGColor;</span><br><span class="line">    shapeLayer.lineWidth = 5;</span><br><span class="line">    shapeLayer.lineJoin = kCALineJoinRound;</span><br><span class="line">    shapeLayer.lineCap = kCALineCapRound;</span><br><span class="line">    shapeLayer.path = path.CGPath; //路径</span><br><span class="line">    [self.view.layer addSublayer:shapeLayer];</span><br><span class="line">	</span><br><span class="line">  // 添加动画效果</span><br><span class="line">    CABasicAnimation *rBase = [CABasicAnimation animationWithKeyPath:@&quot;strokeEnd&quot;];</span><br><span class="line">    rBase.fromValue = @0.0;</span><br><span class="line">    rBase.toValue = @1;</span><br><span class="line">    rBase.duration = 2.f;</span><br><span class="line">    [shapeLayer addAnimation:rBase forKey:nil];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-      
-    </div>
-    <footer>
-      
-        <div class="alignleft">
-            <a href="/2016/04/22/layer/#more" class="more-link"><i class="fa fa-chevron-right"></i>Read More</a>
-        </div>
-        
-        
-          <div class="alignright"> 
-            <a href="atony2099.github.io/2016/04/22/layer/#comment" class="comment-link">
-              <i class="fa fa-comments"></i><span class="ds-thread-count" data-thread-key="/2016/04/22/layer/">&nbsp;
-              </span>
-            </a>
-          </div>
-        
-      
-      <div class="clearfix"></div>
-    </footer>
-  </div>
-</article>
-
-
-
-
-  <article class="post">
-  
-    <div class="gallery">
-  <div class="photoset">
-    
-      <img src="">
-    
-  </div>
-  <div class="control">
-    <div class="prev"></div>
-    <div class="next"></div>
-  </div>
-</div>
-  
-  <div class="post-content">
-    <header>
-      
-      <time datetime="2016-04-12T13:32:39.000Z"><a href="/2016/04/12/runloop学习/">Tue, Apr 12 2016, 9:32:39 pm</a></time>
-
-  
-    <h1 class="title"><a href="/2016/04/12/runloop学习/">associated Objects</a></h1>
-  
-
-
-
-<div class="clear"></div>
-      
-    </header>
-    <div class="entry">
-      
-        <p><em>与文章无关的事情: 为什么感觉可乐越来越难喝了？ 我想当个诗人</em></p>
-<p>今天我们来谈谈高大上的runloop,跟往常一样，我们先抛出问题: </p>
-<ul>
-<li>什么是runloop？</li>
-<li>runloop和autoReleasePool关系</li>
-</ul>
-<h3 id="什么是runloop"><a href="#什么是runloop" class="headerlink" title="什么是runloop?"></a>什么是runloop?</h3><p>一般来讲，一个线程执行完一次就退出了。我们需要一种机制，让线程处于”work –sleep – work– sleep”的状态，runloop正是这种机制的实现。</p>
-<p><img src="http://www.2cto.com/uploadfile/Collfiles/20160330/2016033009122244.jpg" alt=""></p>
-<p>相关的伪代码如下: </p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">while (AppIsRunning)&#123;</span><br><span class="line">	// 睡眠状态，等待唤醒</span><br><span class="line">	id whoWakesMe = SleepForWaitingUp(); </span><br><span class="line"> 	// 唤醒</span><br><span class="line"> 	id event = GetEvent(whoWakeMe)</span><br><span class="line"> 	HandleEvent(event)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h3 id="runloop"><a href="#runloop" class="headerlink" title="runloop"></a>runloop</h3><h4 id="runloop与线程关系"><a href="#runloop与线程关系" class="headerlink" title="runloop与线程关系"></a>runloop与线程关系</h4><p>先上代码: </p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line">1</span><br><span class="line">/// 全局的Dictionary，key 是 pthread_t， value 是 CFRunLoopRef</span><br><span class="line">static CFMutableDictionaryRef loopsDic;</span><br><span class="line">/// 访问 loopsDic 时的锁</span><br><span class="line">static CFSpinLock_t loopsLock;</span><br><span class="line">  </span><br><span class="line">/// 获取一个 pthread 对应的 RunLoop。</span><br><span class="line">CFRunLoopRef _CFRunLoopGet(pthread_t thread) &#123;</span><br><span class="line">    OSSpinLockLock(&amp;loopsLock);</span><br><span class="line">    if (!loopsDic) &#123;</span><br><span class="line">        // 第一次进入时，初始化全局Dic，并先为主线程创建一个 RunLoop。</span><br><span class="line">        loopsDic = CFDictionaryCreateMutable();</span><br><span class="line">        CFRunLoopRef mainLoop = _CFRunLoopCreate();</span><br><span class="line">        CFDictionarySetValue(loopsDic, pthread_main_thread_np(), mainLoop);</span><br><span class="line">    &#125;</span><br><span class="line">     </span><br><span class="line">    /// 直接从 Dictionary 里获取。</span><br><span class="line">    CFRunLoopRef loop = CFDictionaryGetValue(loopsDic, thread));</span><br><span class="line">     </span><br><span class="line">    if (!loop) &#123;</span><br><span class="line">        /// 取不到时，创建一个</span><br><span class="line">        loop = _CFRunLoopCreate();</span><br><span class="line">        CFDictionarySetValue(loopsDic, thread, loop);</span><br><span class="line">        /// 注册一个回调，当线程销毁时，顺便也销毁其对应的 RunLoop。</span><br><span class="line">        _CFSetTSD(..., thread, loop, __CFFinalizeRunLoop);</span><br><span class="line">    &#125;</span><br><span class="line">     </span><br><span class="line">    OSSpinLockUnLock(&amp;loopsLock);</span><br><span class="line">    return loop;</span><br><span class="line">&#125;</span><br><span class="line">  </span><br><span class="line">CFRunLoopRef CFRunLoopGetMain() &#123;</span><br><span class="line">    return _CFRunLoopGet(pthread_main_thread_np());</span><br><span class="line">&#125;</span><br><span class="line">  </span><br><span class="line">CFRunLoopRef CFRunLoopGetCurrent() &#123;</span><br><span class="line">    return _CFRunLoopGet(pthread_self());</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>其中pthread_t是一个与线程相关对象，可以看到runloop存在一个全局的字典里面，线程和runloop是一一对应关系。</p>
-<p>程序启动会自动调用<code>CFRunLoopGetMain</code> 创建主线程的runloop，其他线程如果不调用<code>CFRunLoopGetCurrent</code>并不会主动去创建。</p>
-<h4 id="runloop-mode"><a href="#runloop-mode" class="headerlink" title="runloop mode"></a>runloop mode</h4><blockquote>
-<p>A <em>run loop mode</em> is a collection of input sources and timers to be monitored and a collection of run loop observers to be notified</p>
-<p>runloop  mode 是一个关于 输入源,定时源 和观察者的集合。</p>
-</blockquote>
-<p><img src="http://blog.ibireme.com/wp-content/uploads/2015/05/RunLoop_0.png" alt=""></p>
-<p>一个runloop包含若干个mode,每个 Mode 又包含若干个 Source/Timer/Observer</p>
-<p><strong>CFRunLoopSourceRef</strong></p>
-<p> 转发异步事件，有两种版本的source : </p>
-<ul>
-<li><p>source0 : 只包含了一个回调 (函数指针),不能主动触发事件</p>
-</li>
-<li><p>source1: 基于mach_port()，能唤醒进程</p>
 <blockquote>
-<p>Mach port 是一个轻量级的进程间通讯方式，可以理解为一个通讯通道，假如同时有几个进程都挂在这个通道上，那么其他进程向这个通道发送消息时，其他进程都能收到。</p>
+<p> 发送: 每经过一层在原来的包基础上加上该层的header。</p>
+<p> 接收方，每经过一层删除该层header。</p>
+<p> 应用层: 数据封装</p>
+<p> 传输层: 设置端口号,三次握手建立连接</p>
+<p> 网络层: 设置ip地址，</p>
+<p> 链路层：设置mac地址，数据分割成一定大小的数据包。</p>
+<p> 经过物理层转发到达接受方</p>
 </blockquote>
+<h4 id="http协议"><a href="#http协议" class="headerlink" title="http协议"></a>http协议</h4><ul>
+<li><p>http报文： 应用程序之间发送数据块</p>
+</li>
+<li><p>http报文的组成</p>
+<ul>
+<li><p>起始行 start line</p>
+<blockquote>
+<p>请求行</p>
+<ul>
+<li>请求url</li>
+<li>请求方法：get，post，put，delete</li>
+</ul>
+<p>响应行:</p>
+<ul>
+<li><p>响应码，</p>
+<ul>
+<li>| 类别   | 原因短语                   |               |<br>| —- | ———————- | ————- |<br>| 1XX  | Informational(信息性状态码)  | 接收的请求正在处理     |<br>| 2XX  | Success（成功状态码）         | 请求正常处理完毕      |<br>| 3XX  | Redirection（重定向状态码）    | 需要进行附加操作以完成请求 |<br>| 4XX  | Client Error（客户端错误状态码） | 服务器无法处理请求     |<br>| 5XX  | Server Error（服务器错误状态码） | 服务器处理请求出错     |</li>
+</ul>
+</li>
+<li><p>错误信息</p>
 </li>
 </ul>
-<p><strong>CFRunLoopTimerRef</strong></p>
-<p>转发同步事件，包含一个时间长度和一个回调，加入runloop的时候，runloop会注册对应的时间点，当时间点到达的时候,runloop就被唤醒并执行那个回调</p>
-<p><strong>CFRunLoopObserverRef</strong></p>
-<p>观察者，每个观察者都包含了一个回调，当runloop状态发生变化时候，观察者就能通过会回调感受到这个变化</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">typedef CF_OPTIONS(CFOptionFlags, CFRunLoopActivity) &#123;</span><br><span class="line">    kCFRunLoopEntry         = (1UL &lt;&lt; 0), // 即将进入Loop</span><br><span class="line">    kCFRunLoopBeforeTimers  = (1UL &lt;&lt; 1), // 即将处理 Timer</span><br><span class="line">    kCFRunLoopBeforeSources = (1UL &lt;&lt; 2), // 即将处理 Source</span><br><span class="line">    kCFRunLoopBeforeWaiting = (1UL &lt;&lt; 5), // 即将进入休眠</span><br><span class="line">    kCFRunLoopAfterWaiting  = (1UL &lt;&lt; 6), // 刚从休眠中唤醒</span><br><span class="line">    kCFRunLoopExit          = (1UL &lt;&lt; 7), // 即将退出Loop</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
-<blockquote>
-<p>autoreleasepool的创建和销毁?</p>
-<p>苹果在主线程runloop注册了连个observer</p>
-<p>第一个observer监听事件是<strong><em>entry</em></strong>，回调调用_objc_autoreleasePoolPush() 创建自动释放池</p>
-<p>第二个observer监听两个事件<strong><em>BeforeWaiting(准备进入休眠)</em></strong> 时调用_objc_autoreleasePoolPop() 和 _objc_autoreleasePoolPush() 释放旧的池并创建新池；Exit(即将退出Loop) 时调用 _objc_autoreleasePoolPop() 来释放自动释放池</p>
 </blockquote>
-<p>常见的runloop mode模式</p>
-<table>
-<thead>
-<tr>
-<th>mode名称</th>
-<th>运行机制</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>NSDefaultRunLoopMode</td>
-<td>App的默认 Mode，通常主线程是在这个 Mode 下运行的。</td>
-</tr>
-<tr>
-<td>UITrackingRunLoopMode</td>
-<td>界面跟踪 Mode，用于 ScrollView 追踪触摸滑动，</td>
-</tr>
-<tr>
-<td>UIInitializationRunLoopMode</td>
-<td>刚启动 App 时第进入的第一个 Mode，启动完成后就不再使用。</td>
-</tr>
-<tr>
-<td>NSRunLoopCommonModes</td>
-<td>默认包含了NSDefaultRunLoopMode 和UITrackingRunLoopMode</td>
-</tr>
-</tbody>
-</table>
-<blockquote>
-<p>问题： 为什么[NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(doTimer1) userInfo:nil repeats:YES];在互动的时候定时器不走了呢</p>
-<ol>
-<li><p>schedule类方法默认是将timer添加到defaultMode下面 </p>
-</li>
-<li><p>根据官方文档： Each time you run your run loop, you specify (either explicitly or implicitly) a particular “mode” in which to run. During that pass of the run loop, only sources associated with that mode are monitored and allowed to deliver their events. (Similarly, only observers associated with that mode are notified of the run loop’s progress.) Sources associated with other modes hold on to any new events until subsequent passes through the loop in the appropriate mode.</p>
-<p>也就是说runloop每次只能运行在一个mode下，该mode下面的timer才能被监听</p>
-<p>而APP滑动的时候切换到UITrackingRunLoopMode,所以timer事件无法被监听到。</p>
-</li>
-<li><p>解决方法</p>
-<p>将timer 添加到commonmodes上面去，commonmodes是关于mode的集合，添加到上面的timer就自动添加到defaultmode和trackingMode。</p>
 <p>​</p>
 </li>
-</ol>
+<li><p>实体的主体: http实际要传输的内容</p>
+</li>
+<li><p>首部:对报文主题信息的进一步说明</p>
+<ul>
+<li><p>通用首部:不管是响应还是请求报文，都会包含的基本信息</p>
+<p><img src="http://images2015.cnblogs.com/blog/740839/201612/740839-20161220150137995-2033423887.png" alt=""></p>
+</li>
+<li><p>响应首部:提供额外的信息，比如谁在发送响应，响应者功能</p>
+</li>
+<li><p>实体首部</p>
+<blockquote>
+<p>用来描述实体的主体</p>
+<p>包括主体的编码，主体的长度，主体的位置</p>
 </blockquote>
-<p>#### </p>
-<p>参考： </p>
-<p><a href="http://chun.tips/blog/2014/10/20/zou-jin-run-loopde-shi-jie-%5B%3F%5D-:shi-yao-shi-run-loop%3F/" target="_blank" rel="external">走进Run Loop的世界 (一)：什么是Run Loop？</a></p>
-<p><a href="https://developer.apple.com/library/ios/documentation/Cocoa/Conceptual/Multithreading/RunLoopManagement/RunLoopManagement.html" target="_blank" rel="external">Threading Programming Guide</a></p>
+<p><img src="http://ohbzayk4i.bkt.clouddn.com/17-2-3/87588181-file_1486111785330_12ebb.png" alt=""></p>
+</li>
+<li><p>请求首部</p>
+</li>
+<li><p>请求首部说明是谁或什么在发送请求、请求源自何处，或者客户端的喜好及能力。服务器可以根据请求首部给出的客户端信息，试着为客户端提供更好的响应</p>
+<ul>
+<li><p>信息性首部</p>
+<p><img src="http://images2015.cnblogs.com/blog/740839/201612/740839-20161220210102807-1073006005.png" alt=""></p>
+</li>
+<li><p>accept 首部：Accept首部为客户端提供了一种将其喜好和能力告知服务器的方式，</p>
+<p><img src="http://images2015.cnblogs.com/blog/740839/201612/740839-20161220211737839-554697774.png" alt=""></p>
+<blockquote>
+<p> 文本文件</p>
+<p> text/html, text/plain, text/css …application/xhtml+xml, application/xml …</p>
+<p> 图片文件</p>
+<p> image/jpeg, image/gif, image/png …</p>
+<p> 视频文件</p>
+<p> video/mpeg, video/quicktime …</p>
+<p> 应用程序使用的二进制文件</p>
+<p> application/octet-stream, application/zip ..　</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&gt; unacceptable content-type: text/html</span><br><span class="line">&gt;  出现该错误的原因: </span><br><span class="line">&gt; AFN默认设置http 请求报文的accept字段默认不处理text/html。</span><br><span class="line">&gt;   服务端的不规范操作，虽然返回的是json数据，但是没有指定content-type为text/json，返回还是html。导致客户端误认为是text/html格式数据而无法处理。</span><br><span class="line">&gt;   解决方法:手动设置accepe字段接受text/html格式</span><br><span class="line">&gt;</span><br></pre></td></tr></table></figure>
+</blockquote>
+</li>
+<li><p>条件请求首部:为请求加上某些限制</p>
+<p><img src="http://images2015.cnblogs.com/blog/740839/201612/740839-20161220214937745-92052732.png" alt=""></p>
+</li>
+<li><p>安全请求首部:认证机制，对请求就是质询/响应认证</p>
+<p><img src="http://images2015.cnblogs.com/blog/740839/201612/740839-20161220223424932-1363583011.png" alt=""></p>
+<p>​</p>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h4 id="tcp协议"><a href="#tcp协议" class="headerlink" title="tcp协议"></a>tcp协议</h4><ul>
+<li><p>三次握手</p>
+<p><img src="http://img.my.csdn.net/uploads/201210/23/1350985085_3123.jpg" alt=""></p>
+</li>
+</ul>
+<ol>
+<li>客户端发送syn报文，(sequece number = n)</li>
+<li>服务端发送ACK和SYN报文(sequece number = z,acknowledge   number = n+1)</li>
+<li>客户端发送ACK报文 (acknowledge   number = z + 1)</li>
+</ol>
+<blockquote>
+<p> 三次握手是建立可靠连接的必要保证，前两次握手， 保证了服务端能接受到客户端信息并能正确应答，后两次握手，保证客户端能接受到服务端信息并正确应答‘</p>
+</blockquote>
+<ul>
+<li><p>四次挥手</p>
+<p><img src="http://img.my.csdn.net/uploads/201210/23/1350990937_5362.jpg" alt=""></p>
+<p>四次挥手</p>
+<ol>
+<li>客户端发送FIN报文段，sequence nuber = x，</li>
+<li>服务端发送一个ACK报文段，acknowledge number = x + 1.</li>
+<li>服务端发送一个FIN报文段，sequence number = u</li>
+<li>客户端发送一个ACK报文，acknowledge number = x + 1.</li>
+</ol>
+</li>
+</ul>
+<ul>
+<li><p>为什么三次握手，四次挥手</p>
+<p>  握手:服务端搜到syn报文的时候，把ack和syn报文放在一起发送给客户端</p>
+<p>  挥手: 服务端收到fin报文的时候，仅仅表示客户端要关闭连接，服务端 未必要关闭连接，因此它的fin报文和ack报文要分开发送</p>
+</li>
+</ul>
+<h4 id="DNS解析"><a href="#DNS解析" class="headerlink" title="DNS解析"></a>DNS解析</h4><p>做什么: 将主机名和域名转换为IP地址的工作。简单点来说，DNS就是一位“翻译官”。</p>
+<p>第一步：客户机提出域名解析请求,并将该请求发送给本地的域名服务器。<br>第二步：当本地的域名服务器收到请求后,就先查询本地的缓存,如果有该纪录项,则本地的域名服务器就直接把查询的结果返回。<br>第三步：如果本地的缓存中没有该纪录,则本地域名服务器就直接把请求发给根域名服务器,然后根域名服务器再返回给本地域名服务器一个所查询域(根的子域)的主域名服务器的地址。<br>第四步：本地服务器再向上一步返回的域名服务器发送请求,然后接受请求的服务器查询自己的缓存,如果没有该纪录,则返回相关的下级的域名服务器的地址。<br>第五步：重复第四步,直到找到正确的纪录。<br>第六步：本地域名服务器把返回的结果保存到缓存,以备下一次使用,同时还将结果返回给客户机。</p>
+<p><img src="http://ohbzayk4i.bkt.clouddn.com/17-2-3/67217159-file_1486125594106_e922.jpg" alt=""></p>
+<h4 id="socket"><a href="#socket" class="headerlink" title="socket"></a>socket</h4><p><img src="http://ohbzayk4i.bkt.clouddn.com/17-2-3/21050074-file_1486109526818_13600.png" alt=""></p>
+<ol>
+<li>Socket是对TCP/IP协议的封装，Socket本身并不是协议，而是一个调用接口（API），</li>
+<li>通过Socket，我们才能使用TCP/IP协议。</li>
+</ol>
+<p><a href="http://www.techug.com/post/https-ssl-tls.html" target="_blank" rel="external">聊聊HTTPS和SSL/TLS协议</a></p>
+<p><a href="https://www.chen-hao.com.cn/DNS%E8%A7%A3%E6%9E%90%E5%8E%9F%E7%90%86.html" target="_blank" rel="external">DNS解析原理</a></p>
+<p><a href="http://www.genshuixue.com/i-cxy/p/15290422" target="_blank" rel="external">前端学HTTP之报文首部</a></p>
+<p><a href="http://www.ruanyifeng.com/blog/2012/05/internet_protocol_suite_part_i.html" target="_blank" rel="external">互联网协议入门（一)</a></p>
+<p><a href="http://www.codeceo.com/article/tcp-ip-osi-model.html" target="_blank" rel="external">TCP/IP 协议栈及 OSI 参考模型详解</a></p>
+<p><a href="http://blog.csdn.net/oney139/article/details/8103223" target="_blank" rel="external">TCP三次握手详解及释放连接过程</a></p>
+<p>-</p>
 
+          
+        
       
     </div>
-    <footer>
-      
-        <div class="alignleft">
-            <a href="/2016/04/12/runloop学习/#more" class="more-link"><i class="fa fa-chevron-right"></i>Read More</a>
-        </div>
-        
-        
-          <div class="alignright"> 
-            <a href="atony2099.github.io/2016/04/12/runloop学习/#comment" class="comment-link">
-              <i class="fa fa-comments"></i><span class="ds-thread-count" data-thread-key="/2016/04/12/runloop学习/">&nbsp;
-              </span>
-            </a>
-          </div>
-        
-      
-      <div class="clearfix"></div>
-    </footer>
-  </div>
-</article>
 
-
-
-
-  <article class="post">
-  
-    <div class="gallery">
-  <div class="photoset">
-    
-      <img src="">
-    
-  </div>
-  <div class="control">
-    <div class="prev"></div>
-    <div class="next"></div>
-  </div>
-</div>
-  
-  <div class="post-content">
-    <header>
-      
-      <time datetime="2016-04-09T12:46:08.000Z"><a href="/2016/04/09/category/">Sat, Apr 9 2016, 8:46:08 pm</a></time>
-
-  
-    <h1 class="title"><a href="/2016/04/09/category/">category笔记</a></h1>
-  
-
-
-
-<div class="clear"></div>
-      
-    </header>
-    <div class="entry">
-      
-        <h4 id="category是什么"><a href="#category是什么" class="headerlink" title="category是什么?"></a>category是什么?</h4><p>苹果文档如是说: </p>
-<blockquote>
-<p>You use categories to define additional methods of an existing class—even one whose source code is unavailable to you—without subclassin</p>
-</blockquote>
-<p>也就是说category主要是用来向一个已存在的类拓展方法，用category拓展方法明显的好处是可以用来拆分功能,让一个大型的类让一个大型的类分治管理。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">// Sark.h</span><br><span class="line">@interface tfenglin : NSObject</span><br><span class="line">@end</span><br><span class="line"></span><br><span class="line">@interface Sark (play)  // 学习的分类</span><br><span class="line">- (void)play;</span><br><span class="line">@end</span><br><span class="line"></span><br><span class="line">@interface Sark (study) // 工作的分类 </span><br><span class="line">- (void)study;</span><br><span class="line">@end</span><br></pre></td></tr></table></figure>
-<p>category使用要注意的原则:category 的实现可以依赖主类，但主类一定不依赖 category，也就是说移除任何一个 Category 的代码不会对主类产生任何影响。</p>
-<blockquote>
-<p> 所以 Category 一定是简单插拔的，就像买个外接键盘来扩展在 MacBook 上的写码能力，但当拔了键盘，MacBook 的运行不会受到任何影响。–sunnyxx</p>
-</blockquote>
-<h4 id="category-和extension"><a href="#category-和extension" class="headerlink" title="category 和extension"></a>category 和extension</h4><p>category在语法上一般被成视为匿名的extension，但他们在实现机制上差别很大。</p>
-<blockquote>
-<p>Class Extension 在编译期就会将定义的 Ivar、属性、方法等直接合入主类，而 Category 在程序启动 Runtime Loading 时才会将属性（没 Ivar）和方法合入主类。</p>
-</blockquote>
-<p>由于category是运行期决议的，我们可以推导出category是无法添加成员变量的，因为在运行期，对象的内存布局已经确定好，如果添加成员变量，会破会对象的内存布局。</p>
-<blockquote>
-<p> this(extension)  is a way to declare “pseudo-private” methods (pseudo-private in that they’re not really private, just not externally exposed). –stackoverflow </p>
-<p>extension可以理解为声明”私有方法”的一种方式</p>
-</blockquote>
-<h4 id="runtime对category处理"><a href="#runtime对category处理" class="headerlink" title="runtime对category处理"></a>runtime对category处理</h4><p>我们知道OC中的类和对象都可以用category来表示，category也不例外:</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="keyword">struct</span> <span class="keyword">category_t</span> &#123;</span><br><span class="line">    <span class="keyword">const</span> <span class="keyword">char</span> *name; <span class="comment">// 类名</span></span><br><span class="line">    <span class="keyword">classref_t</span> cls; <span class="comment">// 要关联的类对象</span></span><br><span class="line">    <span class="keyword">struct</span> <span class="keyword">method_list_t</span> *instanceMethods; <span class="comment">// 给类添加的实例方法的列表</span></span><br><span class="line">    <span class="keyword">struct</span> <span class="keyword">method_list_t</span> *classMethods; <span class="comment">//给类添加的类方法的列表</span></span><br><span class="line">    <span class="keyword">struct</span> <span class="keyword">protocol_list_t</span> *protocols; <span class="comment">// 给类添加协议列表</span></span><br><span class="line">    <span class="keyword">struct</span> <span class="keyword">property_list_t</span> *instanceProperties; <span class="comment">// 给类添加实例属性</span></span><br><span class="line">&#125; <span class="keyword">category_t</span>;</span><br></pre></td></tr></table></figure>
-<p>从category的数据结构可以看出没有实例变量这一项，这再一次佐证了category                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    无法添加实例变量的特性。</p>
-<p>runtime处理category时候，会调用两拨方法， 一组是实例对象相关的调用<code>addUnattachedCategoryForClass</code>，一拨是类对象相关的调用<code>addUnattachedCategoryForClass</code>，然后会调到<code>attachCategoryMethods</code>方法，这个方法把一个类所有的category_list的所有方法取出来组成一个<code>method_list_t **</code></p>
-<p>attachCategoryMethods方法如下所示: </p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">static void</span><br><span class="line">attachCategoryMethods(class_t *cls, category_list *cats,</span><br><span class="line">                      BOOL *inoutVtablesAffected)</span><br><span class="line">&#123;</span><br><span class="line">    if (!cats) return;</span><br><span class="line">    if (PrintReplacedMethods) printReplacements(cls, cats);</span><br><span class="line"></span><br><span class="line">    BOOL isMeta = isMetaClass(cls);</span><br><span class="line">    method_list_t **mlists = (method_list_t **)</span><br><span class="line">        _malloc_internal(cats-&gt;count * sizeof(*mlists));</span><br><span class="line"></span><br><span class="line">    // Count backwards through cats to get newest categories first</span><br><span class="line">    int mcount = 0;</span><br><span class="line">    int i = cats-&gt;count;</span><br><span class="line">    BOOL fromBundle = NO;</span><br><span class="line">    while (i--) &#123;</span><br><span class="line">        method_list_t *mlist = cat_method_list(cats-&gt;list[i].cat, isMeta);</span><br><span class="line">        if (mlist) &#123;</span><br><span class="line">            mlists[mcount++] = mlist;</span><br><span class="line">            fromBundle |= cats-&gt;list[i].fromBundle;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    attachMethodLists(cls, mlists, mcount, NO, fromBundle, inoutVtablesAffected);</span><br><span class="line"></span><br><span class="line">    _free_internal(mlists);</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>这边有两个核心点: </p>
-<ol>
-<li>category的方法没有“完全替换掉”原来类已经有的方法，也就是说如果category和原来类都有methodA，那么category附加完成之后，类的方法列表里会有两个method</li>
-<li>category的方法被放到了新方法列表的前面，而原来类的方法被放到了新方法列表的后面，这也就是我们平常所说的category的方法会“覆盖”掉原来类的同名方法，这是因为运行时在查找方法的时候是顺着方法列表的顺序查找的，它只要一找到对应名字的方法, ，就会罢休，殊不知后面可能还有一样名字的方法</li>
-</ol>
-<h4 id="associated-object"><a href="#associated-object" class="headerlink" title="associated  object"></a>associated  object</h4><p>虽然category不能添加成员变量，但通过associated  object却可以弥补这一不足，顾名思义，他是一个关联对象，把一个key-object和已知的对象关联起来。</p>
-<p><strong>相关函数</strong></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">void objc_setAssociatedObject(id object, const void *key, id value, objc_AssociationPolicy policy); // 类似set方法</span><br><span class="line">id objc_getAssociatedObject(id object, const void *key); // 类似get方法</span><br><span class="line">void objc_removeAssociatedObjects(id object);</span><br></pre></td></tr></table></figure>
-<p><code>objc_removeAssociatedObjects</code> 函数我们一般是用不上的，因为这个函数会移除一个对象的所有关联对象，将该对象恢复成“原始”状态<br>上文函数key指针参数，推荐使用@selector(),它能确保key值是唯一的常量</p>
-<p><strong>关联策略</strong></p>
-<p>主要有五种关联策略</p>
-<table>
-<thead>
-<tr>
-<th>关联策略</th>
-<th>等价属性</th>
-<th>说明</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>OBJC_ASSOCIATION_ASSIGN</td>
-<td>@property (assign) or @property (unsafe_unretained)</td>
-<td>弱引用关联对象</td>
-</tr>
-<tr>
-<td>OBJC_ASSOCIATION_RETAIN_NONATOMIC</td>
-<td>@property (strong, nonatomic)</td>
-<td>强引用关联对象，且为非原子操作</td>
-</tr>
-<tr>
-<td>OBJC_ASSOCIATION_COPY_NONATOMIC</td>
-<td>@property (copy, nonatomic)</td>
-<td>复制关联对象，且为非原子操作</td>
-</tr>
-<tr>
-<td>OBJC_ASSOCIATION_RETAIN</td>
-<td>@property (strong, atomic)</td>
-<td>强引用关联对象，且为原子操作</td>
-</tr>
-<tr>
-<td>OBJC_ASSOCIATION_COPY</td>
-<td>@property (copy, atomic)</td>
-<td>复制关联对象，且为原子操作</td>
-</tr>
-</tbody>
-</table>
-<blockquote>
-<ol>
-<li>关联对象与被关联对象本身的存储并没有直接的关系，它是存储在单独的哈希表中的；</li>
-<li>关联对象的五种关联策略与属性的限定符非常类似，在绝大多数情况下，我们都会使用<code>OBJC_ASSOCIATION_RETAIN_NONATOMIC</code> 的关联策略，这可以保证我们持有关联对象；</li>
-</ol>
-</blockquote>
-<p><a href="http://nshipster.com/associated-objects/" target="_blank" rel="external"><a href="http://nshipster.com/associated-objects/" target="_blank" rel="external">Associated Objects</a></a></p>
-<p><a href="http://tech.meituan.com/DiveIntoCategory.html" target="_blank" rel="external">深入理解Objective-C：Category</a></p>
-<p><a href="http://blog.devtang.com/2013/10/15/objective-c-object-model/" target="_blank" rel="external">Objective-C对象模型及应用</a></p>
-<p><a href="http://blog.leichunfeng.com/blog/2015/06/26/objective-c-associated-objects-implementation-principle/" target="_blank" rel="external">Objective-C Associated Objects 的实现原理</a></p>
-<p><a href="http://blog.sunnyxx.com/2014/03/05/objc_category_secret/" target="_blank" rel="external">objc category的秘密</a></p>
-
+    <div>
       
     </div>
-    <footer>
-      
-        <div class="alignleft">
-            <a href="/2016/04/09/category/#more" class="more-link"><i class="fa fa-chevron-right"></i>Read More</a>
-        </div>
-        
-        
-          <div class="alignright"> 
-            <a href="atony2099.github.io/2016/04/09/category/#comment" class="comment-link">
-              <i class="fa fa-comments"></i><span class="ds-thread-count" data-thread-key="/2016/04/09/category/">&nbsp;
-              </span>
-            </a>
-          </div>
-        
-      
-      <div class="clearfix"></div>
-    </footer>
-  </div>
-</article>
 
-
-
-
-  <article class="post">
-  
-    <div class="gallery">
-  <div class="photoset">
-    
-      <img src="">
-    
-  </div>
-  <div class="control">
-    <div class="prev"></div>
-    <div class="next"></div>
-  </div>
-</div>
-  
-  <div class="post-content">
-    <header>
-      
-      <time datetime="2016-04-02T12:52:18.000Z"><a href="/2016/04/02/coreAnimation学习/">Sat, Apr 2 2016, 8:52:18 pm</a></time>
-
-  
-    <h1 class="title"><a href="/2016/04/02/coreAnimation学习/">CoreAnimation学习</a></h1>
-  
-
-
-
-<div class="clear"></div>
-      
-    </header>
-    <div class="entry">
-      
-        <p> <strong>相关学习资料 </strong>:</p>
-<ul>
-<li>文档<br> <a href="http://blog.csdn.net/mad2man/article/details/16928891" target="_blank" rel="external">Core Animation编程指南2013中文</a><br><a href="http://www.cocoachina.com/bbs/read.php?tid=84461&amp;fpage=3" target="_blank" rel="external">Core Animation编程指南2011中文</a><br><a href="[Core Animation编程指南2011中文]">Core Animation编程指南英文</a><br><a href="https://www.gitbook.com/book/zsisme/ios-/details" target="_blank" rel="external">Core Animationg高级技巧</a></li>
-<li>相关博客<br><a href="http://objccn.io/issue-12-1/" target="_blank" rel="external">动画解 释</a><br><a href="http://geeklu.com/2012/09/animation-in-ios/" target="_blank" rel="external">谈谈iOS Animation</a><br><a href="http://objccn.io/issue-12-4/" target="_blank" rel="external">View-Layer 协作</a><br><a href="http://www.cocoachina.com/ios/20150828/13257.html" target="_blank" rel="external">你给我解析清楚，都有了CALayer了，为什么还要UIView</a><br><a href="http://o0o0o0o.iteye.com/blog/1728599" target="_blank" rel="external">UIView 和 CALayer的那点事</a></li>
-</ul>
-<p><img src="http://cdn.cocimg.com/cms/uploads/allimg/140515/4196_140515121200_1.png" alt="UIKit"></p>
-<p>####CALayer</p>
-<ol>
-<li><p>什么是图层(CALayer)</p>
-<ul>
-<li>图层是一个模型对象(data object):<blockquote>
-<p>图层管理位图周围状态信息<br>-&gt; A layer merely manages the state information surrounding a bitmap. </p>
-</blockquote>
-</li>
-</ul>
-<blockquote>
-<p>layers manage information about the geometry, content, and visual attributes of their surfaces.</p>
-</blockquote>
-</li>
-</ol>
-<ol>
-<li>how:  CALayer的渲染过程？<br><img src="https://developer.apple.com/library/ios/documentation/Cocoa/Conceptual/CoreAnimation_guide/Art/basics_layer_rendering_2x.png" alt=""><br>1.a layer captures the content your app provides and caches it in a bitmap,</li>
-<li>When you subsequently change a property of the layer, all you are doing is changing the state information associated with the layer object</li>
-<li><p>When a change triggers an animation, Core Animation passes the layer’s bitmap and state information to the graphics hardware, </p>
-</li>
-<li><p>coreAnimation和coreGraphics比较：</p>
-<blockquote>
-<p> But drawing in this way is expensive because <strong>it is done using the CPU on the main thread. </strong>Core Animation avoids this expense by whenever possible by manipulating the cached bitmap in hardware to achieve the same or similar effects.</p>
-</blockquote>
-</li>
-</ol>
-<ol>
-<li>CALayer三层模型<br><img src="https://zsisme.gitbooks.io/ios-/content/chapter7/7.4.jpeg" alt="图片"><br><strong>Layer也和View一样存在着一个层级树状结构,称之为图层树(Layer Tree)</strong></li>
-</ol>
-<p><strong>三个模型层对象</strong></p>
-<ul>
-<li><p>Model Tree。在这个树中的对象是模型对象，模型对象负责存储所有动画的结束值。无论何时改变图层的属性值，你使用的始终是某一个模型对象。</p>
-</li>
-<li><p>Presentation Tree。呈现树中的对象包含所有运行中的动画的瞬时值。图层树对象包含的是动画的目标值，而呈现树中的对象代表显示在屏幕上动画的当前值。你不应该更改这个树中的对象。相反，你使用这些对象来读取当前动画的值，可能用于创建开始于这些值的新的动画。<br>通过-presentationLayer方法来访问。这个呈现图层实际上是模型图层的复制，但是它的属性值代表了在任何指定时刻当前外观效果。换句话说，你可以通过呈现图层的值来获取当前屏幕上真正显示出来的值<br>大多数情况下，你不需要直接访问呈现图层<br><strong>如果想准确地知道在某一时刻图层显示在什么位置就会对正确摆放图层很有用了。</strong></p>
-</li>
-<li><p>Render Tree 在渲染树中的对象执行实际的动画，并且对Core Animation是不公开的。,渲染树是对呈现树的数据进行渲染,为了不阻塞主线程,渲染的过程是在单独的进程或线程中进行的,所以你会发现Animation的动画并不会阻塞主线程.</p>
-</li>
-</ul>
-<ol>
-<li>图层的赋值方式</li>
-</ol>
-<ul>
-<li>直接赋值一个UIImage对象给图层对象contents属性。（这个技术适用于图层内容从不或几乎不改变的情形。）</li>
-<li>赋值一个代理给图层，由代理负责绘制图层内容。（该技术适用于图层内容可能偶尔改变，且内容可由外部对象提供，比如视图。）</li>
-<li>定义一个CALayer的子类并覆盖类的绘图方法，有覆盖的方法返回图层的内容。（该技术适用于你需要创建自定义图层的子类，或者你想改变图层基本的绘图行为。）</li>
-</ul>
-<hr>
-<blockquote>
-<p> 图层并不知道当前设备的分辨率信息。<strong>图层只是简单的存储一个指向位图的指针</strong>，并用给定的有效像素以最佳的方式显示。如果你赋值一个图片给图层的contents属性，你必须给图层的contentsScale属性设置一个正确的值以告诉Core Animation关于图片的分辨率。默认的属性值为1.0，对于在标准分辨率的屏幕上显示图片是正确的。如果你的图片要在Retina屏幕上显示，该值需要设定为2.0。使用[[UIScreen mainScreen] scale]可获取正确的缩放率。</p>
-</blockquote>
-<hr>
-<blockquote>
-<p>核心动画不提供在一个窗口(window)实际显示图层的手段，它们必须通过视图来<br>托管。当视图和图层一起的时候，视图为图层提供了底层的事件处理，而图层为视图<br>提供了显示的内容。<br><strong>iOS 上面的视图系统直接建立在核心动画的图层上面。</strong></p>
-</blockquote>
-<hr>
-<hr>
-<blockquote>
-<p> 当你随后改变了一个图层的属性值，你做的所有工作只是改变了与图层对象相关联的状态信息。当你的更改触发了一个动画，Core Animation会将该图层对应的位图数据和图层的状态信息发送给图形处理硬件。图形处理器所做的工作是根据获得的信息对位图进行渲染<br> 对基于视图的绘图，对视图的改变经常会触发调用视图的drawRect：方法以重绘视图内容。但是此种方式的代价相对较高，因为它是CPU在主线程上的操作。Core Animation通过尽可能的使用图形硬件操纵缓存后的位图来避免了这种开销，从而完成相同或相似的效果。</p>
-<p>Core Animation让视图和可视对象的变化能以动画的形式呈现。大部分变化都与可视对象属性的更改相关。比如Core Animation能让视图的位置、尺寸或者透明度的变化以动画的形式呈现。当你更改了这些属性的值， Core Animation会在当前属性值和最新指定的属性值之间进行动画。</p>
-</blockquote>
-<p><strong>UIView &amp;&amp;CALAyer区别和联合</strong><br><strong>关系:</strong></p>
-<ul>
-<li>官方文档:<br>The view system in iOS is built directly on top of Core Animation layers.  Every instance of UIView automatically creates an instance of a<br>CALayer class .<br>UIView是对layer进一步封装，增加了响应用户时间能力(uiresponder)，包装了一层calyer<br>UIView依赖于calyer提供内容，UIVIEW的内容展示(frame.bounds)和动画都是通过calyer获得</li>
-</ul>
-<p><strong>为什么要 UIView 和 CALayer：</strong><br>职责分离，避免重复的代码<br>底层的布局动画是一样的，表层的用户交互事件差异很大，共享代码</p>
-<ul>
-<li>需要提供什么功能（机制）”和“怎样实现这些功能（策略）”。如果程序可以由独立的部分分别完成机制与策略的实现，那么开发软件就更加容易，也更加容易适应不同的需求。UIView可以看做是策略，变动很多。越是底层，越是机制，越是机制就越是稳定。</li>
-</ul>
-<p><em>CALayer 的 position 属性与 anchorPoint 属性间的关系</em><br>position是layer中的anchorPoint点在superLayer中的位置坐标。<br>因此可以说,<br><strong>position点是相对suerLayer的，anchorPoint点是相对layer的，</strong>两者是相对不同的坐标空间的一个重合点。</p>
-<ul>
-<li>1.position是layer中的anchorPoint在superLayer中的位置坐标。</li>
-<li>2.互不影响原则：单独修改position与anchorPoint中任何一个属性都不影响另一个属性。</li>
-</ul>
-<p>它主要的作用就是用来作为变换的支点，</p>
-<p>####CoreAnimation<br><img src="http://img.objccn.io/issue-3/pixels-software-stack.png" alt="图片1"></p>
-<p>1.它是什么: </p>
-<ul>
-<li>It is an infrastructure for compositing and manipulating your app’s content in hardware.</li>
-<li>操作的对象是图层</li>
-</ul>
-<blockquote>
-<p> Core Animation是一个复合引擎，它的职责就是尽可能快地组合屏幕上不同的可视内容，这个内容是被分解成独立的图层，存储在一个叫做图层树的体系之</p>
-<p>Core Animation自身并不是一个绘图系统。它只是一个负责在硬件上合成和操纵应用内容的基础构件。（Core Animation is not a drawing system itself. It is an infrastructure for compositing and manipulating your app’s content in hardware.）Core Animation的核心是图层对象，图层对象用于管理和操控你的应用内容。图层将捕获的内容放到一副位图中，<strong>图形硬件能够非常容易的操控你的位图。</strong>（A layer captures your content into a bitmap that can be manipulated easily by the graphics hardware.）在大部分应用中，图层被作为一种管理视图内容的方式，但是你也可以创建标准的图层，</p>
-</blockquote>
-<p><strong>什么是Animation(动画),简单点说就是在一段时间内,显示的内容发生了变化.对CALayer来说就是在一段时间内,其Animatable Property发生了变化.</strong></p>
-<p>###隐式动画</p>
-<p><em>之所以叫隐式是因为我们并没有指定任何动画的类型。我们仅仅改变了一个属性，然后Core Animation来决定如何并且何时去做动画</em></p>
-<blockquote>
-<p>核心动画的隐式动画模型假定所有动画图层属性的变化应该是渐进的和异步的。<br>动态的动画场景可以在没有显式的动画图层时候实现。改变可动画显示的图层的属性<br>将会导致图层隐式把图层从旧的值动画显示为新的值。虽然动画是持续的，但是设置<br>新的目标值时会导致图层从当前状态动画过渡到新的目标值。 </p>
-<p>不同于隐式动画，隐式动画会更新图层对象的值。<strong>而显示动画不会更改图层树中的数据。显示动画仅是创建了一个动画。在动画结束之后，Core Animation从图层中移除该动画对象并使用当前的数据值重绘图层。</strong>如果你想让显示动画的改变成为永久性的，如你在之前的例子中看到的，你必须更新图层属性。</p>
-</blockquote>
-<p>###事务</p>
-<blockquote>
-<p>事务实际上是Core Animation用来包含一系列属性动画集合的机制，任何用指定事务去改变可以做动画的图层属性都不会立刻发生变化，而是当事务一旦提交的时候开始用一个动画过渡到新值。</p>
-</blockquote>
-<hr>
-<blockquote>
-<p><strong> 图层的每个改变都是事务的一部分</strong>。CATransaction 是核心动画类，它负责成批的把多个图层树的修改作为一个原子更新到渲染树。<br>可以通过给 CATransaction 类发送一个 begin 消息来创建一<br>个显式事务，修改完成之后发送 comit 消息。<br><strong>Core Animation在每个run loop周期中自动开始一次新的事务（run loop是iOS负责收集用户输入，处理定时器或者网络事件并且重新绘制屏幕的东西），即使你不显式的用[CATransaction begin]开始一次事务，任何在一次run loop循环中属性的改变都会被集中起来，然后做一次0.25秒的动画。</strong></p>
-<p>UIView+animateWithDuration:animations:。这样写对做一堆的属性动画在语法上会更加简单，但实质上它们都是在做同样的事情。  CATransaction的+begin和+commit方法在+animateWithDuration:animations:内部自动调用，这样block中所有属性的改变都会被事务所包含。这样也可以避免开发者由于对+begin和+commit匹配的失误造成的风险。<br>使用场景：</p>
-<ul>
-<li>显式事务在同时设置多个图层的属性的<br>时候（例如当布局多个图层的时候），</li>
-<li>暂时的禁用图层的行为</li>
-<li>或者暂时修改动画的时间的时候</li>
-</ul>
-</blockquote>
-<h4 id="CALayer"><a href="#CALayer" class="headerlink" title="CALayer"></a>CALayer</h4><p>#####CAShapeLayer </p>
-<blockquote>
-<p>CAShapeLayer是一个通过矢量图形而不是bitmap来绘制的图层子类。你指定诸如颜色和线宽等属性，用CGPath来定义想要绘制的图形，最后CAShapeLayer就自动渲染出来<br>优点：</p>
-<ul>
-<li>渲染快速。CAShapeLayer使用了硬件加速，绘制同一图形会比用Core Graphics快很多。</li>
-<li>高效使用内存。一个CAShapeLayer不需要像普通CALayer一样创建一个寄宿图形，所以无论有多大，都不会占用太多的内存。</li>
-<li>不会被图层边界剪裁掉。一个CAShapeLayer可以在边界之外绘制。你的图层路径不会像在使用Core Graphics的普通CALayer一样被剪裁掉（如我们在第二章所见）。</li>
-<li>不会出现像素化。当你给CAShapeLayer做3D变换时，它不像一个有寄宿图的普通图层一样变得像素化。</li>
-</ul>
-</blockquote>
-<h4 id="mask"><a href="#mask" class="headerlink" title="mask"></a>mask</h4><p>CALayer拥有mask属性，Apple的官方解释如下：</p>
-<blockquote>
-<p>An optional layer whose alpha channel is used to mask the layer’s content. The layer’s alpha channel determines how much of the layer’s content and background shows through. Fully or partially opaque pixels allow the underlying content to show through but fully transparent pixels block that content.</p>
-</blockquote>
-<p>mask同样也是一个CALayer。假设将CALayer本身称为ContentLayer，将mask称为MaskLayer，蒙版（Masking）的工作原理是通过MaskLayer的alpha值定义ContentLayer的显示区域：对于ContentLayer上每一个Point，计算公式为ResultLayer = ContentLayer * MaskLayer_Alpha。所以当alpha为1时Content显示，alpha为0时Content不显示，其他处于0与1之间的值导致Content半透明。</p>
-<p>需要注意的是：</p>
-<ul>
-<li>MaskLayer的color不重要，主要使用opacity（CALayer中的alpha），但是注意[UIColor clearColor]其实就是alpha为0的color。<br>ContentLayer超出MaskLayer以外的部分不会被显示出来。</li>
-<li>MaskLayer必须是个“单身汉”，不能有sublayers，否则蒙版（Masking）的结果就是未知（Undefined）。</li>
-</ul>
-<p>####粒子动画</p>
-<blockquote>
-<p>通常粒子系统在三维空间中的位置与运动是由发射器控制的。发射器主要由一组粒子行为参数以及在三维空间中的位置所表示。<strong>粒子行为参数可以包括粒子生成速度（即单位时间粒子生成的数目）、粒子初始速度向量（例如什么时候向什么方向运动）、粒子寿命（经过多长时间粒子湮灭）、粒子颜色、在粒子生命周期中的变化以及其它参数等等。使用大概值而不是绝对值的模糊参数占据全部或者绝大部分是很正常的，一些参数定义了中心值以及允许的变化</strong>。</p>
-</blockquote>
-<p>####备注：<br>bitMap:由像素点构成，每个像素点由自己的颜色和位置属性</p>
-
+    <div>
       
     </div>
-    <footer>
+
+
+    <footer class="post-footer">
       
-        <div class="alignleft">
-            <a href="/2016/04/02/coreAnimation学习/#more" class="more-link"><i class="fa fa-chevron-right"></i>Read More</a>
-        </div>
-        
-        
-          <div class="alignright"> 
-            <a href="atony2099.github.io/2016/04/02/coreAnimation学习/#comment" class="comment-link">
-              <i class="fa fa-comments"></i><span class="ds-thread-count" data-thread-key="/2016/04/02/coreAnimation学习/">&nbsp;
-              </span>
-            </a>
-          </div>
-        
+
       
-      <div class="clearfix"></div>
+
+      
+      
+        <div class="post-eof"></div>
+      
     </footer>
-  </div>
-</article>
+  </article>
 
 
-
-
-  <article class="post">
-  
-    <div class="gallery">
-  <div class="photoset">
     
-      <img src="">
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="atony2099.github.io/2016/12/11/RAC大法好/冷热信号/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="tony2009">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="/images/avatar.gif">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="托尼的开发笔记">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="托尼的开发笔记" src="">
+    </span>
+  </span>
+
     
-  </div>
-  <div class="control">
-    <div class="prev"></div>
-    <div class="next"></div>
-  </div>
-</div>
-  
-  <div class="post-content">
-    <header>
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2016/12/11/RAC大法好/冷热信号/" itemprop="url">
+                  冷热信号
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2016-12-11T13:33:06+08:00">
+                2016-12
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
       
-      <time datetime="2016-03-02T07:33:17.000Z"><a href="/2016/03/02/js-oc交互/">Wed, Mar 2 2016, 3:33:17 pm</a></time>
-
-  
-    <h1 class="title"><a href="/2016/03/02/js-oc交互/">js&amp;&amp;oc交互</a></h1>
-  
-
-
-
-<div class="clear"></div>
       
-    </header>
-    <div class="entry">
+
       
-        <h4 id="相关概念"><a href="#相关概念" class="headerlink" title="相关概念"></a>相关概念</h4><blockquote>
-<p> JavaScriptCore是iOS7引入的新功能，JavaScriptCore可以理解为一个浏览器的运行内核，使用JavaScriptCore可以使用native代码（这里主要指objectiveC和swift）与js代码进行相互的调用</p>
+        
+          
+            <h4 id="冷热信号"><a href="#冷热信号" class="headerlink" title="冷热信号"></a>冷热信号</h4><h5 id="热信号-直播-保持状态"><a href="#热信号-直播-保持状态" class="headerlink" title="热信号 直播  保持状态"></a>热信号 直播  保持状态</h5><p>主动推送消息。</p>
+<p><strong>方法只执行一遍，只有一次副作用</strong></p>
+<h5 id="冷信号-点播，不保持状态"><a href="#冷信号-点播，不保持状态" class="headerlink" title="冷信号 点播，不保持状态"></a>冷信号 点播，不保持状态</h5><p>被动的，需要主动订阅。</p>
+<p>一个剧本，一旦有人说开拍，他就执行一遍。</p>
+<blockquote>
+<p>方法执行多次，有多次副作用</p>
 </blockquote>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">#import &quot;JSContext.h&quot;</span><br><span class="line">#import &quot;JSValue.h&quot;</span><br><span class="line">#import &quot;JSManagedValue.h&quot;</span><br><span class="line">#import &quot;JSVirtualMachine.h&quot;</span><br><span class="line">#import &quot;JSExport.h&quot;</span><br></pre></td></tr></table></figure>
-<ul>
-<li>JSContext是JavaScript的运行上下文，他主要作用是执行js代码和注册native方法接口</li>
-<li>JSValue是JSContext执行后的返回结果，他可以是任何js类型（比如基本数据类型和函数类型，对象类型等），并且都有对象的方法转换为native对象。</li>
-<li>JSManagedValue是JSValue的封装，用它可以解决js和原声代码之间循环引用的问题</li>
-<li>JSVirtualMachine 管理JS运行时和管理js暴露的native对象的内存</li>
-<li>JSExport是一个协议，通过实现它可以完成把一个native对象暴漏给js</li>
-</ul>
-<h4 id="JS调用OC"><a href="#JS调用OC" class="headerlink" title="JS调用OC"></a>JS调用OC</h4><p>JS端实现</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">//iOSNative 是调用方法的对象，方法名要跟iOS端协商好</span><br><span class="line">//callHandler 这个是function name，方法名称 要和iOS商议确定</span><br><span class="line">//handlerName和info 这个是传过来给iOS的参数</span><br><span class="line">iOSNative.callHandler(info)</span><br></pre></td></tr></table></figure>
-<p>iOS端实现</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"> #import &lt;Foundation/Foundation.h&gt;  </span><br><span class="line">#import &lt;JavaScriptCore/JavaScriptCore.h&gt;  </span><br><span class="line">  </span><br><span class="line">//首先创建一个实现了JSExport协议的协议  </span><br><span class="line">@protocol JSObjectText &lt;JSExport&gt;  </span><br><span class="line"></span><br><span class="line">-(void)callHandler:(NSString *)string;  </span><br><span class="line"></span><br><span class="line">@end  </span><br><span class="line">  </span><br><span class="line">//让我们创建的类实现上边的协议  </span><br><span class="line">@interface JSObject : NSObject&lt;JSObjectText&gt;  </span><br><span class="line">@end</span><br></pre></td></tr></table></figure>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"> #import &quot;JSObjectText.h&quot;  </span><br><span class="line">  </span><br><span class="line">@implementation JSObjectText  </span><br><span class="line">  </span><br><span class="line">-(void)callHandler:(NSString *)string;  </span><br><span class="line">&#123;  </span><br><span class="line">	NSLog(@&quot;%@&quot;,string) ;</span><br><span class="line">&#125;  </span><br><span class="line"></span><br><span class="line">@end</span><br></pre></td></tr></table></figure>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">-(void)webViewDidFinishLoad:(UIWebView *)webView  </span><br><span class="line">&#123;  </span><br><span class="line">    //网页加载完成调用此方法  </span><br><span class="line">      </span><br><span class="line">    //首先创建JSContext 对象（此处通过当前webView的键获取到jscontext）  </span><br><span class="line">    JSContext *context=[webView valueForKeyPath:@&quot;documentView.webView.mainFrame.javaScriptContext&quot;];  </span><br><span class="line">      </span><br><span class="line">    //假设js是通过iOSNative对象调用</span><br><span class="line">    //首先创建我们新建类的对象，将他赋值给js的对象  </span><br><span class="line">    JSObjectText *iOSNative=[JSObjectText new];  </span><br><span class="line">    context[@&quot;iOSNative&quot;]=iOSNative;        </span><br><span class="line">&#125;</span><br><span class="line">	//异常信息的处理</span><br><span class="line">  context.exceptionHandler = ^(JSContext *context, JSValue *exceptionValue) &#123;</span><br><span class="line">        context.exception = exceptionValue;</span><br><span class="line">        NSLog(@&quot;异常信息：%@&quot;, exceptionValue);</span><br><span class="line">    &#125;;</span><br></pre></td></tr></table></figure>
+<h4 id=""><a href="#" class="headerlink" title=" "></a> </h4><p>RACSignal 排除RACSubject都是冷信号</p>
+<p>RACSubject 是热信号</p>
+<p>hot signal</p>
+<p><img src="http://tech.meituan.com/img/talk-about-reactivecocoas-cold-signal-and-hot-signal/1.png" alt=""></p>
+<p>code signal </p>
+<p><img src="http://tech.meituan.com/img/talk-about-reactivecocoas-cold-signal-and-hot-signal/2.png" alt=""></p>
+<p><img src="http://tech.meituan.com/img/talk-about-reactivecocoas-cold-signal-and-hot-signal/3.png" alt=""></p>
+<p>subject / replaysubject  </p>
+<h4 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案"></a>解决方案</h4><p>使用subject订阅原始信号， 并让其他订阅者订阅这个Subject，这个Subject就是热信号。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line">   RACSignal *signal = [RACSignal createSignal:^RACDisposable *(id&lt;RACSubscriber&gt; subscriber) &#123;</span><br><span class="line">       // didSubscribeblock中的代码都统称为副作用。</span><br><span class="line">       NSLog(@&quot;hello&quot;);</span><br><span class="line">       </span><br><span class="line">       [[RACScheduler mainThreadScheduler] afterDelay:1 schedule:^&#123;</span><br><span class="line">          </span><br><span class="line">           // 发送信号</span><br><span class="line">           [subscriber sendNext:@&quot;1&quot;];</span><br><span class="line">       &#125;];</span><br><span class="line">       </span><br><span class="line">       </span><br><span class="line">       </span><br><span class="line">       [[RACScheduler mainThreadScheduler] afterDelay:2 schedule:^&#123;</span><br><span class="line">           </span><br><span class="line">           // 发送信号</span><br><span class="line">           [subscriber sendNext:@&quot;2&quot;];</span><br><span class="line">       &#125;];</span><br><span class="line"></span><br><span class="line">       [[RACScheduler mainThreadScheduler] afterDelay:3 schedule:^&#123;</span><br><span class="line">           </span><br><span class="line">           // 发送信号</span><br><span class="line">           [subscriber sendNext:@&quot;3&quot;];</span><br><span class="line">       &#125;];</span><br><span class="line">       return nil;</span><br><span class="line">   &#125;];</span><br><span class="line">//---方案 (1)</span><br><span class="line">//Multicasts the signal to a RACReplaySubject of unlimited capacity, and lazily connects to the resulting RACMulticastConnection.</span><br><span class="line">&#125;]replayLazily];</span><br><span class="line"></span><br><span class="line">   [[RACScheduler mainThreadScheduler] afterDelay:2 schedule:^&#123;</span><br><span class="line">       [signal subscribeNext:^(id x) &#123;</span><br><span class="line">           NSLog(@&quot;schedul-%@&quot;, x);</span><br><span class="line">    &#125;];</span><br><span class="line">       </span><br><span class="line"></span><br><span class="line">// 方案二</span><br><span class="line">   RACMulticastConnection *connection = [signal publish];</span><br><span class="line">   RACSignal *hotSignal = connection.signal;</span><br><span class="line">   [connection connect];</span><br><span class="line">   [[RACScheduler mainThreadScheduler] afterDelay:2 schedule:^&#123;</span><br><span class="line">       [hotSignal subscribeNext:^(id x) &#123;</span><br><span class="line">           NSLog(@&quot;schedul-%@&quot;, x);</span><br><span class="line">       &#125;];</span><br><span class="line">   &#125;];</span><br></pre></td></tr></table></figure>
+
+          
+        
       
     </div>
-    <footer>
+
+    <div>
       
-        <div class="alignleft">
-            <a href="/2016/03/02/js-oc交互/#more" class="more-link"><i class="fa fa-chevron-right"></i>Read More</a>
-        </div>
-        
-        
-          <div class="alignright"> 
-            <a href="atony2099.github.io/2016/03/02/js-oc交互/#comment" class="comment-link">
-              <i class="fa fa-comments"></i><span class="ds-thread-count" data-thread-key="/2016/03/02/js-oc交互/">&nbsp;
-              </span>
-            </a>
-          </div>
-        
+    </div>
+
+    <div>
       
-      <div class="clearfix"></div>
+    </div>
+
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
     </footer>
-  </div>
-</article>
-
-
-
-
-
-<nav id="pagination">
-  
-  
-    <a href="/page/2/" class="alignright next">Nächste Seite<i class="fa fa-long-arrow-right"></i></a>
-  
-  <div class="clearfix"></div>
-</nav>
-
-<script src="/js/jquery.anystretch.min.js"></script>
-<script src="/js/cover.js"></script>
-
-    <div class="clearfix"></div>
-  </div>
-  <footer id="footer" class="inner"><div>
-  
-  &copy; 2016 tony2009
-  
-</div>
-Powered by <a href="http://zespia.tw/hexo/" title="Hexo" target="_blank" rel="external">Hexo</a> and <a href="http://pages.github.com/" title="GitHub Pages" target="_blank" rel="external">GitHub Pages</a>
-
-<div class="clearfix"></div></footer>
-  
-<script src="/js/jquery.imagesloaded.min.js"></script>
-<script src="/js/gallery.js"></script>
-<script src="//netdna.bootstrapcdn.com/bootstrap/3.1.0/js/bootstrap.min.js"></script>
-
-
-
-
-    <script type="text/javascript">
-        (function(){
-
-            $(window).scroll(function(){
-
-                var scrollTop = $(window).scrollTop();
-                if ( scrollTop >200 ){
-                    $("#main-nav").removeClass('normal_mode').addClass('top_mode');
-                } else{
-                    $("#main-nav").removeClass('top_mode').addClass('normal_mode');
-                }
-
-            });
-
-        })();
-    </script>
-
-
-
-  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
-  <script src="/fancybox/jquery.fancybox.pack.js"></script>
-  <script type="text/javascript">
-  (function($){
-    $('.fancybox').fancybox({
-      'titlePosition': 'inside'
-    });
-  })(jQuery);
-  </script>
-
+  </article>
 
 
     
-    <script type="text/javascript">
-      var duoshuoQuery = {short_name:"your_id"};
-    (function() {
-      var ds = document.createElement('script');
-      ds.type = 'text/javascript';ds.async = true;
-      ds.src = 'http://static.duoshuo.com/embed.js';
-      ds.charset = 'UTF-8';
-      (document.getElementsByTagName('head')[0] 
-      || document.getElementsByTagName('body')[0]).appendChild(ds);
-    })();
-  </script>
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="atony2099.github.io/2016/08/20/iOS10适配/访问相册/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="tony2009">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="/images/avatar.gif">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="托尼的开发笔记">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="托尼的开发笔记" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2016/08/20/iOS10适配/访问相册/" itemprop="url">
+                  effetive oc笔记
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2016-08-20T13:28:35+08:00">
+                2016-08
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
 
 
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <ol>
+<li>隐私数据访问： </li>
+</ol>
+<p><img src="https://allluckly.cn/images/blog/tuogao/tougao61/1.png" alt=""></p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="atony2099.github.io/2016/08/20/UI再认识/effetive-oc笔记/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="tony2009">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="/images/avatar.gif">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="托尼的开发笔记">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="托尼的开发笔记" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2016/08/20/UI再认识/effetive-oc笔记/" itemprop="url">
+                  ScrollView的再认识
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2016-08-20T13:28:35+08:00">
+                2016-08
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <blockquote>
+<p>ScrollView 是UI的基础！ —-tony</p>
+</blockquote>
+<h4 id="Base"><a href="#Base" class="headerlink" title="Base"></a>Base</h4><h5 id="contentSize"><a href="#contentSize" class="headerlink" title="contentSize"></a>contentSize</h5><p>The <code>contentSize</code> property is the size of the content that you need to display in the scroll view. In Creating Scroll Views in Interface Builder, it is set to 320 wide by 758 pixels high. The image in Figure 1-2 shows the content of the scroll view with the <code>contentSize</code> width and height indicated.</p>
+<p><img src="https://developer.apple.com/library/content/documentation/WindowsViews/Conceptual/UIScrollView_pg/Art/contentSize.jpg" alt=""></p>
+<h5 id="contentInset-amp-amp-contentoffset-产生联动"><a href="#contentInset-amp-amp-contentoffset-产生联动" class="headerlink" title="contentInset  &amp;&amp; contentoffset 产生联动"></a>contentInset  &amp;&amp; contentoffset 产生联动</h5><blockquote>
+<p>The property <a href="http://developer.apple.com/library/ios/documentation/uikit/reference/UIScrollView_Class/Reference/UIScrollView.html#//apple_ref/occ/instp/UIScrollView/contentInset" target="_blank" rel="external"><code>contentInset</code></a> can  <strong> change the maximum and minimum values of the content offset to allow scrolling outside of the scrollable area.</strong> </p>
+<p>Its type is<a href="http://developer.apple.com/library/ios/#documentation/uikit/reference/UIKitDataTypesReference/Reference/reference.html#//apple_ref/doc/c_ref/UIEdgeInsets" target="_blank" rel="external"><code>UIEdgeInsets</code></a>, which consists of 4 numbers: <code>{top, left, bottom, right}</code>. When you introduce an inset, you change the range of the content offset. For example, setting the content inset to have a value of 10 for its top value allows the content offset’s y value to reach -10. This introduces padding around the scrollable area.</p>
+</blockquote>
+<p><img src="https://www.objc.io/images/issue-3/SV6@2x-7ad19d8b.png" alt=""></p>
+<p><strong>automaticallyAdjustsScrollViewInsets</strong></p>
+<p>A Boolean value that indicates whether the view controller should automatically adjust its scroll view insets.</p>
+<blockquote>
+<p> which auto set the  top to 64 if having navigationBar (toobar considing)</p>
+</blockquote>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="atony2099.github.io/2016/08/20/UI再认识/MJRefresh/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="tony2009">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="/images/avatar.gif">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="托尼的开发笔记">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="托尼的开发笔记" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2016/08/20/UI再认识/MJRefresh/" itemprop="url">
+                  ScrollView的再认识
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2016-08-20T13:28:35+08:00">
+                2016-08
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="atony2099.github.io/2016/08/20/UI再认识/延伸/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="tony2009">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="/images/avatar.gif">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="托尼的开发笔记">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="托尼的开发笔记" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2016/08/20/UI再认识/延伸/" itemprop="url">
+                  ScrollView的再认识
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2016-08-20T13:28:35+08:00">
+                2016-08
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <blockquote>
+<p>ScrollView 是UI的基础！ —-tony</p>
+</blockquote>
+<h4 id="Base"><a href="#Base" class="headerlink" title="Base"></a>Base</h4><h5 id="contentSize"><a href="#contentSize" class="headerlink" title="contentSize"></a>contentSize</h5><p>The <code>contentSize</code> property is the size of the content that you need to display in the scroll view. In Creating Scroll Views in Interface Builder, it is set to 320 wide by 758 pixels high. The image in Figure 1-2 shows the content of the scroll view with the <code>contentSize</code> width and height indicated.</p>
+<p><img src="https://developer.apple.com/library/content/documentation/WindowsViews/Conceptual/UIScrollView_pg/Art/contentSize.jpg" alt=""></p>
+<h5 id="contentInset-amp-amp-contentoffset-产生联动"><a href="#contentInset-amp-amp-contentoffset-产生联动" class="headerlink" title="contentInset  &amp;&amp; contentoffset 产生联动"></a>contentInset  &amp;&amp; contentoffset 产生联动</h5><blockquote>
+<p>The property <a href="http://developer.apple.com/library/ios/documentation/uikit/reference/UIScrollView_Class/Reference/UIScrollView.html#//apple_ref/occ/instp/UIScrollView/contentInset" target="_blank" rel="external"><code>contentInset</code></a> can  <strong> change the maximum and minimum values of the content offset to allow scrolling outside of the scrollable area.</strong> </p>
+<p>Its type is<a href="http://developer.apple.com/library/ios/#documentation/uikit/reference/UIKitDataTypesReference/Reference/reference.html#//apple_ref/doc/c_ref/UIEdgeInsets" target="_blank" rel="external"><code>UIEdgeInsets</code></a>, which consists of 4 numbers: <code>{top, left, bottom, right}</code>. When you introduce an inset, you change the range of the content offset. For example, setting the content inset to have a value of 10 for its top value allows the content offset’s y value to reach -10. This introduces padding around the scrollable area.</p>
+</blockquote>
+<p><img src="https://www.objc.io/images/issue-3/SV6@2x-7ad19d8b.png" alt=""></p>
+<p><strong>automaticallyAdjustsScrollViewInsets</strong></p>
+<p>A Boolean value that indicates whether the view controller should automatically adjust its scroll view insets.</p>
+<blockquote>
+<p> which auto set the  top to 64 if having navigationBar (toobar considing)</p>
+</blockquote>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="atony2099.github.io/2016/08/20/UI再认识/实现朋友圈效果/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="tony2009">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="/images/avatar.gif">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="托尼的开发笔记">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="托尼的开发笔记" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2016/08/20/UI再认识/实现朋友圈效果/" itemprop="url">
+                  用autolayout 类似朋友圈 feed
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2016-08-20T13:28:35+08:00">
+                2016-08
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="atony2099.github.io/2016/08/20/ios缓存的构建/NSCache/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="tony2009">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="/images/avatar.gif">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="托尼的开发笔记">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="托尼的开发笔记" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2016/08/20/ios缓存的构建/NSCache/" itemprop="url">
+                  NSCache
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2016-08-20T13:28:35+08:00">
+                2016-08
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>NSCache是什么？</p>
+<blockquote>
+<p>An NSCache object is a mutable  collection that stores key-value pairs, similar to an NSDictionary object. The NSCache class provides a programmatic interface to adding and removing objects and setting eviction policies based on the total cost and number of objects in the cache.</p>
+<p>The NSCache class incorporates various auto-eviction policies, which ensure that a cache doesn’t use too much of the system’s memory. If memory is needed by other applications, these policies remove some items from the cache, minimizing its memory footprin</p>
+<p>You can add, remove, and query items in the cache from different threads without having to lock the cache yourself.</p>
+<p>Unlike an NSMutableDictionary object, a cache does not copy the key objects that are put into it.</p>
+</blockquote>
+<p>使用场景: 只有那种“重新计算起来很费事”的数据，才值得放入缓存，比如从网络或者从磁盘读取。</p>
+<p>相关demo:  CellSizeCacheDemo</p>
+<p><a href="http://www.15yan.com/story/45toOUzFGlr/" target="_blank" rel="external">Objective-C中的缓存</a></p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="atony2099.github.io/2016/08/20/effetive-oc笔记/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="tony2009">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="/images/avatar.gif">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="托尼的开发笔记">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="托尼的开发笔记" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2016/08/20/effetive-oc笔记/" itemprop="url">
+                  effetive oc笔记
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2016-08-20T13:28:35+08:00">
+                2016-08
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>1.多用字面量语法 </p>
+<ul>
+<li><p>好处</p>
+</li>
+<li><p>实例</p>
+</li>
+<li><p>创建可变</p>
+<p>​</p>
+</li>
+</ul>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="atony2099.github.io/2016/08/20/UI再认识/layer学习/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="tony2009">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="/images/avatar.gif">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="托尼的开发笔记">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="托尼的开发笔记" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2016/08/20/UI再认识/layer学习/" itemprop="url">
+                  ScrollView的再认识
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2016-08-20T13:28:35+08:00">
+                2016-08
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h5 id="1-CAGradientLayer"><a href="#1-CAGradientLayer" class="headerlink" title="1. CAGradientLayer"></a>1. CAGradientLayer</h5><p>是干嘛的: 处理颜色过度的一个layer</p>
+<p>基本属性</p>
+<ol>
+<li>方向: startpoint endpoint</li>
+<li>颜色组合: colors </li>
+<li>颜色分布区间: locations</li>
+</ol>
+<p>Gradient: 梯度</p>
+<blockquote>
+<p><code>CAGradientLayer</code>是用来生成两种或更多颜色平滑渐变的渐变</p>
+</blockquote>
+<p>本地项目: ColorsView</p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+  </section>
+
+  
+  <nav class="pagination">
+    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><span class="space">&hellip;</span><a class="page-number" href="/page/9/">9</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-angle-right"></i></a>
+  </nav>
+
+
+          
+          </div>
+          
+
+
+          
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+
+      <section class="site-overview sidebar-panel sidebar-panel-active">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.gif"
+               alt="tony2009" />
+          <p class="site-author-name" itemprop="name">tony2009</p>
+          <p class="site-description motion-element" itemprop="description"></p>
+        </div>
+        <nav class="site-state motion-element">
+        
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">83</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">3</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">tony2009</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
 
 <script type="text/javascript">
-  
-  $(function(){
-
-    $('.title').hover(
-      function() {      
-        $(this).stop().animate(
-          {'marginLeft': '10px'}, 200
-        );   
-      }, 
-      function() {       
-        $(this).stop().animate({'marginLeft': '0px'}, 200);      
-      
-    });   
-
-  });
-
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
 </script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+  
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+
+
+
+  
+  
+
+  
+
+  
+
+  
+
+  
 
 
 </body>

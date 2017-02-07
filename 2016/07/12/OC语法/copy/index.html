@@ -1,0 +1,674 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="文章来源: Objective-C copy，看我就够了
+copy 使用场景
+ Copying is done mostly so the copy can be modified or moved, or the current value preserved. If either of these is unneeded, a reference to the original data is">
+<meta property="og:type" content="article">
+<meta property="og:title" content="托尼的开发笔记">
+<meta property="og:url" content="atony2099.github.io/2016/07/12/OC语法/copy/index.html">
+<meta property="og:site_name" content="托尼的开发笔记">
+<meta property="og:description" content="文章来源: Objective-C copy，看我就够了
+copy 使用场景
+ Copying is done mostly so the copy can be modified or moved, or the current value preserved. If either of these is unneeded, a reference to the original data is">
+<meta property="og:image" content="https://developer.apple.com/library/content/documentation/General/Conceptual/DevPedia-CocoaCore/Art/object_copying_2x.png">
+<meta property="og:image" content="https://developer.apple.com/library/content/documentation/Cocoa/Conceptual/Collections/Art/CopyingCollections_2x.png">
+<meta property="og:updated_time" content="2017-01-30T16:26:44.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="托尼的开发笔记">
+<meta name="twitter:description" content="文章来源: Objective-C copy，看我就够了
+copy 使用场景
+ Copying is done mostly so the copy can be modified or moved, or the current value preserved. If either of these is unneeded, a reference to the original data is">
+<meta name="twitter:image" content="https://developer.apple.com/library/content/documentation/General/Conceptual/DevPedia-CocoaCore/Art/object_copying_2x.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="atony2099.github.io/2016/07/12/OC语法/copy/"/>
+
+
+
+
+
+  <title>  | 托尼的开发笔记 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">托尼的开发笔记</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+    
+      <p class="site-subtitle"></p>
+    
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="atony2099.github.io/2016/07/12/OC语法/copy/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="tony2009">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="/images/avatar.gif">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="托尼的开发笔记">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="托尼的开发笔记" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2016-07-12T22:27:40+08:00">
+                2016-07
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>文章来源: <a href="http://ios.jobbole.com/91611/?utm_source=blog.jobbole.com&amp;utm_medium=relatedPosts" target="_blank" rel="external">Objective-C copy，看我就够了</a></p>
+<h4 id="copy-使用场景"><a href="#copy-使用场景" class="headerlink" title="copy 使用场景"></a>copy 使用场景</h4><blockquote>
+<p> Copying is done mostly so the copy can be modified or moved, or the current value preserved. If either of these is unneeded, a reference to the original data is sufficient and more efficient, as no copying occurs.</p>
+<p>In Objective-C, the methods copy and mutableCopy are inherited by all objects and intended for performing copies; the latter is for creating a mutable type of the original object. These methods in turn call the copyWithZone and mutableCopyWithZone methods, respectively, to perform the copying. An object must implement the corresponding copyWithZone method to be copyable.</p>
+</blockquote>
+<h4 id="deep-copy-amp-amp-shallow-copy"><a href="#deep-copy-amp-amp-shallow-copy" class="headerlink" title="deep copy &amp;&amp; shallow copy"></a>deep copy &amp;&amp; shallow copy</h4><h4 id=""><a href="#" class="headerlink" title=""></a><img src="https://developer.apple.com/library/content/documentation/General/Conceptual/DevPedia-CocoaCore/Art/object_copying_2x.png" alt=""></h4><ul>
+<li>浅复制：只复制对象的指针</li>
+<li>深复制:  会创建一个新的对象</li>
+</ul>
+<h4 id="Foundation框架非集合类的copy"><a href="#Foundation框架非集合类的copy" class="headerlink" title="Foundation框架非集合类的copy"></a>Foundation框架非集合类的copy</h4><ul>
+<li>对immutableObject，即不可变对象，执行copy，会得到不可变对象，并且是浅copy。</li>
+<li>对immutableObject，即不可变对象，执行mutableCopy，会得到可变对象，并且是深copy。</li>
+<li>对mutableObject，即可变对象，执行copy，会得到不可变对象，并且是深copy。</li>
+<li>对mutableObject，即可变对象，执行mutableCopy，会得到可变对象，并且是深copy。</li>
+</ul>
+<h4 id="自定义类的copy"><a href="#自定义类的copy" class="headerlink" title="自定义类的copy"></a>自定义类的copy</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">// Model定义，copyWithZone第一种实现（浅copy）</span><br><span class="line">@interface Model1 : NSObject&lt;NSCopying&gt;</span><br><span class="line">@property (nonatomic, assign) NSInteger a;</span><br><span class="line">@end</span><br><span class="line"> </span><br><span class="line">@implementation Model1</span><br><span class="line">- (id)copyWithZone:(NSZone *)zone &#123;</span><br><span class="line">    return self;</span><br><span class="line">&#125;</span><br><span class="line">@end</span><br><span class="line"> </span><br><span class="line">// Model定义，copyWithZone第二种实现（深copy）</span><br><span class="line">@interface Model1 : NSObject </span><br><span class="line">@property (nonatomic, assign) NSInteger a;</span><br><span class="line">@end</span><br><span class="line"> </span><br><span class="line">@implementation Model1</span><br><span class="line">- (id)copyWithZone:(NSZone *)zone &#123;</span><br><span class="line">    Model1 *model = [[Model1 allocWithZone:zone] init];</span><br><span class="line">    model.a = self.a;</span><br><span class="line">    return model;</span><br><span class="line">&#125;</span><br><span class="line">@end</span><br><span class="line"> </span><br><span class="line">// 分别选择上述两种model进行指针打印。</span><br><span class="line">Model1 *model = [[Model1 alloc] init];</span><br><span class="line">Model1 *copyModel = [model copy];</span><br><span class="line">NSLog(@&quot;%p&quot;, model);</span><br><span class="line">NSLog(@&quot;%p&quot;, copyModel);</span><br></pre></td></tr></table></figure>
+<p>执行结果</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 对应上述一，可见实现了浅copy</span></span><br><span class="line"><span class="number">2016</span><span class="number">-10</span><span class="number">-21</span> <span class="number">11</span>:<span class="number">12</span>:<span class="number">03.149</span> Memory[<span class="number">67723</span>:<span class="number">5636292</span>] <span class="number">0x60000000c9d0</span></span><br><span class="line"><span class="number">2016</span><span class="number">-10</span><span class="number">-21</span> <span class="number">11</span>:<span class="number">12</span>:<span class="number">03.149</span> Memory[<span class="number">67723</span>:<span class="number">5636292</span>] <span class="number">0x60000000c9d0</span></span><br><span class="line"><span class="comment">// 对应上述二，可见实现了深copy</span></span><br><span class="line"><span class="number">2016</span><span class="number">-10</span><span class="number">-21</span> <span class="number">11</span>:<span class="number">16</span>:<span class="number">46.803</span> Memory[<span class="number">67752</span>:<span class="number">5640133</span>] <span class="number">0x60800001df00</span></span><br><span class="line"><span class="number">2016</span><span class="number">-10</span><span class="number">-21</span> <span class="number">11</span>:<span class="number">16</span>:<span class="number">46.803</span> Memory[<span class="number">67752</span>:<span class="number">5640133</span>] <span class="number">0x60800001def0</span></span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>深浅复制：一切就看你怎么实现NSCopying协议中的copyWithZone:方法。</p>
+</blockquote>
+<h4 id="Foundation框架集合对象"><a href="#Foundation框架集合对象" class="headerlink" title="Foundation框架集合对象"></a>Foundation框架集合对象</h4><h5 id="浅复制"><a href="#浅复制" class="headerlink" title="浅复制"></a>浅复制</h5><p><img src="https://developer.apple.com/library/content/documentation/Cocoa/Conceptual/Collections/Art/CopyingCollections_2x.png" alt=""></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">NSArray *arr = [NSArray arrayWithObjects:@&quot;1&quot;, nil];</span><br><span class="line">NSArray *copyArr = [arr mutableCopy];</span><br><span class="line"> </span><br><span class="line">NSLog(@&quot;%p&quot;, arr);</span><br><span class="line">NSLog(@&quot;%p&quot;, copyArr);</span><br><span class="line"> </span><br><span class="line">// 打印arr、copyArr内部元素进行对比</span><br><span class="line">NSLog(@&quot;%p&quot;, arr[0]);</span><br><span class="line">NSLog(@&quot;%p&quot;, copyArr[0]);</span><br><span class="line"></span><br><span class="line">// 虽然集合的对象的地址改变，但集合元素地址还是不变，属于浅复制</span><br><span class="line">2016-10-21 11:32:27.157 Memory[67801:5649757] 0x6000000030d0</span><br><span class="line">2016-10-21 11:32:27.157 Memory[67801:5649757] 0x600000242e50</span><br><span class="line">2016-10-21 11:32:27.157 Memory[67801:5649757] 0x10dd811b0</span><br><span class="line">2016-10-21 11:32:27.157 Memory[67801:5649757] 0x10dd811b0</span><br></pre></td></tr></table></figure>
+<h4 id="深复制-双层"><a href="#深复制-双层" class="headerlink" title="深复制(双层)"></a>深复制(双层)</h4><p>这里的双层指的是完成了NSArray对象和NSArray容器内对象的深copy（为什么不说完全，是因为无法处理NSArray中还有一个NSArray这种情况）。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line">// 随意创建一个NSMutableString对象</span><br><span class="line">NSMutableString *mutableString = [NSMutableString stringWithString:@&quot;1&quot;];</span><br><span class="line">// 随意创建一个包涵NSMutableString的NSMutableArray对象</span><br><span class="line">NSMutableString *mutalbeString1 = [NSMutableString stringWithString:@&quot;1&quot;];</span><br><span class="line">NSMutableArray *mutableArr = [NSMutableArray arrayWithObjects:mutalbeString1, nil];</span><br><span class="line">// 将mutableString和mutableArr放入一个新的NSArray中</span><br><span class="line">NSArray *testArr = [NSArray arrayWithObjects:mutableString, mutableArr, nil];</span><br><span class="line">// 通过官方文档提供的方式创建copy</span><br><span class="line">NSArray *testArrCopy = [[NSArray alloc] initWithArray:testArr copyItems:YES];</span><br><span class="line"> </span><br><span class="line">// testArr和testArrCopy指针对比</span><br><span class="line">NSLog(@&quot;%p&quot;, testArr);</span><br><span class="line">NSLog(@&quot;%p&quot;, testArrCopy);</span><br><span class="line"> </span><br><span class="line">// testArr和testArrCopy中元素指针对比</span><br><span class="line">// mutableString对比</span><br><span class="line">NSLog(@&quot;%p&quot;, testArr[0]);</span><br><span class="line">NSLog(@&quot;%p&quot;, testArrCopy[0]);</span><br><span class="line">// mutableArr对比</span><br><span class="line">NSLog(@&quot;%p&quot;, testArr[1]);</span><br><span class="line">NSLog(@&quot;%p&quot;, testArrCopy[1]);</span><br><span class="line"> </span><br><span class="line">// mutableArr中的元素对比，即mutalbeString1对比</span><br><span class="line">NSLog(@&quot;%p&quot;, testArr[1][0]);</span><br><span class="line">NSLog(@&quot;%p&quot;, testArrCopy[1][0]);</span><br><span class="line"></span><br><span class="line">// 这里可以发现，copy后，只有mutableArr中的mutalbeString1指针地址没有变化。而testArr的指针和testArr中的mutableArr、mutableString的指针地址均发生变化。所以称之为双层深复制。</span><br><span class="line">2016-10-21 12:03:15.549 Memory[67855:5668888] 0x60800003c7a0</span><br><span class="line">2016-10-21 12:03:15.549 Memory[67855:5668888] 0x60800003c880</span><br><span class="line">2016-10-21 12:03:15.549 Memory[67855:5668888] 0x608000260540</span><br><span class="line">2016-10-21 12:03:15.550 Memory[67855:5668888] 0xa000000000000311</span><br><span class="line">2016-10-21 12:03:15.550 Memory[67855:5668888] 0x60800005d610</span><br><span class="line">2016-10-21 12:03:15.550 Memory[67855:5668888] 0x60800000d2e0</span><br><span class="line">2016-10-21 12:03:15.550 Memory[67855:5668888] 0x608000260980</span><br><span class="line">2016-10-21 12:03:15.550 Memory[67855:5668888] 0x608000260980</span><br></pre></td></tr></table></figure>
+<h4 id="完全深复制"><a href="#完全深复制" class="headerlink" title="完全深复制"></a>完全深复制</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line">// 随意创建一个NSMutableString对象</span><br><span class="line">NSMutableString *mutableString = [NSMutableString stringWithString:@&quot;1&quot;];</span><br><span class="line">// 随意创建一个包涵NSMutableString的NSMutableArray对象</span><br><span class="line">NSMutableString *mutalbeString1 = [NSMutableString stringWithString:@&quot;1&quot;];</span><br><span class="line">NSMutableArray *mutableArr = [NSMutableArray arrayWithObjects:mutalbeString1, nil];</span><br><span class="line">// 将mutableString和mutableArr放入一个新的NSArray中</span><br><span class="line">NSArray *testArr = [NSArray arrayWithObjects:mutableString, mutableArr, nil];</span><br><span class="line">// 通过归档、解档方式创建copy</span><br><span class="line">NSArray *testArrCopy = [NSKeyedUnarchiver unarchiveObjectWithData:</span><br><span class="line">                            [NSKeyedArchiver archivedDataWithRootObject:testArr]];;</span><br><span class="line"></span><br><span class="line">// testArr和testArrCopy指针对比</span><br><span class="line">NSLog(@&quot;%p&quot;, testArr);</span><br><span class="line">NSLog(@&quot;%p&quot;, testArrCopy);</span><br><span class="line"></span><br><span class="line">// testArr和testArrCopy中元素指针对比</span><br><span class="line">// mutableString对比</span><br><span class="line">NSLog(@&quot;%p&quot;, testArr[0]);</span><br><span class="line">NSLog(@&quot;%p&quot;, testArrCopy[0]);</span><br><span class="line">// mutableArr对比</span><br><span class="line">NSLog(@&quot;%p&quot;, testArr[1]);</span><br><span class="line">NSLog(@&quot;%p&quot;, testArrCopy[1]);</span><br><span class="line"></span><br><span class="line">// mutableArr中的元素对比，即mutalbeString1对比</span><br><span class="line">NSLog(@&quot;%p&quot;, testArr[1][0]);</span><br><span class="line">NSLog(@&quot;%p&quot;, testArrCopy[1][0])</span><br><span class="line"> </span><br><span class="line">  // 结果分析</span><br><span class="line">2016-10-21 12:19:34.022 Memory[67887:5677318] 0x60800002db00</span><br><span class="line">2016-10-21 12:19:34.022 Memory[67887:5677318] 0x60800002dc20</span><br><span class="line">2016-10-21 12:19:34.022 Memory[67887:5677318] 0x608000260400</span><br><span class="line">2016-10-21 12:19:34.023 Memory[67887:5677318] 0x6080002603c0</span><br><span class="line">2016-10-21 12:19:34.023 Memory[67887:5677318] 0x608000051d90</span><br><span class="line">2016-10-21 12:19:34.023 Memory[67887:5677318] 0x6080000521e0</span><br><span class="line">2016-10-21 12:19:34.023 Memory[67887:5677318] 0x608000260600</span><br><span class="line">2016-10-21 12:19:34.023 Memory[67887:5677318] 0x6080002606c0</span><br></pre></td></tr></table></figure>
+<h4 id="copy-与关键字"><a href="#copy-与关键字" class="headerlink" title="copy 与关键字"></a>copy 与关键字</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">// 首先分别给出copy和strong修饰的属性，以NSString举例</span><br><span class="line">// 1、strong</span><br><span class="line">@property (nonatomic, strong) NSString *str;</span><br><span class="line">// 2、copy</span><br><span class="line">@property (nonatomic, copy) NSString *str;</span><br><span class="line"> </span><br><span class="line">// 分别对1和2执行下述代码</span><br><span class="line">NSMutableString *mutableStr = [NSMutableString stringWithFormat:@&quot;123&quot;];</span><br><span class="line">self.str = mutableStr;</span><br><span class="line">[mutableStr appendString:@&quot;456&quot;];</span><br><span class="line">NSLog(@&quot;%@&quot;, self.str);</span><br><span class="line">NSLog(@&quot;%p&quot;, self.str);</span><br><span class="line">NSLog(@&quot;%@&quot;, mutableStr);</span><br><span class="line">NSLog(@&quot;%p&quot;, mutableStr);</span><br><span class="line"> </span><br><span class="line">// 结果1</span><br><span class="line">2016-10-21 14:08:46.657 Memory[68242:5714288] 123456</span><br><span class="line">2016-10-21 14:08:46.657 Memory[68242:5714288] 0x608000071040</span><br><span class="line">2016-10-21 14:08:46.657 Memory[68242:5714288] 123456</span><br><span class="line">2016-10-21 14:08:46.657 Memory[68242:5714288] 0x608000071040</span><br><span class="line">// 结果2</span><br><span class="line">2016-10-21 14:11:16.879 Memory[68264:5716282] 123</span><br><span class="line">2016-10-21 14:11:16.880 Memory[68264:5716282] 0xa000000003332313</span><br><span class="line">2016-10-21 14:11:16.880 Memory[68264:5716282] 123456</span><br><span class="line">2016-10-21 14:11:16.880 Memory[68264:5716282] 0x60000007bbc0</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>Foundation框架 中有可变与不可变的类如NSString，NSNumber,NSAarray ,通常使用copy关键字修饰</p>
+<p>原因: 由于OC的多态，不可变的对象指针可以指向可变对象，这会导致声明为不可变的对象属性遭到篡改，不安全</p>
+</blockquote>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/07/03/dispatch-group/" rel="next" title="dispatch_group管理任务依赖">
+                <i class="fa fa-chevron-left"></i> dispatch_group管理任务依赖
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/07/29/可选/" rel="prev" title="Swift中的optional">
+                Swift中的optional <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+          
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.gif"
+               alt="tony2009" />
+          <p class="site-author-name" itemprop="name">tony2009</p>
+          <p class="site-description motion-element" itemprop="description"></p>
+        </div>
+        <nav class="site-state motion-element">
+        
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">83</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">3</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#copy-使用场景"><span class="nav-number">1.</span> <span class="nav-text">copy 使用场景</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#deep-copy-amp-amp-shallow-copy"><span class="nav-number">2.</span> <span class="nav-text">deep copy && shallow copy</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#"><span class="nav-number">3.</span> <span class="nav-text"></span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Foundation框架非集合类的copy"><span class="nav-number">4.</span> <span class="nav-text">Foundation框架非集合类的copy</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#自定义类的copy"><span class="nav-number">5.</span> <span class="nav-text">自定义类的copy</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Foundation框架集合对象"><span class="nav-number">6.</span> <span class="nav-text">Foundation框架集合对象</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#浅复制"><span class="nav-number">6.1.</span> <span class="nav-text">浅复制</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#深复制-双层"><span class="nav-number">7.</span> <span class="nav-text">深复制(双层)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#完全深复制"><span class="nav-number">8.</span> <span class="nav-text">完全深复制</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#copy-与关键字"><span class="nav-number">9.</span> <span class="nav-text">copy 与关键字</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">tony2009</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+      <!-- UY BEGIN -->
+      <script type="text/javascript" src="http://v2.uyan.cc/code/uyan.js?uid="></script>
+      <!-- UY END -->
+  
+
+
+
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+
+</body>
+</html>

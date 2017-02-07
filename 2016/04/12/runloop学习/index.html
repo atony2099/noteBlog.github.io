@@ -1,110 +1,354 @@
-<!DOCTYPE HTML>
-<html>
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
 <head>
-  <meta charset="utf-8">
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
   
-  <title>associated Objects | 托尼的夏天</title>
-  <meta name="author" content="tony2009">
   
-  <meta name="description" content="与文章无关的事情: 为什么感觉可乐越来越难喝了？ 我想当个诗人
-今天我们来谈谈高大上的runloop,跟往常一样，我们先抛出问题: 
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="今天我们来谈谈高大上的runloop,跟往常一样，我们先抛出问题: 
 
 什么是runloop？
 runloop和autoReleasePool关系
 
-什么是runloop?一般来讲，一个线程执行完一次就退出了。我们需要一种机制，让线程处">
-  
-  
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+1A run loop is an event processing loop that you use to schedule work and coordinate the receipt of incoming events.The purpo">
+<meta property="og:type" content="article">
+<meta property="og:title" content="associated Objects">
+<meta property="og:url" content="atony2099.github.io/2016/04/12/runloop学习/index.html">
+<meta property="og:site_name" content="托尼的开发笔记">
+<meta property="og:description" content="今天我们来谈谈高大上的runloop,跟往常一样，我们先抛出问题: 
 
-  <meta property="og:title" content="associated Objects"/>
-  <meta property="og:site_name" content="托尼的夏天"/>
+什么是runloop？
+runloop和autoReleasePool关系
 
-  
-    <meta property="og:image" content="undefined"/>
-  
+1A run loop is an event processing loop that you use to schedule work and coordinate the receipt of incoming events.The purpo">
+<meta property="og:image" content="http://www.2cto.com/uploadfile/Collfiles/20160330/2016033009122244.jpg">
+<meta property="og:image" content="http://blog.ibireme.com/wp-content/uploads/2015/05/RunLoop_0.png">
+<meta property="og:updated_time" content="2017-01-16T18:04:42.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="associated Objects">
+<meta name="twitter:description" content="今天我们来谈谈高大上的runloop,跟往常一样，我们先抛出问题: 
 
-  <link href="/favicon.ico" rel="icon">
-  <link rel="alternate" href="/atom.xml" title="托尼的夏天" type="application/atom+xml">
-  <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap.min.css">
-<link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css">
-<link rel="stylesheet" href="/css/style.css">
-  <script src="http://code.jquery.com/jquery-2.1.1.min.js"></script>
-  <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
-  
-<script type="text/javascript">
-  var _gaq = _gaq || [];
-  _gaq.push(['_setAccount', 'UA-368771XX-X']);
-  _gaq.push(['_trackPageview']);
+什么是runloop？
+runloop和autoReleasePool关系
 
-  (function() {
-    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-  })();
+1A run loop is an event processing loop that you use to schedule work and coordinate the receipt of incoming events.The purpo">
+<meta name="twitter:image" content="http://www.2cto.com/uploadfile/Collfiles/20160330/2016033009122244.jpg">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
 </script>
 
+
+
+  <link rel="canonical" href="atony2099.github.io/2016/04/12/runloop学习/"/>
+
+
+
+
+
+  <title> associated Objects | 托尼的开发笔记 </title>
 </head>
 
-<body>
-  <header id="header" class='normal_mode'>
-    <nav id="main-nav">
-  <ul class='container'>
-    
-      <li><a href="/">Home</a></li>
-    
-      <li><a href="/archives">Archives</a></li>
-    
-  </ul>
-  <div class="clearfix"></div>
-</nav>
-  </header>
-  <div id="content" class="container">
-    <article class="post">
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
   
-    <div class="gallery">
-  <div class="photoset">
+
+
+
+
+
+
+
+
+
+
+  
+  
     
-      <img src="">
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">托尼的开发笔记</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
     
-  </div>
-  <div class="control">
-    <div class="prev"></div>
-    <div class="next"></div>
-  </div>
+      <p class="site-subtitle"></p>
+    
 </div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
   
-  <div class="post-content">
-    <header>
+
+  
+    <ul id="menu" class="menu">
       
-      <time datetime="2016-04-12T13:32:39.000Z"><a href="/2016/04/12/runloop学习/">Tue, Apr 12 2016, 9:32:39 pm</a></time>
-
-  
-    <h1 class="title">associated Objects</h1>
-  
-
-
-
-<div class="clear"></div>
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
       
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
     </header>
-    <div class="entry">
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="atony2099.github.io/2016/04/12/runloop学习/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="tony2009">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="/images/avatar.gif">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="托尼的开发笔记">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="托尼的开发笔记" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                associated Objects
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2016-04-12T21:32:39+08:00">
+                2016-04
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
       
-        <p><em>与文章无关的事情: 为什么感觉可乐越来越难喝了？ 我想当个诗人</em></p>
-<p>今天我们来谈谈高大上的runloop,跟往常一样，我们先抛出问题: </p>
+      
+
+      
+        <p>今天我们来谈谈高大上的runloop,跟往常一样，我们先抛出问题: </p>
 <ul>
 <li>什么是runloop？</li>
 <li>runloop和autoReleasePool关系</li>
 </ul>
-<h3 id="什么是runloop"><a href="#什么是runloop" class="headerlink" title="什么是runloop?"></a>什么是runloop?</h3><p>一般来讲，一个线程执行完一次就退出了。我们需要一种机制，让线程处于”work –sleep – work– sleep”的状态，runloop正是这种机制的实现。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">A run loop is an event processing loop that you use to schedule work and coordinate the receipt of incoming events.The purpose of a run loop is to keep your thread busy when there is work to do and put your thread to sleep when there is none.</span><br></pre></td></tr></table></figure>
+<h3 id="什么是runloop"><a href="#什么是runloop" class="headerlink" title="什么是runloop?"></a>什么是runloop?</h3><p>​    </p>
+<p>一般来讲，一个线程执行完一次就退出了。我们需要一种循环机制，让线程处于”work –sleep – work– sleep”的状态，runloop正是这种机制的实现。</p>
 <p><img src="http://www.2cto.com/uploadfile/Collfiles/20160330/2016033009122244.jpg" alt=""></p>
 <p>相关的伪代码如下: </p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">while (AppIsRunning)&#123;</span><br><span class="line">	// 睡眠状态，等待唤醒</span><br><span class="line">	id whoWakesMe = SleepForWaitingUp(); </span><br><span class="line"> 	// 唤醒</span><br><span class="line"> 	id event = GetEvent(whoWakeMe)</span><br><span class="line"> 	HandleEvent(event)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">while</span> (AppIsRunning)&#123;</span><br><span class="line">	var message = get_next_message(); </span><br><span class="line">	process(message)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <h3 id="runloop"><a href="#runloop" class="headerlink" title="runloop"></a>runloop</h3><h4 id="runloop与线程关系"><a href="#runloop与线程关系" class="headerlink" title="runloop与线程关系"></a>runloop与线程关系</h4><p>先上代码: </p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line">1</span><br><span class="line">/// 全局的Dictionary，key 是 pthread_t， value 是 CFRunLoopRef</span><br><span class="line">static CFMutableDictionaryRef loopsDic;</span><br><span class="line">/// 访问 loopsDic 时的锁</span><br><span class="line">static CFSpinLock_t loopsLock;</span><br><span class="line">  </span><br><span class="line">/// 获取一个 pthread 对应的 RunLoop。</span><br><span class="line">CFRunLoopRef _CFRunLoopGet(pthread_t thread) &#123;</span><br><span class="line">    OSSpinLockLock(&amp;loopsLock);</span><br><span class="line">    if (!loopsDic) &#123;</span><br><span class="line">        // 第一次进入时，初始化全局Dic，并先为主线程创建一个 RunLoop。</span><br><span class="line">        loopsDic = CFDictionaryCreateMutable();</span><br><span class="line">        CFRunLoopRef mainLoop = _CFRunLoopCreate();</span><br><span class="line">        CFDictionarySetValue(loopsDic, pthread_main_thread_np(), mainLoop);</span><br><span class="line">    &#125;</span><br><span class="line">     </span><br><span class="line">    /// 直接从 Dictionary 里获取。</span><br><span class="line">    CFRunLoopRef loop = CFDictionaryGetValue(loopsDic, thread));</span><br><span class="line">     </span><br><span class="line">    if (!loop) &#123;</span><br><span class="line">        /// 取不到时，创建一个</span><br><span class="line">        loop = _CFRunLoopCreate();</span><br><span class="line">        CFDictionarySetValue(loopsDic, thread, loop);</span><br><span class="line">        /// 注册一个回调，当线程销毁时，顺便也销毁其对应的 RunLoop。</span><br><span class="line">        _CFSetTSD(..., thread, loop, __CFFinalizeRunLoop);</span><br><span class="line">    &#125;</span><br><span class="line">     </span><br><span class="line">    OSSpinLockUnLock(&amp;loopsLock);</span><br><span class="line">    return loop;</span><br><span class="line">&#125;</span><br><span class="line">  </span><br><span class="line">CFRunLoopRef CFRunLoopGetMain() &#123;</span><br><span class="line">    return _CFRunLoopGet(pthread_main_thread_np());</span><br><span class="line">&#125;</span><br><span class="line">  </span><br><span class="line">CFRunLoopRef CFRunLoopGetCurrent() &#123;</span><br><span class="line">    return _CFRunLoopGet(pthread_self());</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>其中pthread_t是一个与线程相关对象，可以看到runloop存在一个全局的字典里面，线程和runloop是一一对应关系。</p>
 <p>程序启动会自动调用<code>CFRunLoopGetMain</code> 创建主线程的runloop，其他线程如果不调用<code>CFRunLoopGetCurrent</code>并不会主动去创建。</p>
-<h4 id="runloop-mode"><a href="#runloop-mode" class="headerlink" title="runloop mode"></a>runloop mode</h4><blockquote>
+<h4 id="Runloop-mode"><a href="#Runloop-mode" class="headerlink" title="Runloop mode"></a>Runloop mode</h4><blockquote>
 <p>A <em>run loop mode</em> is a collection of input sources and timers to be monitored and a collection of run loop observers to be notified</p>
 <p>runloop  mode 是一个关于 输入源,定时源 和观察者的集合。</p>
 </blockquote>
@@ -160,7 +404,7 @@ runloop和autoReleasePool关系
 </tbody>
 </table>
 <blockquote>
-<p>问题： 为什么[NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(doTimer1) userInfo:nil repeats:YES];在互动的时候定时器不走了呢</p>
+<p>问题： 为什么[NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(doTimer1) userInfo:nil repeats:YES];在滑动的时候定时器不走了呢</p>
 <ol>
 <li><p>schedule类方法默认是将timer添加到defaultMode下面 </p>
 </li>
@@ -174,142 +418,333 @@ runloop和autoReleasePool关系
 </li>
 </ol>
 </blockquote>
-<p>#### </p>
+<p>######## runloop 底层实现</p>
+<p>底层通过mach内核提供的api接受来自其他进程的消息</p>
+<h4 id="runloop的应用"><a href="#runloop的应用" class="headerlink" title="runloop的应用"></a>runloop的应用</h4><ol>
+<li><p>界面显示和刷新： runloop注册对应source通过mach port监听信号信号通知，刷新界面(1.frame，透明度等修改 并提交到一个中间态，2,coreanimaiton在RunLoop</p>
+<p>注册一个observer，这个回调在BeforeWaiting 前，会把所有中间态调教到gpu显示)</p>
+</li>
+</ol>
+<blockquote>
+<p>VSync 信号由硬件时钟生成,完成一帧显示，需要显示下一个帧，发出一个VSync，每秒钟发出 60 次, </p>
+</blockquote>
 <p>参考： </p>
 <p><a href="http://chun.tips/blog/2014/10/20/zou-jin-run-loopde-shi-jie-%5B%3F%5D-:shi-yao-shi-run-loop%3F/" target="_blank" rel="external">走进Run Loop的世界 (一)：什么是Run Loop？</a></p>
 <p><a href="https://developer.apple.com/library/ios/documentation/Cocoa/Conceptual/Multithreading/RunLoopManagement/RunLoopManagement.html" target="_blank" rel="external">Threading Programming Guide</a></p>
+<p><a href="http://www.cocoachina.com/ios/20150601/11970.html" target="_blank" rel="external">深入理解RunLoop</a></p>
 
       
     </div>
-    <footer>
-      
-          
-<!-- JiaThis Button BEGIN -->
-<div class="jiathis_style">
-  <span class="jiathis_txt">分享到：</span>
-  <a class="jiathis_button_weixin">微信</a>
-  <a class="jiathis_button_tsina">新浪微博</a>
-  <a class="jiathis_button_renren">人人网</a>
-  <a class="jiathis_button_qzone">QQ空间</a>
-  <a class="jiathis_button_douban">豆瓣</a>
-  <a class="jiathis_button_pocket">Pocket</a>
-  <a href="http://www.jiathis.com/share?uid=901656" class="jiathis jiathis_txt jiathis_separator jtico jtico_jiathis" target="_blank">更多</a>
-  <a class="jiathis_counter_style"></a>
-</div>
-<script type="text/javascript" src="http://v3.jiathis.com/code_mini/jia.js?uid=901656" charset="utf-8"></script>
-<!-- JiaThis Button END -->
 
-          <div class="clearfix"></div>
-          <nav id="pagination">
-  
-    <a href="/2016/04/22/layer/" class="alignleft prev"><i class="fa fa-long-arrow-left"></i>Next</a>
-  
-  
-    <a href="/2016/04/09/category/" class="alignright next">Prev<i class="fa fa-long-arrow-right"></i></a>
-  
-  <div class="clearfix"></div>
-</nav>
+    <div>
       
-      <div class="clearfix"></div>
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/04/12/runloop/runloop学习/" rel="next" title="associated Objects">
+                <i class="fa fa-chevron-left"></i> associated Objects
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/04/22/layer/" rel="prev" title="CAReplicatorLayer">
+                CAReplicatorLayer <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
     </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
   </div>
-</article>
+
+          
+          </div>
+          
 
 
-<section id="comment">
-  <h1 class="title">Kommentare</h1>
-
-  
-      <!-- Duoshuo Comment BEGIN -->
-<div class="ds-thread" data-thread-key="/2016/04/12/runloop学习/"></div>
-<!-- Duoshuo Comment END -->
-  
-</section>
-
-
-
-    <div class="clearfix"></div>
-  </div>
-  <footer id="footer" class="inner"><div>
-  
-  &copy; 2016 tony2009
-  
-</div>
-Powered by <a href="http://zespia.tw/hexo/" title="Hexo" target="_blank" rel="external">Hexo</a> and <a href="http://pages.github.com/" title="GitHub Pages" target="_blank" rel="external">GitHub Pages</a>
-
-<div class="clearfix"></div></footer>
-  
-<script src="/js/jquery.imagesloaded.min.js"></script>
-<script src="/js/gallery.js"></script>
-<script src="//netdna.bootstrapcdn.com/bootstrap/3.1.0/js/bootstrap.min.js"></script>
-
-
-
-
-    <script type="text/javascript">
-        (function(){
-
-            $(window).scroll(function(){
-
-                var scrollTop = $(window).scrollTop();
-                if ( scrollTop >200 ){
-                    $("#main-nav").removeClass('normal_mode').addClass('top_mode');
-                } else{
-                    $("#main-nav").removeClass('top_mode').addClass('normal_mode');
-                }
-
-            });
-
-        })();
-    </script>
-
-
-
-  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
-  <script src="/fancybox/jquery.fancybox.pack.js"></script>
-  <script type="text/javascript">
-  (function($){
-    $('.fancybox').fancybox({
-      'titlePosition': 'inside'
-    });
-  })(jQuery);
-  </script>
-
-
-
+          
+  <div class="comments" id="comments">
     
-    <script type="text/javascript">
-      var duoshuoQuery = {short_name:"your_id"};
-    (function() {
-      var ds = document.createElement('script');
-      ds.type = 'text/javascript';ds.async = true;
-      ds.src = 'http://static.duoshuo.com/embed.js';
-      ds.charset = 'UTF-8';
-      (document.getElementsByTagName('head')[0] 
-      || document.getElementsByTagName('body')[0]).appendChild(ds);
-    })();
-  </script>
+  </div>
 
 
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.gif"
+               alt="tony2009" />
+          <p class="site-author-name" itemprop="name">tony2009</p>
+          <p class="site-description motion-element" itemprop="description"></p>
+        </div>
+        <nav class="site-state motion-element">
+        
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">83</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">3</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#什么是runloop"><span class="nav-number">1.</span> <span class="nav-text">什么是runloop?</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#runloop"><span class="nav-number">2.</span> <span class="nav-text">runloop</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#runloop与线程关系"><span class="nav-number">2.1.</span> <span class="nav-text">runloop与线程关系</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Runloop-mode"><span class="nav-number">2.2.</span> <span class="nav-text">Runloop mode</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#runloop的应用"><span class="nav-number">2.3.</span> <span class="nav-text">runloop的应用</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">tony2009</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
 
 <script type="text/javascript">
-  
-  $(function(){
-
-    $('.title').hover(
-      function() {      
-        $(this).stop().animate(
-          {'marginLeft': '10px'}, 200
-        );   
-      }, 
-      function() {       
-        $(this).stop().animate({'marginLeft': '0px'}, 200);      
-      
-    });   
-
-  });
-
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
 </script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+      <!-- UY BEGIN -->
+      <script type="text/javascript" src="http://v2.uyan.cc/code/uyan.js?uid="></script>
+      <!-- UY END -->
+  
+
+
+
+
+  
+  
+
+  
+
+  
+
+  
+
+  
 
 
 </body>
