@@ -241,7 +241,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-  <link itemprop="mainEntityOfPage" href="atony2099.github.io/2016/08/11/MVVM/">
+  <link itemprop="mainEntityOfPage" href="atony2099.github.io/2016/08/11/1reactivecocoa/函数式编程/">
 
   <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
     <meta itemprop="name" content="tony2009">
@@ -266,8 +266,8 @@
             
               
                 
-                <a class="post-title-link" href="/2016/08/11/MVVM/" itemprop="url">
-                  断言
+                <a class="post-title-link" href="/2016/08/11/1reactivecocoa/函数式编程/" itemprop="url">
+                  MVVM
                 </a>
               
             
@@ -321,7 +321,32 @@
       
         
           
-            <p>ReactiveCocoa思考: </p>
+            <h4 id="MVC"><a href="#MVC" class="headerlink" title="MVC"></a>MVC</h4><p><img src="http://i1.piimg.com/4851/9683ef5137c09930.png" alt=""></p>
+<ul>
+<li>Model - The Data model our view is managing</li>
+<li>View - The User Interface on screen consisting of things such as text fields, buttons, etc.</li>
+<li>Controller - The Controller in MVC exists to decouple the view from the model.</li>
+</ul>
+<p><img src="http://3.bp.blogspot.com/-0bs30LLV-KA/UTkczxGNlyI/AAAAAAAABJw/MpjCKhhb49s/s320/Screen+Shot+2013-03-07+at+5.02.20+PM.png" alt=""></p>
+<p><img src="http://limboy.me/image/FRP_ReactiveCocoa_large.png" alt=""></p>
+<p>MVVM: </p>
+<p>viewModel: </p>
+<pre><code>1. the thing that our user interface binds its properties to
+</code></pre><ol>
+<li>The View Model should not know anything about the UI that will bind to it</li>
+</ol>
+<p>ReactiveCocoa思考: </p>
+<ol>
+<li><p>相关思想：</p>
+<blockquote>
+<p><a href="http://en.wikipedia.org/wiki/Functional_reactive_programming" target="_blank" rel="external">Functional Reactive Programming</a> (FRP) is a way of thinking about software in terms of transforming inputs to produce output continuously over time. </p>
+<p>Programs take input and produce output. The output is the result of doing something with the input. Input, transform, output, done.</p>
+<p>The input is all the sources of action for your app. It’s taps. It’s keyboard events. It’s timer triggers, GPS events, and web service responses. These things are all inputs. They all feed into the app, and the app combines them all in some way to produce a result: the output.</p>
+<p>The output is often a change in the app’s UI. A switch is toggled or a list gets a new item. Or it could be more than that. It could be a new file on the device’s disk, or it could be an API request. These things are the outputs of the app.</p>
+<p>But unlike the classic input/output design, this input and output happens more than once. It’s not just a single input → work → output—the cycle continues while the app is open. <strong>The app is always consuming inputs and producing outputs based on them</strong></p>
+</blockquote>
+</li>
+</ol>
 <ol>
 <li>输入—-&gt;&gt; 输出</li>
 </ol>
@@ -339,11 +364,22 @@
 <p><code>Flatten map</code> is for when you might want to inject another Signal into some other signal that depends on the initial signal. You can therefor use the initial signal to effect or determine the signal returned. This is one of the ways you can take one or more signals and join them in a way that results in one signal. Hence the terminology: flatten. The other slightly different ways you can do this in RAC is <code>merge:</code> and <code>switchToLatest()</code> to name a few. Imaging you had a signal that did a network fetch based on a particular search query. Then imagine you had another signal for text typed into a search box. In order to do a search request based on the current search query in the searchText signal you could use a flatten map.</p>
 <figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">&gt; <span class="keyword">self</span>.searchTextSignal.flattenMap(&#123;(object: <span class="type">AnyObject</span>!) -&gt; <span class="type">RACSignal</span>! <span class="keyword">in</span></span><br><span class="line">&gt;     <span class="keyword">if</span> <span class="keyword">let</span> searchQuery: <span class="type">String</span> = object <span class="keyword">as</span>? <span class="type">String</span> &#123;</span><br><span class="line">&gt;         <span class="keyword">return</span> <span class="keyword">self</span>.networkFetchSignal(query: searchQuery)</span><br><span class="line">&gt;     &#125;</span><br><span class="line">&gt;     <span class="keyword">return</span> <span class="type">RACSignal</span>.empty()</span><br><span class="line">&gt; &#125;).subscribeNext(&#123;(object: <span class="type">AnyObject</span>) -&gt; <span class="type">Void</span> <span class="keyword">in</span> </span><br><span class="line">&gt;    <span class="comment">//the results</span></span><br><span class="line">&gt; &#125;)</span><br><span class="line">&gt;</span><br></pre></td></tr></table></figure>
 </blockquote>
-<h4 id="RACCommmand"><a href="#RACCommmand" class="headerlink" title="RACCommmand"></a>RACCommmand</h4><p>switchLast:  get  the lastest signals</p>
+<h4 id="RACCommmand"><a href="#RACCommmand" class="headerlink" title="RACCommmand"></a>RACCommmand</h4><ol>
+<li><p>怎么用</p>
+<p>allowsConcurrentExecution:  Whether the command allows multiple executions to proceed concurrently.</p>
+<p>​</p>
+<p>​</p>
+</li>
+</ol>
+<p>switchLast:  get  the lastest signals</p>
 <p>—-signal of signals(信号的信号)  : 信号发出的数据是信号</p>
+<h3 id="Racsubject"><a href="#Racsubject" class="headerlink" title="#Racsubject"></a>#Racsubject</h3><blockquote>
+<p>/// A subject can be thought of as a signal that you can manually control by<br>/// sending next, completed, and error.<br>///<br>/// They’re most helpful in bridging the non-RAC world to RAC, since they let you<br>/// manually control the sending of events.</p>
+</blockquote>
 <h4 id="parm-mark-RAC"><a href="#parm-mark-RAC" class="headerlink" title="parm mark - RAC"></a>parm mark - RAC</h4><blockquote>
 <p>Make sure to <code>@strongify(self)</code> when using this macro within a block! The<br>/// macro will <em>always</em> reference <code>self</code>, which can silently introduce a retain</p>
 </blockquote>
+<p><a href="http://mrpeak.cn/blog/functional/" target="_blank" rel="external">iOS与函数式编程</a></p>
 
           
         
@@ -382,7 +418,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-  <link itemprop="mainEntityOfPage" href="atony2099.github.io/2016/08/11/数据存储/沙盒/">
+  <link itemprop="mainEntityOfPage" href="atony2099.github.io/2016/08/11/数据结构/断言 copy/">
 
   <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
     <meta itemprop="name" content="tony2009">
@@ -407,8 +443,8 @@
             
               
                 
-                <a class="post-title-link" href="/2016/08/11/数据存储/沙盒/" itemprop="url">
-                  沙盒
+                <a class="post-title-link" href="/2016/08/11/数据结构/断言 copy/" itemprop="url">
+                  栈和队列
                 </a>
               
             
@@ -462,50 +498,26 @@
       
         
           
-            <p><img src="https://developer.apple.com/library/content/documentation/FileManagement/Conceptual/FileSystemProgrammingGuide/art/ios_app_layout_2x.png" alt=""></p>
-<table>
-<thead>
-<tr>
-<th style="text-align:left">Directory</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:left"><em>AppName</em><code>.app</code></td>
-<td>This is the app’s <a href="undefined">bundle</a>. This directory contains the app and all of its resources.You cannot write to this directory. To prevent tampering, the bundle directory is signed at installation time. Writing to this directory changes the signature and prevents your app from launching. You can, however, gain read-only access to any resources stored in the apps bundle. For more information, see the <em>Resource Programming Guide</em>The contents of this directory are not backed up by iTunes or iCloud. However, iTunes does perform an initial sync of any apps purchased from the App Store.</td>
-</tr>
-<tr>
-<td style="text-align:left"><code>Documents/</code></td>
-<td>Use this directory to store user-generated content. The contents of this directory can be made available to the user through file sharing; therefore, his directory should only contain files that you may wish to expose to the user.The contents of this directory are backed up by iTunes and iCloud.</td>
-</tr>
-<tr>
-<td style="text-align:left"><code>Documents/Inbox</code></td>
-<td>Use this directory to access files that your app was asked to open by outside entities. Specifically, the Mail program places email attachments associated with your app in this directory. Document interaction controllers may also place files in it.Your app can read and delete files in this directory but cannot create new files or write to existing files. If the user tries to edit a file in this directory, your app must silently move it out of the directory before making any changes.The contents of this directory are backed up by iTunes and iCloud.</td>
-</tr>
-<tr>
-<td style="text-align:left"><code>Library/</code></td>
-<td>This is the top-level directory for any files that are not user data files. You typically put files in one of several standard subdirectories. iOS apps commonly use the <code>Application Support</code> and <code>Caches</code> subdirectories; however, you can create custom subdirectories.Use the <code>Library</code> subdirectories for any files you don’t want exposed to the user. Your app should not use these directories for user data files.The contents of the <code>Library</code> directory (with the exception of the <code>Caches</code> subdirectory) are backed up by iTunes and iCloud.For additional information about the Library directory and its commonly used subdirectories, see <a href="https://developer.apple.com/library/content/documentation/FileManagement/Conceptual/FileSystemProgrammingGuide/FileSystemOverview/FileSystemOverview.html#//apple_ref/doc/uid/TP40010672-CH2-SW1" target="_blank" rel="external">The Library Directory Stores App-Specific Files</a>.</td>
-</tr>
-<tr>
-<td style="text-align:left"><code>tmp/</code></td>
-<td>Use this directory to write temporary files that do not need to persist between launches of your app. Your app should remove files from this directory when they are no longer needed; however, the system may purge this directory when your app is not running.The contents of this directory are not backed up by iTunes or iCloud.</td>
-</tr>
-</tbody>
-</table>
-<p><strong>沙盒</strong>: 应用程序的读写操作被限定在沙盒内</p>
-<p>AppName.app : </p>
+            <h4 id="数据结构"><a href="#数据结构" class="headerlink" title="数据结构"></a>数据结构</h4><blockquote>
+<p>数据结构:  存在一种或者多种关系的数据元素的集合</p>
+</blockquote>
+<p>逻辑结构: 1.集合结构 2. 线性结构 3.树形结构 4. 图形结构</p>
+<p>物理结构: 在计算机中的存储形式</p>
+<ol>
+<li>顺序结构 2. 链式存储结构</li>
+</ol>
+<h4 id="线性表"><a href="#线性表" class="headerlink" title="线性表"></a>线性表</h4><p><img src="http://ohbzayk4i.bkt.clouddn.com/17-1-4/46062697-file_1483465204435_450.jpg" alt="n"></p>
 <ul>
-<li>info.plist:配置信息</li>
-<li>可执行文件：可执行的代码</li>
-<li>资源文件: 图片，声音，xib</li>
+<li>线性表的顺序存储结构代码</li>
 </ul>
-<p>doucument: 用户重要的数据， 可以被icloud备份 (用户账户信息)</p>
-<p>Library: 除了Caches，其他会被icloud备份</p>
-<p>Library/Caches: 缓存网络文件，获取更好的用户体验,  (sdweb)</p>
-<p>Library/Preferences： NSUserDefaults写入的数据(版本号)</p>
-<p>temp:临时文件，随时可能被清除</p>
-<p><a href="https://developer.apple.com/library/content/documentation/FileManagement/Conceptual/FileSystemProgrammingGuide/FileSystemOverview/FileSystemOverview.html#//apple_ref/doc/uid/TP40010672-CH2-SW12" target="_blank" rel="external">File System</a></p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> MAXSIZE 20             <span class="comment">/* 存储空间初始分配量 */</span>typedef int ElemType;          <span class="comment">/* ElemType类型根据实际情况而定，这里假设为int*/</span></span></span><br><span class="line"><span class="keyword">typedef</span> <span class="keyword">struct</span></span><br><span class="line">&#123;    ElemType data[MAXSIZE];    <span class="comment">/* 数组存储数据元素，最大值为MAXSIZE */</span>    <span class="keyword">int</span> length;                <span class="comment">/* 线性表当前长度 */</span></span><br><span class="line">&#125; SqList;</span><br></pre></td></tr></table></figure>
+<p>线性表优缺点：    </p>
+<p><img src="http://ohbzayk4i.bkt.clouddn.com/17-1-4/21662702-file_1483469533257_146a4.jpg" alt=""></p>
+<p>头指针</p>
+<p><img src="http://hi.csdn.net/attachment/201012/22/0_1293027039qq3J.gif" alt=""></p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//-----线性表的单链表存储结构-----   </span></span><br><span class="line"><span class="keyword">typedef</span> <span class="keyword">struct</span> LNode&#123;   </span><br><span class="line">    ElemType   data;   </span><br><span class="line">    <span class="keyword">struct</span> LNode  *next; </span><br><span class="line">&#125;LNode, *LinkList;</span><br></pre></td></tr></table></figure>
+<p><img src="http://hi.csdn.net/attachment/201012/22/0_12930270416p63.gif" alt=""></p>
+<p>链表反转</p>
 
           
         
@@ -544,7 +556,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-  <link itemprop="mainEntityOfPage" href="atony2099.github.io/2016/07/29/1swift-tips/可选/">
+  <link itemprop="mainEntityOfPage" href="atony2099.github.io/2016/07/29/计算机基础知识/硬件知识/">
 
   <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
     <meta itemprop="name" content="tony2009">
@@ -569,7 +581,7 @@
             
               
                 
-                <a class="post-title-link" href="/2016/07/29/1swift-tips/可选/" itemprop="url">
+                <a class="post-title-link" href="/2016/07/29/计算机基础知识/硬件知识/" itemprop="url">
                   Swift中的optional
                 </a>
               
@@ -624,33 +636,142 @@
       
         
           
-            <h4 id="为什么需要optional"><a href="#为什么需要optional" class="headerlink" title="为什么需要optional"></a>为什么需要optional</h4><p>在多数的语言中，一个<code>nil</code>值的出现，可以轻易的让程式产生错误，进而被系统强制关闭。一般使用者叫他闪退；开发者叫他崩溃。如何防止<code>nil</code>造成的错误，各式各样的检查早已不可或缺，但无论如何防堵，<code>nil</code>总是在程式运行阶段(runtime)才会发生，无法在编译时期(compile time)就检查出<code>nil</code>发生问题的可能性，也没有稳定的规则可以找出<code>nil</code>的出没之处。</p>
-<p>虽然Objective-C有一个有趣的特性，可以在对象成为<code>nil</code>时，执行该对象的method ，而不产生错误，也不会引发crash 。<em>但是由于对象是否为nil状况不明，还是会造成意外的情况</em></p>
-<p>因此，以安全做为诉求的Swift设计成所有的变量在赋值时只能有值，不能是<code>nil</code>，只要接受到<code>nil</code>，就会抛出错误。</p>
-<h5 id="但是变量还是有nil的需求"><a href="#但是变量还是有nil的需求" class="headerlink" title="但是变量还是有nil的需求"></a>但是变量还是有nil的需求</h5><p>为了从根本上解决<code>nil</code>不明确的问题， Swift导入了Optional的概念，由<code>enum</code>实作，并在Compiler中加强了对Optional的操作性。</p>
-<p>当变量存在值有可能缺失的情况下使用可选类型，官方文档如下定义：</p>
-<ul>
-<li><em>There is a value ,and it equals x</em>,值存在且等于<em>x</em>.</li>
-<li><em>There isn’t a value at all</em>,值不存在!</li>
-</ul>
-<p><em>opetinal是主动描述变量是否存在nil值，减少变量在传递在传递过程中，存在nil的不确定性</em></p>
-<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">let</span> intValue:<span class="type">Int</span> = <span class="number">0</span> <span class="comment">// 合法</span></span><br><span class="line"><span class="keyword">let</span> intValue2:<span class="type">Int</span> = <span class="literal">nil</span> <span class="comment">//不合法</span></span><br><span class="line"><span class="keyword">let</span> optionalIntValue:<span class="type">Int</span>? = <span class="literal">nil</span> <span class="comment">//合法，這是一個Int的Optional</span></span><br></pre></td></tr></table></figure>
-<h4 id="optional"><a href="#optional" class="headerlink" title="optional"></a>optional</h4><p>Optional其实是个<code>enum</code>，里面有<code>None</code>和<code>Some</code>两种类型。其实所谓的nil就是<code>Optional.None</code>, 非nil就是<code>Optional.Some</code>, 然后会通过<code>Some(T)</code>包装（wrap）原始值，这也是为什么在使用Optional的时候要拆包（从enum里取出来原始值）的原因, 也是PlayGround会把Optional值显示为类似<code>{Some &quot;hello world&quot;}</code>的原因，这里是enum Optional的定义：</p>
-<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">enum</span> <span class="title">Optional</span>&lt;<span class="title">T</span>&gt; : <span class="title">LogicValue</span>, <span class="title">Reflectable</span> </span>&#123;</span><br><span class="line">    <span class="keyword">case</span> <span class="type">None</span></span><br><span class="line">    <span class="keyword">case</span> <span class="type">Some</span>(<span class="type">T</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<blockquote>
-<p>可以把optional 想象成一个糖果盒子，里面可能装着糖果 或者空气</p>
+            <h4 id="内核"><a href="#内核" class="headerlink" title="内核"></a>内核</h4><p><img src="http://ohbzayk4i.bkt.clouddn.com/17-1-6/18273845-file_1483690773141_92b7.jpg" alt=""></p>
+<p>内核，是一个<a href="http://baike.baidu.com/view/880.htm" target="_blank" rel="external">操作系统</a>的核心。是基于硬件的第一层软件扩充，提供操作系统的最基本的功能，是操作系统工作的基础，它负责管理系统的进程、<a href="http://baike.baidu.com/view/1082.htm" target="_blank" rel="external">内存</a>、[核体系结构设备<a href="http://baike.baidu.com/view/43111.htm" target="_blank" rel="external">驱动</a>程序、文件和<a href="http://baike.baidu.com/view/3487.htm" target="_blank" rel="external">网络</a>系统，决定着系统的性能和稳定性。</p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="atony2099.github.io/2016/07/29/1swift-tips/error hanlding/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="tony2009">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="/images/avatar.gif">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="托尼的开发笔记">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="托尼的开发笔记" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2016/07/29/1swift-tips/error hanlding/" itemprop="url">
+                  error  Handling
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2016-07-29T19:48:20+08:00">
+                2016-07
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <blockquote>
+<p><em>Error handling</em> is the process of responding to and recovering from error conditions in your program. Swift provides first-class(一等公民) support for throwing, catching, propagating, and manipulating recoverable errors at runtime.</p>
 </blockquote>
-<h5 id="拆包："><a href="#拆包：" class="headerlink" title="拆包："></a>拆包：</h5><p><em>1.在糖果盒里面有糖果的时候，2.取出来让他参与运算</em></p>
-<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 强制解包</span></span><br><span class="line"><span class="keyword">if</span> possibleNumber != <span class="literal">nil</span> &#123;</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">"hello<span class="subst">\(possibleNumber!)</span>"</span>) <span class="comment">// 使用前需!强制解析</span></span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">   </span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 拆包方式二，guard守护</span></span><br><span class="line"><span class="comment">/* guard充当了警卫员一职，保证条件满足情况下，才会让你通过，否则只能else让你返回了！切记else中一定需要有返回  的语句，比如return、continue、break、throw这种提早退出的关键字！！*/</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">unWrapped</span><span class="params">()</span></span> &#123;</span><br><span class="line">    <span class="keyword">guard</span> <span class="keyword">let</span> number = possibleNumber <span class="keyword">else</span>&#123;</span><br><span class="line">        <span class="keyword">return</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">"hello<span class="subst">\(number)</span> "</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 拆包方式三,使用可选绑定（optional binding）来判断可选类型是否包含值，如果包含就把值赋给一个临时常量或者变量。</span></span><br><span class="line"><span class="keyword">if</span> <span class="keyword">let</span> number = possibleNumber &#123;</span><br><span class="line">   <span class="built_in">print</span>(<span class="string">"hello<span class="subst">\(number)</span>"</span>)</span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">// 拆包方式三，替代物</span></span><br><span class="line"><span class="keyword">var</span> number:<span class="type">Int</span>?</span><br><span class="line"><span class="keyword">let</span> number1 = number ?? <span class="number">0</span></span><br></pre></td></tr></table></figure>
-<h5 id="optional-binding的特殊形式-optional-chaining"><a href="#optional-binding的特殊形式-optional-chaining" class="headerlink" title="optional binding的特殊形式:  optional chaining"></a>optional binding的特殊形式:  optional chaining</h5><p>optional chaining 行为类似OC中的 nil 不响应消息</p>
-<p>调用属性或者方法的过程中，如果遇到optional，忽视optianl，并执行下一个语法，知道语法完成，如果过程中有一个属性是nil，直接结束语法，并传回nil</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">let 使用者名字:String? = grady.禮物收藏盒?.使用者名字</span><br></pre></td></tr></table></figure>
-<p><em>optianl chaining取得的值，最终一定是optional</em></p>
-<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Toy</span> </span>&#123;</span><br><span class="line">    <span class="keyword">let</span> name: <span class="type">String</span></span><br><span class="line">    <span class="keyword">init</span>(name: <span class="type">String</span>) &#123;</span><br><span class="line">        <span class="keyword">self</span>.name = name</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Pet</span> </span>&#123;</span><br><span class="line">    <span class="keyword">var</span> toy: <span class="type">Toy</span>?</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Child</span> </span>&#123;</span><br><span class="line">    <span class="keyword">var</span> pet: <span class="type">Pet</span>?</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">let</span> xiaomi = <span class="type">Chilid</span>()</span><br><span class="line"><span class="keyword">let</span> name = xiaomi.pet?.toy?.name <span class="comment">// 虽然name被声明为不是nil，但是 获得的name一定是 optianal</span></span><br></pre></td></tr></table></figure>
-<p><a href="http://letsswift.com/2014/06/swift-questionmark-exclamatorymark/" target="_blank" rel="external">Swift中的问号?和感叹号!</a></p>
-<p> <a href="http://blog.csdn.net/zhangao0086/article/details/386402099" target="_blank" rel="external">Swift 可选值(Optional Values)介绍</a></p>
-<p><a href="http://blog.barat.cc/ios/understanding-swift-optional/" target="_blank" rel="external">理解Swift中Optional类型－有和无的哲学</a></p>
-<p><a href="http://www.appcoda.com.tw/swift-optional/" target="_blank" rel="external">初学Swift：爱恨交织的Optional</a></p>
+<p>why not nil ?</p>
+<blockquote>
+<p>Some operations aren’t guaranteed to always complete execution or produce a useful output. Optionals are used to represent the absence of a value, but when an operation fails, <strong>it’s often useful to understand what caused the failure, so that your code can respond accordingly</strong>.</p>
+</blockquote>
+<h4 id="Propagating"><a href="#Propagating" class="headerlink" title="Propagating"></a>Propagating</h4><figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">Item</span> </span>&#123;</span><br><span class="line">    <span class="keyword">var</span> price: <span class="type">Int</span></span><br><span class="line">    <span class="keyword">var</span> <span class="built_in">count</span>: <span class="type">Int</span></span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">VendingMachine</span> </span>&#123;</span><br><span class="line">    <span class="keyword">var</span> inventory = [</span><br><span class="line">        <span class="string">"Candy Bar"</span>: <span class="type">Item</span>(price: <span class="number">12</span>, <span class="built_in">count</span>: <span class="number">7</span>),</span><br><span class="line">        <span class="string">"Chips"</span>: <span class="type">Item</span>(price: <span class="number">10</span>, <span class="built_in">count</span>: <span class="number">4</span>),</span><br><span class="line">        <span class="string">"Pretzels"</span>: <span class="type">Item</span>(price: <span class="number">7</span>, <span class="built_in">count</span>: <span class="number">11</span>)</span><br><span class="line">    ]</span><br><span class="line">    <span class="keyword">var</span> coinsDeposited = <span class="number">0</span></span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">func</span> <span class="title">vend</span><span class="params">(itemNamed name: String)</span></span> <span class="keyword">throws</span> &#123;</span><br><span class="line">        <span class="keyword">guard</span> <span class="keyword">let</span> item = inventory[name] <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="keyword">throw</span> <span class="type">VendingMachineError</span>.invalidSelection</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">guard</span> item.<span class="built_in">count</span> &gt; <span class="number">0</span> <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="keyword">throw</span> <span class="type">VendingMachineError</span>.outOfStock</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">guard</span> item.price &lt;= coinsDeposited <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="keyword">throw</span> <span class="type">VendingMachineError</span>.insufficientFunds(coinsNeeded: item.price - coinsDeposited)</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        coinsDeposited -= item.price</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">var</span> newItem = item</span><br><span class="line">        newItem.<span class="built_in">count</span> -= <span class="number">1</span></span><br><span class="line">        inventory[name] = newItem</span><br><span class="line">        </span><br><span class="line">        <span class="built_in">print</span>(<span class="string">"Dispensing <span class="subst">\(name)</span>"</span>)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>continue to propagate them.</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> favoriteSnacks = [</span><br><span class="line">    <span class="string">"Alice"</span>: <span class="string">"Chips"</span>,</span><br><span class="line">    <span class="string">"Bob"</span>: <span class="string">"Licorice"</span>,</span><br><span class="line">    <span class="string">"Eve"</span>: <span class="string">"Pretzels"</span>,</span><br><span class="line">]</span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">buyFavoriteSnack</span><span class="params">(person: String, vendingMachine: VendingMachine)</span></span> <span class="keyword">throws</span> &#123;</span><br><span class="line">    <span class="keyword">let</span> snackName = favoriteSnacks[person] ?? <span class="string">"Candy Bar"</span></span><br><span class="line">    <span class="keyword">try</span> vendingMachine.vend(itemNamed: snackName)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="Handling-Errors-Using-Do-Catch"><a href="#Handling-Errors-Using-Do-Catch" class="headerlink" title="Handling Errors Using Do-Catch"></a>Handling Errors Using Do-Catch</h3><figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> vendingMachine = <span class="type">VendingMachine</span>()</span><br><span class="line">vendingMachine.coinsDeposited = <span class="number">8</span></span><br><span class="line"><span class="keyword">do</span> &#123;</span><br><span class="line">    <span class="keyword">try</span> buyFavoriteSnack(person: <span class="string">"Alice"</span>, vendingMachine: vendingMachine)</span><br><span class="line">&#125; <span class="keyword">catch</span> <span class="type">VendingMachineError</span>.invalidSelection &#123;</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">"Invalid Selection."</span>)</span><br><span class="line">&#125; <span class="keyword">catch</span> <span class="type">VendingMachineError</span>.outOfStock &#123;</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">"Out of Stock."</span>)</span><br><span class="line">&#125; <span class="keyword">catch</span> <span class="type">VendingMachineError</span>.insufficientFunds(<span class="keyword">let</span> coinsNeeded) &#123;</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">"Insufficient funds. Please insert an additional <span class="subst">\(coinsNeeded)</span> coins."</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>You use <code>try?</code> to handle an error by converting it to an optional value. If an error is thrown while evaluating the <code>try?</code> expression, the value of the expression is <code>nil</code></p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">someThrowingFunction</span><span class="params">()</span></span> <span class="keyword">throws</span> -&gt; <span class="type">Int</span> &#123;</span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line"><span class="keyword">let</span> x = <span class="keyword">try</span>? someThrowingFunction()</span><br><span class="line"> </span><br><span class="line"><span class="keyword">let</span> y: <span class="type">Int</span>?</span><br><span class="line"><span class="keyword">do</span> &#123;</span><br><span class="line">    y = <span class="keyword">try</span> someThrowingFunction()</span><br><span class="line">&#125; <span class="keyword">catch</span> &#123;</span><br><span class="line">    y = <span class="literal">nil</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>Sometimes you know a throwing function or method won’t, in fact, throw an error at runtime. On those occasions, you can write <code>try!</code> before the expression to disable error propagation and wrap the call in a runtime assertion that no error will be thrown.</p>
+</blockquote>
 
           
         
@@ -1002,7 +1123,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-  <link itemprop="mainEntityOfPage" href="atony2099.github.io/2016/07/29/计算机基础知识/硬件知识/">
+  <link itemprop="mainEntityOfPage" href="atony2099.github.io/2016/07/29/1swift-tips/可选/">
 
   <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
     <meta itemprop="name" content="tony2009">
@@ -1027,7 +1148,7 @@
             
               
                 
-                <a class="post-title-link" href="/2016/07/29/计算机基础知识/硬件知识/" itemprop="url">
+                <a class="post-title-link" href="/2016/07/29/1swift-tips/可选/" itemprop="url">
                   Swift中的optional
                 </a>
               
@@ -1082,142 +1203,33 @@
       
         
           
-            <h4 id="内核"><a href="#内核" class="headerlink" title="内核"></a>内核</h4><p><img src="http://ohbzayk4i.bkt.clouddn.com/17-1-6/18273845-file_1483690773141_92b7.jpg" alt=""></p>
-<p>内核，是一个<a href="http://baike.baidu.com/view/880.htm" target="_blank" rel="external">操作系统</a>的核心。是基于硬件的第一层软件扩充，提供操作系统的最基本的功能，是操作系统工作的基础，它负责管理系统的进程、<a href="http://baike.baidu.com/view/1082.htm" target="_blank" rel="external">内存</a>、[核体系结构设备<a href="http://baike.baidu.com/view/43111.htm" target="_blank" rel="external">驱动</a>程序、文件和<a href="http://baike.baidu.com/view/3487.htm" target="_blank" rel="external">网络</a>系统，决定着系统的性能和稳定性。</p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-  <link itemprop="mainEntityOfPage" href="atony2099.github.io/2016/07/29/1swift-tips/error hanlding/">
-
-  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
-    <meta itemprop="name" content="tony2009">
-    <meta itemprop="description" content="">
-    <meta itemprop="image" content="/images/avatar.gif">
-  </span>
-
-  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-    <meta itemprop="name" content="托尼的开发笔记">
-    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
-      <img style="display:none;" itemprop="url image" alt="托尼的开发笔记" src="">
-    </span>
-  </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2016/07/29/1swift-tips/error hanlding/" itemprop="url">
-                  error  Handling
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2016-07-29T19:48:20+08:00">
-                2016-07
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <blockquote>
-<p><em>Error handling</em> is the process of responding to and recovering from error conditions in your program. Swift provides first-class(一等公民) support for throwing, catching, propagating, and manipulating recoverable errors at runtime.</p>
-</blockquote>
-<p>why not nil ?</p>
+            <h4 id="为什么需要optional"><a href="#为什么需要optional" class="headerlink" title="为什么需要optional"></a>为什么需要optional</h4><p>在多数的语言中，一个<code>nil</code>值的出现，可以轻易的让程式产生错误，进而被系统强制关闭。一般使用者叫他闪退；开发者叫他崩溃。如何防止<code>nil</code>造成的错误，各式各样的检查早已不可或缺，但无论如何防堵，<code>nil</code>总是在程式运行阶段(runtime)才会发生，无法在编译时期(compile time)就检查出<code>nil</code>发生问题的可能性，也没有稳定的规则可以找出<code>nil</code>的出没之处。</p>
+<p>虽然Objective-C有一个有趣的特性，可以在对象成为<code>nil</code>时，执行该对象的method ，而不产生错误，也不会引发crash 。<em>但是由于对象是否为nil状况不明，还是会造成意外的情况</em></p>
+<p>因此，以安全做为诉求的Swift设计成所有的变量在赋值时只能有值，不能是<code>nil</code>，只要接受到<code>nil</code>，就会抛出错误。</p>
+<h5 id="但是变量还是有nil的需求"><a href="#但是变量还是有nil的需求" class="headerlink" title="但是变量还是有nil的需求"></a>但是变量还是有nil的需求</h5><p>为了从根本上解决<code>nil</code>不明确的问题， Swift导入了Optional的概念，由<code>enum</code>实作，并在Compiler中加强了对Optional的操作性。</p>
+<p>当变量存在值有可能缺失的情况下使用可选类型，官方文档如下定义：</p>
+<ul>
+<li><em>There is a value ,and it equals x</em>,值存在且等于<em>x</em>.</li>
+<li><em>There isn’t a value at all</em>,值不存在!</li>
+</ul>
+<p><em>opetinal是主动描述变量是否存在nil值，减少变量在传递在传递过程中，存在nil的不确定性</em></p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">let</span> intValue:<span class="type">Int</span> = <span class="number">0</span> <span class="comment">// 合法</span></span><br><span class="line"><span class="keyword">let</span> intValue2:<span class="type">Int</span> = <span class="literal">nil</span> <span class="comment">//不合法</span></span><br><span class="line"><span class="keyword">let</span> optionalIntValue:<span class="type">Int</span>? = <span class="literal">nil</span> <span class="comment">//合法，這是一個Int的Optional</span></span><br></pre></td></tr></table></figure>
+<h4 id="optional"><a href="#optional" class="headerlink" title="optional"></a>optional</h4><p>Optional其实是个<code>enum</code>，里面有<code>None</code>和<code>Some</code>两种类型。其实所谓的nil就是<code>Optional.None</code>, 非nil就是<code>Optional.Some</code>, 然后会通过<code>Some(T)</code>包装（wrap）原始值，这也是为什么在使用Optional的时候要拆包（从enum里取出来原始值）的原因, 也是PlayGround会把Optional值显示为类似<code>{Some &quot;hello world&quot;}</code>的原因，这里是enum Optional的定义：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">enum</span> <span class="title">Optional</span>&lt;<span class="title">T</span>&gt; : <span class="title">LogicValue</span>, <span class="title">Reflectable</span> </span>&#123;</span><br><span class="line">    <span class="keyword">case</span> <span class="type">None</span></span><br><span class="line">    <span class="keyword">case</span> <span class="type">Some</span>(<span class="type">T</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <blockquote>
-<p>Some operations aren’t guaranteed to always complete execution or produce a useful output. Optionals are used to represent the absence of a value, but when an operation fails, <strong>it’s often useful to understand what caused the failure, so that your code can respond accordingly</strong>.</p>
+<p>可以把optional 想象成一个糖果盒子，里面可能装着糖果 或者空气</p>
 </blockquote>
-<h4 id="Propagating"><a href="#Propagating" class="headerlink" title="Propagating"></a>Propagating</h4><figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">Item</span> </span>&#123;</span><br><span class="line">    <span class="keyword">var</span> price: <span class="type">Int</span></span><br><span class="line">    <span class="keyword">var</span> <span class="built_in">count</span>: <span class="type">Int</span></span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">VendingMachine</span> </span>&#123;</span><br><span class="line">    <span class="keyword">var</span> inventory = [</span><br><span class="line">        <span class="string">"Candy Bar"</span>: <span class="type">Item</span>(price: <span class="number">12</span>, <span class="built_in">count</span>: <span class="number">7</span>),</span><br><span class="line">        <span class="string">"Chips"</span>: <span class="type">Item</span>(price: <span class="number">10</span>, <span class="built_in">count</span>: <span class="number">4</span>),</span><br><span class="line">        <span class="string">"Pretzels"</span>: <span class="type">Item</span>(price: <span class="number">7</span>, <span class="built_in">count</span>: <span class="number">11</span>)</span><br><span class="line">    ]</span><br><span class="line">    <span class="keyword">var</span> coinsDeposited = <span class="number">0</span></span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">func</span> <span class="title">vend</span><span class="params">(itemNamed name: String)</span></span> <span class="keyword">throws</span> &#123;</span><br><span class="line">        <span class="keyword">guard</span> <span class="keyword">let</span> item = inventory[name] <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="keyword">throw</span> <span class="type">VendingMachineError</span>.invalidSelection</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">guard</span> item.<span class="built_in">count</span> &gt; <span class="number">0</span> <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="keyword">throw</span> <span class="type">VendingMachineError</span>.outOfStock</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">guard</span> item.price &lt;= coinsDeposited <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="keyword">throw</span> <span class="type">VendingMachineError</span>.insufficientFunds(coinsNeeded: item.price - coinsDeposited)</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        coinsDeposited -= item.price</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">var</span> newItem = item</span><br><span class="line">        newItem.<span class="built_in">count</span> -= <span class="number">1</span></span><br><span class="line">        inventory[name] = newItem</span><br><span class="line">        </span><br><span class="line">        <span class="built_in">print</span>(<span class="string">"Dispensing <span class="subst">\(name)</span>"</span>)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>continue to propagate them.</p>
-<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> favoriteSnacks = [</span><br><span class="line">    <span class="string">"Alice"</span>: <span class="string">"Chips"</span>,</span><br><span class="line">    <span class="string">"Bob"</span>: <span class="string">"Licorice"</span>,</span><br><span class="line">    <span class="string">"Eve"</span>: <span class="string">"Pretzels"</span>,</span><br><span class="line">]</span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">buyFavoriteSnack</span><span class="params">(person: String, vendingMachine: VendingMachine)</span></span> <span class="keyword">throws</span> &#123;</span><br><span class="line">    <span class="keyword">let</span> snackName = favoriteSnacks[person] ?? <span class="string">"Candy Bar"</span></span><br><span class="line">    <span class="keyword">try</span> vendingMachine.vend(itemNamed: snackName)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h3 id="Handling-Errors-Using-Do-Catch"><a href="#Handling-Errors-Using-Do-Catch" class="headerlink" title="Handling Errors Using Do-Catch"></a>Handling Errors Using Do-Catch</h3><figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> vendingMachine = <span class="type">VendingMachine</span>()</span><br><span class="line">vendingMachine.coinsDeposited = <span class="number">8</span></span><br><span class="line"><span class="keyword">do</span> &#123;</span><br><span class="line">    <span class="keyword">try</span> buyFavoriteSnack(person: <span class="string">"Alice"</span>, vendingMachine: vendingMachine)</span><br><span class="line">&#125; <span class="keyword">catch</span> <span class="type">VendingMachineError</span>.invalidSelection &#123;</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">"Invalid Selection."</span>)</span><br><span class="line">&#125; <span class="keyword">catch</span> <span class="type">VendingMachineError</span>.outOfStock &#123;</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">"Out of Stock."</span>)</span><br><span class="line">&#125; <span class="keyword">catch</span> <span class="type">VendingMachineError</span>.insufficientFunds(<span class="keyword">let</span> coinsNeeded) &#123;</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">"Insufficient funds. Please insert an additional <span class="subst">\(coinsNeeded)</span> coins."</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>You use <code>try?</code> to handle an error by converting it to an optional value. If an error is thrown while evaluating the <code>try?</code> expression, the value of the expression is <code>nil</code></p>
-<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">someThrowingFunction</span><span class="params">()</span></span> <span class="keyword">throws</span> -&gt; <span class="type">Int</span> &#123;</span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line"><span class="keyword">let</span> x = <span class="keyword">try</span>? someThrowingFunction()</span><br><span class="line"> </span><br><span class="line"><span class="keyword">let</span> y: <span class="type">Int</span>?</span><br><span class="line"><span class="keyword">do</span> &#123;</span><br><span class="line">    y = <span class="keyword">try</span> someThrowingFunction()</span><br><span class="line">&#125; <span class="keyword">catch</span> &#123;</span><br><span class="line">    y = <span class="literal">nil</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<blockquote>
-<p>Sometimes you know a throwing function or method won’t, in fact, throw an error at runtime. On those occasions, you can write <code>try!</code> before the expression to disable error propagation and wrap the call in a runtime assertion that no error will be thrown.</p>
-</blockquote>
+<h5 id="拆包："><a href="#拆包：" class="headerlink" title="拆包："></a>拆包：</h5><p><em>1.在糖果盒里面有糖果的时候，2.取出来让他参与运算</em></p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 强制解包</span></span><br><span class="line"><span class="keyword">if</span> possibleNumber != <span class="literal">nil</span> &#123;</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">"hello<span class="subst">\(possibleNumber!)</span>"</span>) <span class="comment">// 使用前需!强制解析</span></span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">   </span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 拆包方式二，guard守护</span></span><br><span class="line"><span class="comment">/* guard充当了警卫员一职，保证条件满足情况下，才会让你通过，否则只能else让你返回了！切记else中一定需要有返回  的语句，比如return、continue、break、throw这种提早退出的关键字！！*/</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">unWrapped</span><span class="params">()</span></span> &#123;</span><br><span class="line">    <span class="keyword">guard</span> <span class="keyword">let</span> number = possibleNumber <span class="keyword">else</span>&#123;</span><br><span class="line">        <span class="keyword">return</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">"hello<span class="subst">\(number)</span> "</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 拆包方式三,使用可选绑定（optional binding）来判断可选类型是否包含值，如果包含就把值赋给一个临时常量或者变量。</span></span><br><span class="line"><span class="keyword">if</span> <span class="keyword">let</span> number = possibleNumber &#123;</span><br><span class="line">   <span class="built_in">print</span>(<span class="string">"hello<span class="subst">\(number)</span>"</span>)</span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">// 拆包方式三，替代物</span></span><br><span class="line"><span class="keyword">var</span> number:<span class="type">Int</span>?</span><br><span class="line"><span class="keyword">let</span> number1 = number ?? <span class="number">0</span></span><br></pre></td></tr></table></figure>
+<h5 id="optional-binding的特殊形式-optional-chaining"><a href="#optional-binding的特殊形式-optional-chaining" class="headerlink" title="optional binding的特殊形式:  optional chaining"></a>optional binding的特殊形式:  optional chaining</h5><p>optional chaining 行为类似OC中的 nil 不响应消息</p>
+<p>调用属性或者方法的过程中，如果遇到optional，忽视optianl，并执行下一个语法，知道语法完成，如果过程中有一个属性是nil，直接结束语法，并传回nil</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">let 使用者名字:String? = grady.禮物收藏盒?.使用者名字</span><br></pre></td></tr></table></figure>
+<p><em>optianl chaining取得的值，最终一定是optional</em></p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Toy</span> </span>&#123;</span><br><span class="line">    <span class="keyword">let</span> name: <span class="type">String</span></span><br><span class="line">    <span class="keyword">init</span>(name: <span class="type">String</span>) &#123;</span><br><span class="line">        <span class="keyword">self</span>.name = name</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Pet</span> </span>&#123;</span><br><span class="line">    <span class="keyword">var</span> toy: <span class="type">Toy</span>?</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Child</span> </span>&#123;</span><br><span class="line">    <span class="keyword">var</span> pet: <span class="type">Pet</span>?</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">let</span> xiaomi = <span class="type">Chilid</span>()</span><br><span class="line"><span class="keyword">let</span> name = xiaomi.pet?.toy?.name <span class="comment">// 虽然name被声明为不是nil，但是 获得的name一定是 optianal</span></span><br></pre></td></tr></table></figure>
+<p><a href="http://letsswift.com/2014/06/swift-questionmark-exclamatorymark/" target="_blank" rel="external">Swift中的问号?和感叹号!</a></p>
+<p> <a href="http://blog.csdn.net/zhangao0086/article/details/386402099" target="_blank" rel="external">Swift 可选值(Optional Values)介绍</a></p>
+<p><a href="http://blog.barat.cc/ios/understanding-swift-optional/" target="_blank" rel="external">理解Swift中Optional类型－有和无的哲学</a></p>
+<p><a href="http://www.appcoda.com.tw/swift-optional/" target="_blank" rel="external">初学Swift：爱恨交织的Optional</a></p>
 
           
         
