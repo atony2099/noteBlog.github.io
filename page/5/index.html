@@ -241,7 +241,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-  <link itemprop="mainEntityOfPage" href="atony2099.github.io/2016/05/01/1swift-tips/swift错误集锦/">
+  <link itemprop="mainEntityOfPage" href="atony2099.github.io/2016/05/01/1swift-tips/anyobject/">
 
   <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
     <meta itemprop="name" content="tony2009">
@@ -266,8 +266,8 @@
             
               
                 
-                <a class="post-title-link" href="/2016/05/01/1swift-tips/swift错误集锦/" itemprop="url">
-                  swift 错误集锦
+                <a class="post-title-link" href="/2016/05/01/1swift-tips/anyobject/" itemprop="url">
+                  swift protocol
                 </a>
               
             
@@ -321,13 +321,16 @@
       
         
           
-            <h4 id="1-Variable-declared-in-‘guard’-condition-not-usable-in-its-body"><a href="#1-Variable-declared-in-‘guard’-condition-not-usable-in-its-body" class="headerlink" title="1. Variable declared in ‘guard’ condition not usable in its body"></a>1. Variable declared in ‘guard’ condition not usable in its body</h4><p><strong>example</strong></p>
-<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//check to see if we got a valid response code</span></span><br><span class="line">   <span class="keyword">guard</span> <span class="keyword">let</span> resCode = (response <span class="keyword">as</span>? <span class="type">NSHTTPURLResponse</span>)?.statusCode <span class="keyword">where</span> resCode == <span class="number">200</span> <span class="keyword">else</span> &#123;</span><br><span class="line">       <span class="keyword">return</span> <span class="type">NSError</span>(domain: <span class="string">"Error with request"</span>, code: <span class="number">1</span>, userInfo: [<span class="type">NSLocalizedDescriptionKey</span>: <span class="string">"Recieved the following status code: <span class="subst">\(resCode)</span>"</span>])</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
-<p><strong>Answer</strong></p>
-<p>As the error states, you can’t use a variable that you bound in the guard statement inside of the guard statement’s body. The variable only gets bound in the case where the guard body is not entered. You also aren’t differentiating between the cases where your response is nil and where your status code isn’t 200.</p>
-<p>You should break the statements into two different checks:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">guard let httpResponse = response as? NSHTTPURLResponse else &#123;</span><br><span class="line">    return NSError(domain: &quot;Error with request&quot;, code: 1, userInfo: [NSLocalizedDescriptionKey: &quot;Invalid response: \(response)&quot;])</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">guard httpResponse.statusCode == 200 else &#123;</span><br><span class="line">    return NSError(domain: &quot;Error with request&quot;, code: 1, userInfo: [NSLocalizedDescriptionKey: &quot;Recieved the following status code: \(httpResponse.statusCode)&quot;])</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>Don’t try to minimize the number of lines of code at the expense of readability or correctness.</p>
+            <h4 id="对比"><a href="#对比" class="headerlink" title="对比"></a>对比</h4><p>anyObject:Any 可以代表 struct、class、func 等等几乎所有类型</p>
+<p>any : class实例</p>
+<blockquote>
+<p><code>AnyObject</code>是<code>Any</code>的子集</p>
+</blockquote>
+<p>swift 2</p>
+<blockquote>
+<p>那为什么之前我们在 Swift 2  里可以用 [AnyObject] 声明数组，并且在里面放 Int、String 等 struct 类型呢？这是因为 Swift 2 中，会针对这些 Int、String 等 struct 进行一个 Implicit Bridging Conversions，在 Array 里插入他们时，编译器会自动将其 bridge 到 Objective-C 的 NSNumber、NSString 等类型，这就是为什么我们声明的 [AnyObject] 里可以放 struct 的原因。</p>
+</blockquote>
+<p><a href="https://zhuanlan.zhihu.com/p/22584349" target="_blank" rel="external">适配 Swift 3 的一点小经验和坑</a></p>
 
           
         
